@@ -1,3 +1,6 @@
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const CACHE_PREFIX = "routedatabase:tfl-stops:";
+
 const state = {
   data: { current: [], withdrawn: [] },
   filter: "current",
@@ -10,6 +13,7 @@ const state = {
 
 const el = id => document.getElementById(id);
 const normalise = value => String(value ?? "").trim().toLowerCase();
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function routeNumber(value) {
   const text = String(value || "");
@@ -128,12 +132,22 @@ function renderDetail() {
   }
 }
 
-async function tflFetch(path) {
+async function tflFetch(path, retryCount = 0) {
   const config = window.APP_CONFIG || {};
   const url = new URL(`https://api.tfl.gov.uk${path}`);
   if (config.tflApiKey) url.searchParams.set("app_key", config.tflApiKey);
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`TfL returned ${response.status}`);
+
+  const response = await fetch(url, { headers: { Accept: "application/json" } });
+  if (response.status === 429 && retryCount < 1) {
+    const retryAfter = Number(response.headers.get("Retry-After"));
+    await sleep(Number.isFinite(retryAfter) ? Math.min(retryAfter * 1000, 10000) : 3000);
+    return tflFetch(path, retryCount + 1);
+  }
+  if (!response.ok) {
+    const error = new Error(`TfL returned ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
   return response.json();
 }
 
@@ -142,7 +156,7 @@ function normaliseSequences(data, direction) {
   return sequences
     .filter(sequence => !direction || normalise(sequence.direction) === direction)
     .map((sequence, index) => ({
-      id: `${direction}-${sequence.branchId ?? index}`,
+      id: `${direction || sequence.direction}-${sequence.branchId ?? index}`,
       direction: normalise(sequence.direction) || direction,
       branchId: sequence.branchId ?? index,
       serviceType: sequence.serviceType || "Regular",
@@ -151,9 +165,27 @@ function normaliseSequences(data, direction) {
     .filter(sequence => sequence.stops.length);
 }
 
-async function fetchDirection(routeId, direction) {
-  const data = await tflFetch(`/Line/${encodeURIComponent(routeId)}/Route/Sequence/${direction}?serviceTypes=Regular&excludeCrowding=true`);
-  return normaliseSequences(data, direction);
+function readStoredStops(routeId) {
+  try {
+    const raw = localStorage.getItem(`${CACHE_PREFIX}${routeId}`);
+    if (!raw) return null;
+    const cached = JSON.parse(raw);
+    if (!cached.savedAt || Date.now() - cached.savedAt > CACHE_TTL_MS) {
+      localStorage.removeItem(`${CACHE_PREFIX}${routeId}`);
+      return null;
+    }
+    return cached.data || null;
+  } catch {
+    return null;
+  }
+}
+
+function storeStops(routeId, routeData) {
+  try {
+    localStorage.setItem(`${CACHE_PREFIX}${routeId}`, JSON.stringify({ savedAt: Date.now(), data: routeData }));
+  } catch {
+    // localStorage may be unavailable or full; the in-memory cache still works.
+  }
 }
 
 async function loadRouteStops(routeId, forceRefresh = false) {
@@ -163,28 +195,23 @@ async function loadRouteStops(routeId, forceRefresh = false) {
   const tabs = el("directionTabs");
   if (!message || !container || !tabs) return;
 
-  message.textContent = "Loading stops from TfL…";
+  message.textContent = forceRefresh ? "Refreshing stops from TfL…" : "Loading stops…";
   container.innerHTML = "";
   tabs.hidden = true;
 
   try {
-    let routeData = state.routeStopsCache.get(selectedRoute);
-    if (!routeData || forceRefresh) {
-      const results = await Promise.allSettled([
-        fetchDirection(selectedRoute, "outbound"),
-        fetchDirection(selectedRoute, "inbound")
-      ]);
+    let routeData = !forceRefresh ? state.routeStopsCache.get(selectedRoute) : null;
+    if (!routeData && !forceRefresh) routeData = readStoredStops(selectedRoute);
 
+    if (!routeData) {
+      const data = await tflFetch(`/Line/${encodeURIComponent(selectedRoute)}/Route/Sequence/all?serviceTypes=Regular&excludeCrowding=true`);
       routeData = {
-        outbound: results[0].status === "fulfilled" ? results[0].value : [],
-        inbound: results[1].status === "fulfilled" ? results[1].value : []
+        outbound: normaliseSequences(data, "outbound"),
+        inbound: normaliseSequences(data, "inbound")
       };
-
-      if (!routeData.outbound.length && !routeData.inbound.length) {
-        const fallback = await tflFetch(`/Line/${encodeURIComponent(selectedRoute)}/Route/Sequence/all?serviceTypes=Regular&excludeCrowding=true`);
-        routeData.outbound = normaliseSequences(fallback, "outbound");
-        routeData.inbound = normaliseSequences(fallback, "inbound");
-      }
+      state.routeStopsCache.set(selectedRoute, routeData);
+      storeStops(selectedRoute, routeData);
+    } else {
       state.routeStopsCache.set(selectedRoute, routeData);
     }
 
@@ -205,16 +232,26 @@ async function loadRouteStops(routeId, forceRefresh = false) {
       button.addEventListener("click", () => {
         state.selectedDirection = button.dataset.direction;
         renderStopSequences(routeData[state.selectedDirection]);
+        updateStopsMessage(routeData[state.selectedDirection], Boolean(readStoredStops(selectedRoute)));
         tabs.querySelectorAll(".direction-tab").forEach(tab => tab.classList.toggle("active", tab === button));
       });
     });
 
-    const totalStops = routeData[state.selectedDirection].reduce((sum, sequence) => sum + sequence.stops.length, 0);
-    message.textContent = `${totalStops} stops loaded across ${routeData[state.selectedDirection].length} ${routeData[state.selectedDirection].length === 1 ? "route pattern" : "route patterns"}.`;
+    updateStopsMessage(routeData[state.selectedDirection], !forceRefresh && Boolean(readStoredStops(selectedRoute)));
     renderStopSequences(routeData[state.selectedDirection]);
   } catch (error) {
-    message.textContent = `Could not load stops: ${error.message}. Check the TfL API key and try again.`;
+    if (error.status === 429) {
+      message.textContent = "TfL is temporarily limiting requests. Please wait a minute, then press Refresh stops. Routes already opened on this device will continue to use the saved cache.";
+    } else {
+      message.textContent = `Could not load stops: ${error.message}. Please try Refresh stops shortly.`;
+    }
   }
+}
+
+function updateStopsMessage(sequences, cached) {
+  const totalStops = sequences.reduce((sum, sequence) => sum + sequence.stops.length, 0);
+  const suffix = cached ? " Saved route data was used to reduce TfL requests." : "";
+  el("apiMessage").textContent = `${totalStops} stops loaded across ${sequences.length} ${sequences.length === 1 ? "route pattern" : "route patterns"}.${suffix}`;
 }
 
 function stopTitle(stop) {
