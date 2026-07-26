@@ -9,13 +9,7 @@ const state = {
   selected: null,
   selectedDirection: "outbound",
   routeStopsCache: new Map(),
-  advancedFilters: {
-    operator: "",
-    garage: "",
-    routeType: "",
-    vehicleType: "",
-    powerType: ""
-  }
+  advancedFilters: { operator: "", garage: "", routeType: "", vehicleType: "", powerType: "" }
 };
 
 const el = id => document.getElementById(id);
@@ -51,24 +45,19 @@ function routeField(route, key) {
 }
 
 function matchesSelectedValue(route, key, selected) {
-  if (!selected) return true;
-  return normalise(routeField(route, key)) === normalise(selected);
+  return !selected || normalise(routeField(route, key)) === normalise(selected);
 }
 
 function getBaseRecords() {
-  return state.filter === "all"
-    ? [...state.data.current, ...state.data.withdrawn]
-    : [...state.data[state.filter]];
+  return state.filter === "all" ? [...state.data.current, ...state.data.withdrawn] : [...state.data[state.filter]];
 }
 
 function getRecords() {
   let records = getBaseRecords();
-
   if (state.query) {
     const q = normalise(state.query);
     records = records.filter(route => Object.values(route).some(value => normalise(value).includes(q)));
   }
-
   records = records.filter(route =>
     matchesSelectedValue(route, "operator", state.advancedFilters.operator) &&
     matchesSelectedValue(route, "garage", state.advancedFilters.garage) &&
@@ -76,7 +65,6 @@ function getRecords() {
     matchesSelectedValue(route, "vehicleType", state.advancedFilters.vehicleType) &&
     matchesSelectedValue(route, "powerType", state.advancedFilters.powerType)
   );
-
   records.sort((a, b) => {
     if (state.sort === "start") return normalise(a.Start || a["Former Start"]).localeCompare(normalise(b.Start || b["Former Start"]));
     if (state.sort === "destination") return normalise(a.Destination || a["Former Destination"]).localeCompare(normalise(b.Destination || b["Former Destination"]));
@@ -86,9 +74,7 @@ function getRecords() {
 }
 
 function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-  }[char]));
+  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
 }
 
 function renderList() {
@@ -99,7 +85,6 @@ function renderList() {
     list.innerHTML = '<p style="padding:20px;color:var(--muted)">No routes match the selected filters.</p>';
     return;
   }
-
   list.innerHTML = records.map((route, index) => {
     const start = route.Start || route["Former Start"] || "Unknown start";
     const destination = route.Destination || route["Former Destination"] || "Unknown destination";
@@ -110,7 +95,6 @@ function renderList() {
       <small>${escapeHtml(route.Operator || route["Final Operator"] || (route["Date Withdrawn"] ? "Withdrawn route" : "Operator not recorded"))}</small></span>
     </button>`;
   }).join("");
-
   list.querySelectorAll(".route-item").forEach(button => {
     button.addEventListener("click", () => {
       state.selected = records[Number(button.dataset.index)];
@@ -125,7 +109,7 @@ function fieldCards(route) {
   const ignored = new Set(["Route", "Image", "ImageAlt"]);
   return Object.entries(route)
     .filter(([key, value]) => !ignored.has(key) && String(value ?? "").trim())
-    .map(([key, value]) => `<div class="detail-card"><span>${escapeHtml(key)}</span><strong>${escapeHtml(value)}</strong></div>`)
+    .map(([key, value]) => `<div class="detail-card" data-field="${escapeHtml(key)}"><span>${escapeHtml(key)}</span><strong>${escapeHtml(value)}</strong></div>`)
     .join("");
 }
 
@@ -141,31 +125,24 @@ function renderDetail() {
   const start = route.Start || route["Former Start"] || "Unknown start";
   const destination = route.Destination || route["Former Destination"] || "Unknown destination";
   const imageStyle = route.Image ? `style="background-image:url('${encodeURI(route.Image)}')"` : "";
-
   el("routeDetail").className = "route-detail";
   el("routeDetail").innerHTML = `
     <div class="detail-hero">
       <div class="detail-copy">
         <p class="eyebrow">${current ? "Current route" : "Withdrawn route"}</p>
         <h2>${escapeHtml(route.Route)}</h2>
-        <p>${escapeHtml(start)} → ${escapeHtml(destination)}</p>
+        <p id="routeEndpoints">${escapeHtml(start)} → ${escapeHtml(destination)}</p>
         <span class="status-pill">${escapeHtml(route.Operator || route["Final Operator"] || "Operator not recorded")}</span>
       </div>
-      <div class="detail-image" ${imageStyle} role="img" aria-label="${escapeHtml(route.ImageAlt || `Route ${route.Route}`)}">
-        ${route.Image ? "" : `<span>${escapeHtml(route.Route)}</span>`}
-      </div>
+      <div class="detail-image" ${imageStyle} role="img" aria-label="${escapeHtml(route.ImageAlt || `Route ${route.Route}`)}">${route.Image ? "" : `<span>${escapeHtml(route.Route)}</span>`}</div>
     </div>
     <div class="detail-grid">${fieldCards(route)}</div>
     ${current ? `<div class="live-panel">
-      <div class="live-heading">
-        <div><h3>Route stops</h3><p>Official TfL stop sequences for route ${escapeHtml(route.Route)}.</p></div>
-        <button id="refreshStopsButton" type="button">Refresh stops</button>
-      </div>
+      <div class="live-heading"><div><h3>Route stops</h3><p>Official TfL stop sequences for route ${escapeHtml(route.Route)}.</p></div><button id="refreshStopsButton" type="button">Refresh stops</button></div>
       <div id="apiMessage" class="api-message" aria-live="polite">Loading stops…</div>
       <div id="directionTabs" class="direction-tabs" hidden></div>
       <div id="stopSequences" class="stop-sequences"></div>
     </div>` : ""}`;
-
   if (current) {
     el("refreshStopsButton").addEventListener("click", () => loadRouteStops(route.Route, true));
     loadRouteStops(route.Route);
@@ -218,9 +195,41 @@ function readStoredStops(routeId) {
 }
 
 function storeStops(routeId, routeData) {
-  try {
-    localStorage.setItem(`${CACHE_PREFIX}${routeId}`, JSON.stringify({ savedAt: Date.now(), data: routeData }));
-  } catch { /* In-memory cache still works. */ }
+  try { localStorage.setItem(`${CACHE_PREFIX}${routeId}`, JSON.stringify({ savedAt: Date.now(), data: routeData })); }
+  catch { /* In-memory cache still works. */ }
+}
+
+function mainSequence(routeData) {
+  const outbound = routeData.outbound || [];
+  const candidates = outbound.length ? outbound : (routeData.inbound || []);
+  return candidates.reduce((longest, sequence) => !longest || sequence.stops.length > longest.stops.length ? sequence : longest, null);
+}
+
+function updateFieldCard(field, value) {
+  document.querySelectorAll(".detail-card").forEach(card => {
+    if (card.dataset.field === field) {
+      const strong = card.querySelector("strong");
+      if (strong) strong.textContent = value;
+    }
+  });
+}
+
+function updateRouteEndpointsFromTfL(routeData) {
+  const route = state.selected;
+  const sequence = mainSequence(routeData);
+  if (!route || !sequence?.stops?.length) return;
+  let first = sequence.stops[0];
+  let last = sequence.stops[sequence.stops.length - 1];
+  if (!routeData.outbound?.length && routeData.inbound?.length) [first, last] = [last, first];
+  const start = stopTitle(first);
+  const destination = stopTitle(last);
+  route.Start = start;
+  route.Destination = destination;
+  const endpoints = el("routeEndpoints");
+  if (endpoints) endpoints.textContent = `${start} → ${destination}`;
+  updateFieldCard("Start", start);
+  updateFieldCard("Destination", destination);
+  renderList();
 }
 
 async function loadRouteStops(routeId, forceRefresh = false) {
@@ -229,11 +238,9 @@ async function loadRouteStops(routeId, forceRefresh = false) {
   const container = el("stopSequences");
   const tabs = el("directionTabs");
   if (!message || !container || !tabs) return;
-
-  message.textContent = forceRefresh ? "Refreshing stops from TfL…" : "Loading stops…";
+  message.textContent = forceRefresh ? "Refreshing stops and endpoints from TfL…" : "Loading stops and endpoints…";
   container.innerHTML = "";
   tabs.hidden = true;
-
   try {
     let routeData = !forceRefresh ? state.routeStopsCache.get(selectedRoute) : null;
     if (!routeData && !forceRefresh) routeData = readStoredStops(selectedRoute);
@@ -242,15 +249,12 @@ async function loadRouteStops(routeId, forceRefresh = false) {
       routeData = { outbound: normaliseSequences(data, "outbound"), inbound: normaliseSequences(data, "inbound") };
       state.routeStopsCache.set(selectedRoute, routeData);
       storeStops(selectedRoute, routeData);
-    } else {
-      state.routeStopsCache.set(selectedRoute, routeData);
-    }
-
+    } else state.routeStopsCache.set(selectedRoute, routeData);
     if (!state.selected || String(state.selected.Route) !== selectedRoute) return;
     const availableDirections = ["outbound", "inbound"].filter(direction => routeData[direction]?.length);
     if (!availableDirections.length) throw new Error("TfL did not return a stop sequence for this route");
+    updateRouteEndpointsFromTfL(routeData);
     if (!availableDirections.includes(state.selectedDirection)) state.selectedDirection = availableDirections[0];
-
     tabs.hidden = false;
     tabs.innerHTML = availableDirections.map(direction => `<button class="direction-tab${state.selectedDirection === direction ? " active" : ""}" data-direction="${direction}" type="button">${direction === "outbound" ? "Outbound" : "Inbound"}</button>`).join("");
     tabs.querySelectorAll(".direction-tab").forEach(button => {
@@ -265,20 +269,18 @@ async function loadRouteStops(routeId, forceRefresh = false) {
     renderStopSequences(routeData[state.selectedDirection]);
   } catch (error) {
     message.textContent = error.status === 429
-      ? "TfL is temporarily limiting requests. Please wait a minute, then press Refresh stops. Routes already opened on this device will continue to use the saved cache."
-      : `Could not load stops: ${error.message}. Please try Refresh stops shortly.`;
+      ? "TfL is temporarily limiting requests. Your saved start and destination will be used until TfL is available."
+      : `Could not load TfL stops or endpoints: ${error.message}. Your saved route details are still shown.`;
   }
 }
 
 function updateStopsMessage(sequences, cached) {
   const totalStops = sequences.reduce((sum, sequence) => sum + sequence.stops.length, 0);
-  const suffix = cached ? " Saved route data was used to reduce TfL requests." : "";
-  el("apiMessage").textContent = `${totalStops} stops loaded across ${sequences.length} ${sequences.length === 1 ? "route pattern" : "route patterns"}.${suffix}`;
+  const suffix = cached ? " Saved TfL data was used to reduce requests." : "";
+  el("apiMessage").textContent = `${totalStops} stops loaded. Start and destination updated from TfL.${suffix}`;
 }
 
-function stopTitle(stop) {
-  return stop.name || stop.commonName || stop.id || "Unknown stop";
-}
+function stopTitle(stop) { return stop?.name || stop?.commonName || stop?.id || "Unknown stop"; }
 
 function renderStopSequences(sequences) {
   const container = el("stopSequences");
@@ -291,11 +293,7 @@ function renderStopSequences(sequences) {
       <div class="sequence-heading"><div><span class="sequence-label">${escapeHtml(sequence.serviceType)} · ${sequence.stops.length} stops</span><h4>${escapeHtml(title)}</h4></div></div>
       <ol class="stop-list">${sequence.stops.map((stop, index) => `<li>
         <span class="stop-marker" aria-hidden="true"></span>
-        <div class="stop-copy"><strong>${escapeHtml(stopTitle(stop))}</strong><small>${escapeHtml([
-          stop.stopLetter ? `Stop ${stop.stopLetter}` : "",
-          stop.towards ? `Towards ${stop.towards}` : "",
-          stop.id || ""
-        ].filter(Boolean).join(" · "))}</small></div>
+        <div class="stop-copy"><strong>${escapeHtml(stopTitle(stop))}</strong><small>${escapeHtml([stop.stopLetter ? `Stop ${stop.stopLetter}` : "", stop.towards ? `Towards ${stop.towards}` : "", stop.id || ""].filter(Boolean).join(" · "))}</small></div>
         <span class="stop-number">${index + 1}</span>
       </li>`).join("")}</ol>
     </section>`;
@@ -351,7 +349,6 @@ async function init() {
 el("searchButton").addEventListener("click", applySearch);
 el("searchInput").addEventListener("keydown", event => { if (event.key === "Enter") applySearch(); });
 el("searchInput").addEventListener("input", () => { state.query = el("searchInput").value.trim(); renderList(); });
-
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
@@ -362,14 +359,7 @@ document.querySelectorAll(".filter").forEach(button => {
     renderEmptyDetail();
   });
 });
-
-const filterBindings = {
-  operatorFilter: "operator",
-  garageFilter: "garage",
-  routeTypeFilter: "routeType",
-  vehicleTypeFilter: "vehicleType",
-  powerTypeFilter: "powerType"
-};
+const filterBindings = { operatorFilter: "operator", garageFilter: "garage", routeTypeFilter: "routeType", vehicleTypeFilter: "vehicleType", powerTypeFilter: "powerType" };
 Object.entries(filterBindings).forEach(([id, key]) => {
   el(id).addEventListener("change", event => {
     state.advancedFilters[key] = event.target.value;
@@ -378,12 +368,10 @@ Object.entries(filterBindings).forEach(([id, key]) => {
     renderEmptyDetail();
   });
 });
-
 el("clearFiltersButton").addEventListener("click", clearAdvancedFilters);
 el("sortSelect").addEventListener("change", event => { state.sort = event.target.value; renderList(); });
 el("themeButton").addEventListener("click", () => {
   document.body.classList.toggle("dark");
   el("themeButton").textContent = document.body.classList.contains("dark") ? "Light mode" : "Dark mode";
 });
-
 init();
