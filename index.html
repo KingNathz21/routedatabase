@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Search current and withdrawn London bus routes with live TfL information.">
+  <title>London Bus Route Archive</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#" aria-label="London Bus Route Archive home">
+        <span class="roundel" aria-hidden="true"><span></span></span>
+        <span>London Bus Route Archive</span>
+      </a>
+      <button id="themeButton" class="ghost-button" type="button">Dark mode</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">London route database</p>
+        <h1>Find a London bus route</h1>
+        <p class="hero-copy">Search the archive, compare route details and load live TfL route information.</p>
+      </div>
+      <div class="search-panel">
+        <label for="searchInput">Route number or place</label>
+        <div class="search-row">
+          <input id="searchInput" type="search" placeholder="Try 1, N1, Hampstead or Canada Water" autocomplete="off">
+          <button id="searchButton" type="button">Search</button>
+        </div>
+        <div class="filters" role="group" aria-label="Route filters">
+          <button class="filter active" data-filter="current" type="button">Current</button>
+          <button class="filter" data-filter="withdrawn" type="button">Withdrawn</button>
+          <button class="filter" data-filter="all" type="button">All</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="Database summary">
+      <article><strong id="currentCount">0</strong><span>Current routes</span></article>
+      <article><strong id="withdrawnCount">0</strong><span>Withdrawn routes</span></article>
+      <article><strong id="resultCount">0</strong><span>Results shown</span></article>
+    </section>
+
+    <section class="content-layout">
+      <aside class="route-list-panel">
+        <div class="panel-heading">
+          <h2>Routes</h2>
+          <select id="sortSelect" aria-label="Sort routes">
+            <option value="route">Route number</option>
+            <option value="start">Starting point</option>
+            <option value="destination">Destination</option>
+          </select>
+        </div>
+        <div id="routeList" class="route-list" aria-live="polite"></div>
+      </aside>
+
+      <section id="routeDetail" class="route-detail empty-state">
+        <div>
+          <span class="large-roundel">BUS</span>
+          <h2>Select a route</h2>
+          <p>Choose a route from the list to view its full information.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>Unofficial London bus route archive. Live information supplied by Transport for London.</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
