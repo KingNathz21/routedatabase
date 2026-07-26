@@ -1,0 +1,29 @@
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 10px;
+  flex: 0 0 auto;
+}
+
+.empty-logo {
+  display: block;
+  width: min(150px, 42vw);
+  height: auto;
+  margin: 0 auto 18px;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 520px) {
+  .brand {
+    gap: 9px;
+    font-size: .94rem;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+}
