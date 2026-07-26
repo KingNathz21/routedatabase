@@ -1,0 +1,71 @@
+.advanced-filters {
+  margin: 0 0 20px;
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.advanced-filter-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.advanced-filter-heading .eyebrow {
+  margin: 0 0 4px;
+  color: var(--red);
+}
+
+.advanced-filter-heading h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.filter-grid label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.filter-grid select {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: .92rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.filter-grid select:focus {
+  outline: 3px solid rgba(0, 25, 168, .16);
+  border-color: var(--blue);
+}
+
+@media (max-width: 1050px) {
+  .filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .advanced-filter-heading { align-items: stretch; flex-direction: column; }
+  .advanced-filter-heading button { width: 100%; }
+  .filter-grid { grid-template-columns: 1fr; }
+}
