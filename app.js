@@ -1,10 +1,11 @@
-
 const state = {
   data: { current: [], withdrawn: [] },
   filter: "current",
   query: "",
   sort: "route",
-  selected: null
+  selected: null,
+  selectedDirection: "outbound",
+  routeStopsCache: new Map()
 };
 
 const el = id => document.getElementById(id);
@@ -49,6 +50,7 @@ function renderList() {
     list.innerHTML = '<p style="padding:20px;color:var(--muted)">No matching routes found.</p>';
     return;
   }
+
   list.innerHTML = records.map((route, index) => {
     const start = route.Start || route["Former Start"] || "Unknown start";
     const destination = route.Destination || route["Former Destination"] || "Unknown destination";
@@ -63,6 +65,7 @@ function renderList() {
   list.querySelectorAll(".route-item").forEach(button => {
     button.addEventListener("click", () => {
       state.selected = records[Number(button.dataset.index)];
+      state.selectedDirection = "outbound";
       renderList();
       renderDetail();
     });
@@ -90,6 +93,7 @@ function renderDetail() {
   const start = route.Start || route["Former Start"] || "Unknown start";
   const destination = route.Destination || route["Former Destination"] || "Unknown destination";
   const imageStyle = route.Image ? `style="background-image:url('${encodeURI(route.Image)}')"` : "";
+
   el("routeDetail").className = "route-detail";
   el("routeDetail").innerHTML = `
     <div class="detail-hero">
@@ -105,14 +109,23 @@ function renderDetail() {
     </div>
     <div class="detail-grid">${fieldCards(route)}</div>
     ${current ? `<div class="live-panel">
-      <h3>Live TfL route information</h3>
-      <p>Load the official stop sequence and current line status for route ${escapeHtml(route.Route)}.</p>
-      <button id="loadLiveButton" type="button">Load TfL data</button>
-      <div id="apiMessage" class="api-message"></div>
-      <ol id="stopList" class="stop-list"></ol>
+      <div class="live-heading">
+        <div>
+          <h3>Route stops</h3>
+          <p>Official TfL stop sequences for route ${escapeHtml(route.Route)}.</p>
+        </div>
+        <button id="refreshStopsButton" type="button">Refresh stops</button>
+      </div>
+      <div id="apiMessage" class="api-message" aria-live="polite">Loading stops…</div>
+      <div id="directionTabs" class="direction-tabs" hidden></div>
+      <div id="stopSequences" class="stop-sequences"></div>
     </div>` : ""}
   `;
-  if (current) el("loadLiveButton").addEventListener("click", () => loadLiveData(route.Route));
+
+  if (current) {
+    el("refreshStopsButton").addEventListener("click", () => loadRouteStops(route.Route, true));
+    loadRouteStops(route.Route);
+  }
 }
 
 async function tflFetch(path) {
@@ -124,23 +137,124 @@ async function tflFetch(path) {
   return response.json();
 }
 
-async function loadLiveData(routeId) {
+function normaliseSequences(data, direction) {
+  const sequences = Array.isArray(data?.stopPointSequences) ? data.stopPointSequences : [];
+  return sequences
+    .filter(sequence => !direction || normalise(sequence.direction) === direction)
+    .map((sequence, index) => ({
+      id: `${direction}-${sequence.branchId ?? index}`,
+      direction: normalise(sequence.direction) || direction,
+      branchId: sequence.branchId ?? index,
+      serviceType: sequence.serviceType || "Regular",
+      stops: Array.isArray(sequence.stopPoint) ? sequence.stopPoint : []
+    }))
+    .filter(sequence => sequence.stops.length);
+}
+
+async function fetchDirection(routeId, direction) {
+  const data = await tflFetch(`/Line/${encodeURIComponent(routeId)}/Route/Sequence/${direction}?serviceTypes=Regular&excludeCrowding=true`);
+  return normaliseSequences(data, direction);
+}
+
+async function loadRouteStops(routeId, forceRefresh = false) {
+  const selectedRoute = String(routeId);
   const message = el("apiMessage");
-  const list = el("stopList");
-  message.textContent = "Loading TfL data…";
-  list.innerHTML = "";
+  const container = el("stopSequences");
+  const tabs = el("directionTabs");
+  if (!message || !container || !tabs) return;
+
+  message.textContent = "Loading stops from TfL…";
+  container.innerHTML = "";
+  tabs.hidden = true;
+
   try {
-    const [sequence, status] = await Promise.all([
-      tflFetch(`/Line/${encodeURIComponent(routeId)}/Route/Sequence/all?serviceTypes=Regular&excludeCrowding=true`),
-      tflFetch(`/Line/${encodeURIComponent(routeId)}/Status?detail=true`)
-    ]);
-    const stops = sequence.stopPointSequences?.[0]?.stopPoint || sequence.stations || [];
-    const statusText = status?.[0]?.lineStatuses?.[0]?.statusSeverityDescription || "No status supplied";
-    message.textContent = `${statusText}. ${stops.length} stops loaded.`;
-    list.innerHTML = stops.map(stop => `<li>${escapeHtml(stop.name || stop.commonName || stop.id)}</li>`).join("");
+    let routeData = state.routeStopsCache.get(selectedRoute);
+    if (!routeData || forceRefresh) {
+      const results = await Promise.allSettled([
+        fetchDirection(selectedRoute, "outbound"),
+        fetchDirection(selectedRoute, "inbound")
+      ]);
+
+      routeData = {
+        outbound: results[0].status === "fulfilled" ? results[0].value : [],
+        inbound: results[1].status === "fulfilled" ? results[1].value : []
+      };
+
+      if (!routeData.outbound.length && !routeData.inbound.length) {
+        const fallback = await tflFetch(`/Line/${encodeURIComponent(selectedRoute)}/Route/Sequence/all?serviceTypes=Regular&excludeCrowding=true`);
+        routeData.outbound = normaliseSequences(fallback, "outbound");
+        routeData.inbound = normaliseSequences(fallback, "inbound");
+      }
+      state.routeStopsCache.set(selectedRoute, routeData);
+    }
+
+    if (!state.selected || String(state.selected.Route) !== selectedRoute) return;
+
+    const availableDirections = ["outbound", "inbound"].filter(direction => routeData[direction]?.length);
+    if (!availableDirections.length) throw new Error("TfL did not return a stop sequence for this route");
+    if (!availableDirections.includes(state.selectedDirection)) state.selectedDirection = availableDirections[0];
+
+    tabs.hidden = false;
+    tabs.innerHTML = availableDirections.map(direction => {
+      const label = direction === "outbound" ? "Outbound" : "Inbound";
+      const active = state.selectedDirection === direction ? " active" : "";
+      return `<button class="direction-tab${active}" data-direction="${direction}" type="button">${label}</button>`;
+    }).join("");
+
+    tabs.querySelectorAll(".direction-tab").forEach(button => {
+      button.addEventListener("click", () => {
+        state.selectedDirection = button.dataset.direction;
+        renderStopSequences(routeData[state.selectedDirection]);
+        tabs.querySelectorAll(".direction-tab").forEach(tab => tab.classList.toggle("active", tab === button));
+      });
+    });
+
+    const totalStops = routeData[state.selectedDirection].reduce((sum, sequence) => sum + sequence.stops.length, 0);
+    message.textContent = `${totalStops} stops loaded across ${routeData[state.selectedDirection].length} ${routeData[state.selectedDirection].length === 1 ? "route pattern" : "route patterns"}.`;
+    renderStopSequences(routeData[state.selectedDirection]);
   } catch (error) {
-    message.textContent = `Could not load TfL data: ${error.message}. Check the route number, internet connection and API configuration.`;
+    message.textContent = `Could not load stops: ${error.message}. Check the TfL API key and try again.`;
   }
+}
+
+function stopTitle(stop) {
+  return stop.name || stop.commonName || stop.id || "Unknown stop";
+}
+
+function renderStopSequences(sequences) {
+  const container = el("stopSequences");
+  if (!container) return;
+
+  container.innerHTML = sequences.map((sequence, sequenceIndex) => {
+    const first = sequence.stops[0];
+    const last = sequence.stops[sequence.stops.length - 1];
+    const title = sequences.length > 1
+      ? `Pattern ${sequenceIndex + 1}: ${stopTitle(first)} to ${stopTitle(last)}`
+      : `${stopTitle(first)} to ${stopTitle(last)}`;
+
+    return `<section class="stop-sequence-card">
+      <div class="sequence-heading">
+        <div>
+          <span class="sequence-label">${escapeHtml(sequence.serviceType)} · ${sequence.stops.length} stops</span>
+          <h4>${escapeHtml(title)}</h4>
+        </div>
+      </div>
+      <ol class="stop-list">
+        ${sequence.stops.map((stop, index) => `<li>
+          <span class="stop-marker" aria-hidden="true"></span>
+          <div class="stop-copy">
+            <strong>${escapeHtml(stopTitle(stop))}</strong>
+            <small>${escapeHtml([
+              stop.stopLetter ? `Stop ${stop.stopLetter}` : "",
+              stop.towards ? `Towards ${stop.towards}` : "",
+              stop.id || ""
+            ].filter(Boolean).join(" · "))}</small>
+          </div>
+          <span class="stop-number">${index + 1}</span>
+        </li>`).join("")}
+      </ol>
+    </section>`;
+  }).join("");
 }
 
 function applySearch() {
