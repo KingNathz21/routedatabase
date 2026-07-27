@@ -41,14 +41,14 @@
       "Final Operator",
       "Garage",
       "Final Garage",
-      "Route Type",
-      "PVR"
+      "Route Type"
     ];
 
-    preferredOrder.forEach(field => {
-      const card = cards.find(item => item.dataset.field === field);
-      if (card) grid.appendChild(card);
-    });
+    const preferredCards = preferredOrder
+      .map(field => cards.find(item => item.dataset.field === field))
+      .filter(Boolean);
+    const remainingCards = cards.filter(card => !preferredCards.includes(card));
+    [...preferredCards, ...remainingCards].forEach(card => grid.appendChild(card));
 
     const badgeLabels = {
       Start: "Start point",
@@ -109,17 +109,17 @@
 
     organiseInformationCards(grid);
 
+    const viaSection = buildViaSection(route);
+    const destinationCard = grid.querySelector('.detail-card[data-field="Destination"], .detail-card[data-field="Former Destination"]');
+    if (destinationCard) destinationCard.insertAdjacentElement("afterend", viaSection);
+    else heading.insertAdjacentElement("afterend", viaSection);
+
     const pvr = String(routeExtras(route).PVR ?? route.PVR ?? "Not yet recorded").trim();
     const pvrCard = document.createElement("div");
     pvrCard.className = "detail-card route-pvr-card";
     pvrCard.dataset.field = "PVR";
     pvrCard.innerHTML = `<span>PVR</span><strong>${escapeHtml(pvr)}</strong><span class="detail-card-badge">Vehicles</span>`;
     grid.appendChild(pvrCard);
-
-    const viaSection = buildViaSection(route);
-    const destinationCard = grid.querySelector('.detail-card[data-field="Destination"], .detail-card[data-field="Former Destination"]');
-    if (destinationCard) destinationCard.insertAdjacentElement("afterend", viaSection);
-    else grid.insertBefore(viaSection, grid.querySelector(".detail-card"));
   }
 
   function makeStopsCollapsible() {
