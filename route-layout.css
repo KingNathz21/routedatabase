@@ -1,101 +1,81 @@
 .api-message[hidden] { display: none !important; }
 
-.route-information-heading {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 4px 2px 8px;
-}
-
-.route-information-heading h3 {
-  margin: 4px 0 0;
-  font-size: 1.7rem;
-}
-
-.route-information-badge,
-.detail-card-badge,
-.via-badge {
-  flex: 0 0 auto;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: var(--red);
-  color: #fff;
-  font-size: .76rem;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.detail-card {
-  position: relative;
-  padding-top: 45px !important;
-}
-
-.detail-card > span:first-child {
-  position: absolute;
-  top: 17px;
-  left: 18px;
-}
-
-.detail-card-badge {
-  position: absolute;
-  top: 13px;
-  right: 14px;
-}
-
-.via-section {
-  grid-column: 1 / -1;
-  margin: 4px 0 8px;
+.route-information-section {
+  margin: 20px;
   padding: 24px;
   border: 1px solid var(--border);
-  border-left: 6px solid var(--red);
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--card);
   box-shadow: var(--shadow);
 }
 
-.via-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+.route-information-title {
   margin-bottom: 18px;
 }
 
-.via-heading h3 {
-  margin: 4px 0 5px;
-  font-size: 1.65rem;
+.route-information-title h3 {
+  margin: 4px 0 0;
+  font-size: 1.8rem;
 }
 
-.via-heading p {
-  margin: 0;
+.route-information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.route-info-card {
+  min-width: 0;
+  padding: 17px 18px;
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--red);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.route-info-card strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.route-info-label {
+  display: block;
   color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
-.via-list {
-  position: relative;
+.route-info-via {
+  grid-column: 1 / -1;
+}
+
+.route-via-list {
   list-style: none;
-  margin: 0;
+  margin: 14px 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
   gap: 10px;
 }
 
-.via-list li {
+.route-via-list li {
   position: relative;
   min-height: 48px;
   display: flex;
   align-items: center;
   padding: 11px 13px 11px 38px;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--paper);
+  border-radius: 11px;
+  background: var(--card);
   font-weight: 800;
+  line-height: 1.2;
 }
 
-.via-list li::before {
+.route-via-list li::before {
   content: "";
   position: absolute;
   left: 14px;
@@ -106,24 +86,30 @@
   background: var(--card);
 }
 
-.via-empty {
-  display: grid;
-  gap: 5px;
-  margin: 0;
-  padding: 15px;
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  background: var(--paper);
+.route-info-operator {
+  display: flex;
+  min-height: 105px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.operator-logo {
+  display: block;
+  width: min(100%, 230px);
+  max-height: 72px;
+  margin-top: 10px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.route-info-empty {
+  margin: 10px 0 0;
   color: var(--muted);
 }
 
-.via-empty strong { color: var(--ink); }
-.via-empty code { font-weight: 800; }
-
-.via-source {
-  display: block;
-  margin-top: 12px;
-  color: var(--muted);
+.route-info-empty code {
+  font-weight: 800;
+  color: var(--ink);
 }
 
 .full-stops-details {
@@ -165,11 +151,11 @@
 .full-stops-details .direction-tabs { padding: 0 16px; }
 .full-stops-details .stop-sequences { padding: 0 16px 16px; }
 
-@media (max-width: 600px) {
-  .route-information-heading,
-  .via-heading { flex-direction: column; }
-  .via-section { padding: 18px; }
-  .via-list { grid-template-columns: 1fr; }
+@media (max-width: 700px) {
+  .route-information-section { margin: 14px; padding: 18px; }
+  .route-information-grid { grid-template-columns: 1fr; }
+  .route-info-via { grid-column: auto; }
+  .route-via-list { grid-template-columns: 1fr; }
   .full-stops-details .direction-tabs,
   .full-stops-details .stop-sequences { padding-left: 10px; padding-right: 10px; }
 }
