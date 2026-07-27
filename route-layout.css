@@ -1,7 +1,52 @@
 .api-message[hidden] { display: none !important; }
 
+.route-information-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 2px 8px;
+}
+
+.route-information-heading h3 {
+  margin: 4px 0 0;
+  font-size: 1.7rem;
+}
+
+.route-information-badge,
+.detail-card-badge,
+.via-badge {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: .76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.detail-card {
+  position: relative;
+  padding-top: 45px !important;
+}
+
+.detail-card > span:first-child {
+  position: absolute;
+  top: 17px;
+  left: 18px;
+}
+
+.detail-card-badge {
+  position: absolute;
+  top: 13px;
+  right: 14px;
+}
+
 .via-section {
-  margin-top: 20px;
+  grid-column: 1 / -1;
+  margin: 4px 0 8px;
   padding: 24px;
   border: 1px solid var(--border);
   border-left: 6px solid var(--red);
@@ -26,16 +71,6 @@
 .via-heading p {
   margin: 0;
   color: var(--muted);
-}
-
-.via-badge {
-  flex: 0 0 auto;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: var(--red);
-  color: #fff;
-  font-size: .78rem;
-  font-weight: 900;
 }
 
 .via-list {
@@ -72,6 +107,8 @@
 }
 
 .via-empty {
+  display: grid;
+  gap: 5px;
   margin: 0;
   padding: 15px;
   border: 1px dashed var(--border);
@@ -79,6 +116,9 @@
   background: var(--paper);
   color: var(--muted);
 }
+
+.via-empty strong { color: var(--ink); }
+.via-empty code { font-weight: 800; }
 
 .via-source {
   display: block;
@@ -126,8 +166,9 @@
 .full-stops-details .stop-sequences { padding: 0 16px 16px; }
 
 @media (max-width: 600px) {
-  .via-section { padding: 18px; }
+  .route-information-heading,
   .via-heading { flex-direction: column; }
+  .via-section { padding: 18px; }
   .via-list { grid-template-columns: 1fr; }
   .full-stops-details .direction-tabs,
   .full-stops-details .stop-sequences { padding-left: 10px; padding-right: 10px; }
