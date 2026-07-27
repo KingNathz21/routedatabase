@@ -12,10 +12,60 @@
   }
 
   function removeDuplicateCards() {
-    const hiddenFields = new Set(["Number of Stops", "Via", "PVR"]);
+    const hiddenFields = new Set(["Number of Stops", "Via", "PVR", "Images"]);
     document.querySelectorAll(".detail-card").forEach(card => {
       if (hiddenFields.has(card.dataset.field)) card.remove();
     });
+  }
+
+  function renderViaItems(items, source = "saved") {
+    const list = document.getElementById("routeViaList");
+    const empty = document.getElementById("routeViaEmpty");
+    const note = document.getElementById("routeViaSource");
+    if (!list || !empty) return;
+
+    if (!items.length) {
+      list.hidden = true;
+      list.innerHTML = "";
+      empty.hidden = false;
+      empty.textContent = "Loading key places from the live TfL stop sequence…";
+      if (note) note.textContent = "";
+      return;
+    }
+
+    list.innerHTML = items.map(place => `<li>${escapeHtml(place)}</li>`).join("");
+    list.hidden = false;
+    empty.hidden = true;
+    if (note) note.textContent = source === "tfl" ? "Generated from the current TfL stop sequence" : "Saved route information";
+  }
+
+  function deriveViaFromRenderedStops() {
+    const stopNames = [...document.querySelectorAll("#stopSequences .stop-copy strong")]
+      .map(item => item.textContent.trim())
+      .filter(Boolean)
+      .filter((name, index, array) => array.indexOf(name) === index);
+
+    if (stopNames.length < 3) return;
+
+    const middle = stopNames.slice(1, -1);
+    const maximum = Math.min(7, middle.length);
+    const selected = [];
+
+    for (let index = 0; index < maximum; index += 1) {
+      const position = Math.round(index * (middle.length - 1) / Math.max(1, maximum - 1));
+      const place = middle[position];
+      if (place && !selected.includes(place)) selected.push(place);
+    }
+
+    if (selected.length) renderViaItems(selected, "tfl");
+  }
+
+  function watchTfLStops() {
+    const stops = document.getElementById("stopSequences");
+    if (!stops) return;
+    const observer = new MutationObserver(() => deriveViaFromRenderedStops());
+    observer.observe(stops, { childList: true, subtree: true });
+    deriveViaFromRenderedStops();
   }
 
   function addRouteInformation(route) {
@@ -30,19 +80,25 @@
     pvrCard.innerHTML = `<span>PVR</span><strong>${escapeHtml(pvr)}</strong>`;
     grid.appendChild(pvrCard);
 
-    const via = listItems(route.Via);
+    const savedVia = listItems(route.Via);
     const viaSection = document.createElement("section");
     viaSection.className = "via-section";
+    viaSection.setAttribute("aria-labelledby", "routeViaHeading");
     viaSection.innerHTML = `
       <div class="via-heading">
-        <span class="eyebrow">Route information</span>
-        <h3>Via</h3>
+        <div>
+          <span class="eyebrow">Route information</span>
+          <h3 id="routeViaHeading">Via</h3>
+          <p>Key places served between the start and destination.</p>
+        </div>
+        <span class="via-badge">Key stops</span>
       </div>
-      ${via.length
-        ? `<ul>${via.map(place => `<li>${escapeHtml(place)}</li>`).join("")}</ul>`
-        : '<p class="via-empty">Via points have not yet been added for this route.</p>'}
+      <ol id="routeViaList" class="via-list" ${savedVia.length ? "" : "hidden"}></ol>
+      <p id="routeViaEmpty" class="via-empty" ${savedVia.length ? "hidden" : ""}>Loading key places from the live TfL stop sequence…</p>
+      <small id="routeViaSource" class="via-source"></small>
     `;
     grid.insertAdjacentElement("afterend", viaSection);
+    renderViaItems(savedVia);
   }
 
   function makeStopsCollapsible() {
@@ -82,6 +138,7 @@
     if (!route) return;
     addRouteInformation(route);
     makeStopsCollapsible();
+    watchTfLStops();
   }
 
   renderDetail = function () {
