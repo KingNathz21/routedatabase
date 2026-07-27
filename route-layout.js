@@ -12,6 +12,14 @@
     });
   }
 
+  function renameField(grid, field, label) {
+    grid.querySelectorAll(".detail-card").forEach(card => {
+      if (card.dataset.field !== field) return;
+      const fieldLabel = card.querySelector("span");
+      if (fieldLabel) fieldLabel.textContent = label;
+    });
+  }
+
   function infoCard(label, content, className = "") {
     return `<article class="route-info-card ${className}"><span class="route-info-label">${escapeHtml(label)}</span>${content}</article>`;
   }
@@ -92,8 +100,10 @@
     removeFields(grid, new Set([
       "Start", "Former Start", "Destination", "Former Destination",
       "Via", "Operator", "Final Operator", "OperatorLogo", "OperatorLogoAlt",
-      "PVR", "Images", "Image", "ImageAlt", "Number of Stops"
+      "PVR", "Images", "Image", "ImageAlt", "Number of Stops",
+      "Off-Peak Frequency", "Evening Frequency"
     ]));
+    renameField(grid, "Peak Frequency", "Frequency");
 
     hero.insertAdjacentElement("afterend", buildRouteInformation(route));
     makeStopsCollapsible();
