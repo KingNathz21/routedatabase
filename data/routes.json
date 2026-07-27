@@ -19,24 +19,40 @@
       "Vehicle Type (Single/Double Deck)": "Double deck",
       "Power Type": "Hybrid",
       "Previous Route Number": "n/a",
-      "Notes": "Fandom route page checked; route operates daily.",
-      "PVR": "17",
+      "Notes": "",
+      "PVR": "23",
       "Via": [
-        "Rosslyn Hill",
-        "Hawley Road",
-        "British Library",
-        "Waterloo Bridge / South Bank",
-        "Bricklayer's Arms / New Kent Road",
-        "Anchor Street",
-        "Gomm Road"
+        "South Bermondsey",
+        "Elephant & Castle",
+        "Waterloo",
+        "Holborn",
+        "Euston",
+        "Camden Town",
+        "Chalk Farm"
       ],
       "Images": [
         {
           "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/1/17/1_CW.jpeg/revision/latest/scale-to-width-down/1000?cb=20250727165656",
-          "alt": "London bus route 1"
-        }
+          "alt": "Route 1 - Gemini 3"
+        },
+          {
+    "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/7/7c/1_bus_route.jpeg/revision/latest?cb=20250708115939",
+    "alt": "Route 1 - E400MMC"
+  },
+    {
+    "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/2/24/Lg-MHV19_on_1.jpg/revision/latest/scale-to-width-down/1000?cb=20231105000513",
+    "alt": "Route 1 - Evoseti"
+  },
+    {
+    "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/4/4a/1.png/revision/latest/scale-to-width-down/1000?cb=20150725011024g",
+    "alt": "Route 1 near Waterloo"
+  },
+    {
+    "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/4/4b/London_Bus_1_%28Leyland_Titan_by_Ian_Armstrong%29.jpg/revision/latest/scale-to-width-down/1000?cb=20210224185513",
+    "alt": "Route 1 near Waterloo"
+  }
       ],
-      "OperatorLogo": "images/operators/go-ahead-london.svg",
+      "OperatorLogo": "assets/operators/go-ahead-london.png",
       "OperatorLogoAlt": "Go-Ahead London"
     },
     {
