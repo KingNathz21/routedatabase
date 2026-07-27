@@ -1,8 +1,16 @@
 (() => {
   const previousRenderDetail = renderDetail;
 
+  function routeExtras(route) {
+    return window.ROUTE_INFO?.[String(route.Route)] || {};
+  }
+
   function normaliseGallery(route) {
-    const raw = Array.isArray(route.Images) ? route.Images : [];
+    const extras = routeExtras(route);
+    const raw = Array.isArray(extras.Images)
+      ? extras.Images
+      : (Array.isArray(route.Images) ? route.Images : []);
+
     const images = raw.map((item, index) => {
       if (typeof item === "string") {
         return { src: item.trim(), alt: `Route ${route.Route} photo ${index + 1}` };
@@ -38,7 +46,7 @@
           <span class="gallery-empty-route">${escapeHtml(route.Route)}</span>
           <div>
             <strong>Route photos coming soon</strong>
-            <small>Add image links to the route's <code>Images</code> list in <code>data/routes.json</code>.</small>
+            <small>Add image paths to this route's <code>Images</code> list in <code>routes.js</code>.</small>
           </div>
         </div>
       `;
