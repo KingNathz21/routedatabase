@@ -1,0 +1,34 @@
+name: Migrate route data to JSON fields
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/migrate-route-data.yml'
+      - '.github/scripts/migrate-route-data.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Migrate data/routes.json
+        run: node .github/scripts/migrate-route-data.mjs
+
+      - name: Commit migrated route data
+        run: |
+          if git diff --quiet -- data/routes.json; then
+            echo "No route data changes were needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/routes.json
+          git commit -m "Store route extras in data/routes.json"
+          git push
