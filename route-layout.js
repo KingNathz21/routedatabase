@@ -11,6 +11,10 @@
       .filter(Boolean);
   }
 
+  function routeExtras(route) {
+    return window.ROUTE_INFO?.[String(route.Route)] || {};
+  }
+
   function removeDuplicateCards() {
     const hiddenFields = new Set(["Number of Stops", "Via", "PVR", "Images"]);
     document.querySelectorAll(".detail-card").forEach(card => {
@@ -18,73 +22,58 @@
     });
   }
 
-  function renderViaItems(items, source = "saved") {
-    const list = document.getElementById("routeViaList");
-    const empty = document.getElementById("routeViaEmpty");
-    const note = document.getElementById("routeViaSource");
-    if (!list || !empty) return;
-
-    if (!items.length) {
-      list.hidden = true;
-      list.innerHTML = "";
-      empty.hidden = false;
-      empty.textContent = "Loading key places from the live TfL stop sequence…";
-      if (note) note.textContent = "";
-      return;
-    }
-
-    list.innerHTML = items.map(place => `<li>${escapeHtml(place)}</li>`).join("");
-    list.hidden = false;
-    empty.hidden = true;
-    if (note) note.textContent = source === "tfl" ? "Generated from the current TfL stop sequence" : "Saved route information";
+  function addCardBadge(card, text) {
+    if (!card || card.querySelector(".detail-card-badge")) return;
+    const badge = document.createElement("span");
+    badge.className = "detail-card-badge";
+    badge.textContent = text;
+    card.appendChild(badge);
   }
 
-  function deriveViaFromRenderedStops() {
-    const stopNames = [...document.querySelectorAll("#stopSequences .stop-copy strong")]
-      .map(item => item.textContent.trim())
-      .filter(Boolean)
-      .filter((name, index, array) => array.indexOf(name) === index);
+  function organiseInformationCards(grid) {
+    const cards = [...grid.querySelectorAll(".detail-card")];
+    const preferredOrder = [
+      "Start",
+      "Former Start",
+      "Destination",
+      "Former Destination",
+      "Operator",
+      "Final Operator",
+      "Garage",
+      "Final Garage",
+      "Route Type",
+      "PVR"
+    ];
 
-    if (stopNames.length < 3) return;
+    preferredOrder.forEach(field => {
+      const card = cards.find(item => item.dataset.field === field);
+      if (card) grid.appendChild(card);
+    });
 
-    const middle = stopNames.slice(1, -1);
-    const maximum = Math.min(7, middle.length);
-    const selected = [];
+    const badgeLabels = {
+      Start: "Start point",
+      "Former Start": "Start point",
+      Destination: "Terminus",
+      "Former Destination": "Terminus",
+      Operator: "Operator",
+      "Final Operator": "Operator",
+      Garage: "Garage",
+      "Final Garage": "Garage"
+    };
 
-    for (let index = 0; index < maximum; index += 1) {
-      const position = Math.round(index * (middle.length - 1) / Math.max(1, maximum - 1));
-      const place = middle[position];
-      if (place && !selected.includes(place)) selected.push(place);
-    }
-
-    if (selected.length) renderViaItems(selected, "tfl");
+    Object.entries(badgeLabels).forEach(([field, label]) => {
+      const card = grid.querySelector(`.detail-card[data-field="${field}"]`);
+      addCardBadge(card, label);
+    });
   }
 
-  function watchTfLStops() {
-    const stops = document.getElementById("stopSequences");
-    if (!stops) return;
-    const observer = new MutationObserver(() => deriveViaFromRenderedStops());
-    observer.observe(stops, { childList: true, subtree: true });
-    deriveViaFromRenderedStops();
-  }
-
-  function addRouteInformation(route) {
-    const grid = document.querySelector(".detail-grid");
-    if (!grid) return;
-
-    removeDuplicateCards();
-
-    const pvr = String(route.PVR || "Not yet recorded").trim();
-    const pvrCard = document.createElement("div");
-    pvrCard.className = "detail-card route-pvr-card";
-    pvrCard.innerHTML = `<span>PVR</span><strong>${escapeHtml(pvr)}</strong>`;
-    grid.appendChild(pvrCard);
-
-    const savedVia = listItems(route.Via);
-    const viaSection = document.createElement("section");
-    viaSection.className = "via-section";
-    viaSection.setAttribute("aria-labelledby", "routeViaHeading");
-    viaSection.innerHTML = `
+  function buildViaSection(route) {
+    const extras = routeExtras(route);
+    const via = listItems(extras.Via ?? route.Via);
+    const section = document.createElement("section");
+    section.className = "via-section";
+    section.setAttribute("aria-labelledby", "routeViaHeading");
+    section.innerHTML = `
       <div class="via-heading">
         <div>
           <span class="eyebrow">Route information</span>
@@ -93,12 +82,44 @@
         </div>
         <span class="via-badge">Key stops</span>
       </div>
-      <ol id="routeViaList" class="via-list" ${savedVia.length ? "" : "hidden"}></ol>
-      <p id="routeViaEmpty" class="via-empty" ${savedVia.length ? "hidden" : ""}>Loading key places from the live TfL stop sequence…</p>
-      <small id="routeViaSource" class="via-source"></small>
+      ${via.length
+        ? `<ol class="via-list">${via.map(place => `<li>${escapeHtml(place)}</li>`).join("")}</ol>`
+        : `<div class="via-empty"><strong>No Via places added yet</strong><span>Edit this route in <code>routes.js</code> to add them.</span></div>`}
+      <small class="via-source">Manually managed in routes.js</small>
     `;
-    grid.insertAdjacentElement("afterend", viaSection);
-    renderViaItems(savedVia);
+    return section;
+  }
+
+  function addRouteInformation(route) {
+    const grid = document.querySelector(".detail-grid");
+    if (!grid) return;
+
+    removeDuplicateCards();
+
+    const heading = document.createElement("div");
+    heading.className = "route-information-heading";
+    heading.innerHTML = `
+      <div>
+        <span class="eyebrow">Route information</span>
+        <h3>Service details</h3>
+      </div>
+      <span class="route-information-badge">Route ${escapeHtml(route.Route)}</span>
+    `;
+    grid.prepend(heading);
+
+    organiseInformationCards(grid);
+
+    const pvr = String(routeExtras(route).PVR ?? route.PVR ?? "Not yet recorded").trim();
+    const pvrCard = document.createElement("div");
+    pvrCard.className = "detail-card route-pvr-card";
+    pvrCard.dataset.field = "PVR";
+    pvrCard.innerHTML = `<span>PVR</span><strong>${escapeHtml(pvr)}</strong><span class="detail-card-badge">Vehicles</span>`;
+    grid.appendChild(pvrCard);
+
+    const viaSection = buildViaSection(route);
+    const destinationCard = grid.querySelector('.detail-card[data-field="Destination"], .detail-card[data-field="Former Destination"]');
+    if (destinationCard) destinationCard.insertAdjacentElement("afterend", viaSection);
+    else grid.insertBefore(viaSection, grid.querySelector(".detail-card"));
   }
 
   function makeStopsCollapsible() {
@@ -138,7 +159,6 @@
     if (!route) return;
     addRouteInformation(route);
     makeStopsCollapsible();
-    watchTfLStops();
   }
 
   renderDetail = function () {
