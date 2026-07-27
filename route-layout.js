@@ -6,12 +6,6 @@
     return String(value || "").split(/\n|\||•|;/).map(item => item.trim()).filter(Boolean);
   }
 
-  function routeExtras(route) {
-    return typeof window.getRouteInfo === "function"
-      ? window.getRouteInfo(route.Route)
-      : (window.ROUTE_INFO?.[String(route.Route)] || {});
-  }
-
   function removeFields(grid, fields) {
     grid.querySelectorAll(".detail-card").forEach(card => {
       if (fields.has(card.dataset.field)) card.remove();
@@ -23,14 +17,13 @@
   }
 
   function buildRouteInformation(route) {
-    const extras = routeExtras(route);
     const start = route.Start || route["Former Start"] || "Not yet recorded";
     const destination = route.Destination || route["Former Destination"] || "Not yet recorded";
-    const via = listItems(extras.Via ?? route.Via);
+    const via = listItems(route.Via);
     const operatorName = route.Operator || route["Final Operator"] || "Operator not recorded";
-    const operatorLogo = String(extras.OperatorLogo || "").trim();
-    const operatorLogoAlt = String(extras.OperatorLogoAlt || operatorName).trim();
-    const pvr = String(extras.PVR ?? route.PVR ?? "Not yet recorded").trim();
+    const operatorLogo = String(route.OperatorLogo || "").trim();
+    const operatorLogoAlt = String(route.OperatorLogoAlt || operatorName).trim();
+    const pvr = String(route.PVR || "Not yet recorded").trim();
 
     const operatorContent = operatorLogo
       ? `<img class="operator-logo" src="${escapeHtml(operatorLogo)}" alt="${escapeHtml(operatorLogoAlt)}">`
@@ -38,7 +31,7 @@
 
     const viaContent = via.length
       ? `<ol class="route-via-list">${via.map(place => `<li>${escapeHtml(place)}</li>`).join("")}</ol>`
-      : `<p class="route-info-empty">No Via places have been added. Edit this route in <code>routes.js</code>.</p>`;
+      : `<p class="route-info-empty">No Via places have been added. Edit this route in <code>data/routes.json</code>.</p>`;
 
     const section = document.createElement("section");
     section.className = "route-information-section";
@@ -98,7 +91,8 @@
     document.querySelector(".detail-copy .status-pill")?.remove();
     removeFields(grid, new Set([
       "Start", "Former Start", "Destination", "Former Destination",
-      "Via", "Operator", "Final Operator", "PVR", "Images", "Number of Stops"
+      "Via", "Operator", "Final Operator", "OperatorLogo", "OperatorLogoAlt",
+      "PVR", "Images", "Image", "ImageAlt", "Number of Stops"
     ]));
 
     hero.insertAdjacentElement("afterend", buildRouteInformation(route));
