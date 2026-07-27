@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Search current and withdrawn London bus routes with live TfL information.">
+  <title>Routes · RouteFlow London</title>
+  <link rel="icon" type="image/png" href="IMG_3442.png">
+  <link rel="apple-touch-icon" href="IMG_3442.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="brand.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="stylesheet" href="filters.css">
+  <link rel="stylesheet" href="route-layout.css">
+  <link rel="stylesheet" href="route-gallery.css">
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html" aria-label="RouteFlow London home"><img class="brand-logo" src="IMG_3442.png" alt="RouteFlow London logo"><span>RouteFlow London</span></a>
+    <nav class="site-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="routes.html">Routes</a><a href="arrivals.html">Live arrivals</a><a href="disruptions.html">Disruptions</a></nav>
+    <button id="themeButton" class="ghost-button" type="button">Dark mode</button>
+  </div></header>
+
+  <main>
+    <section class="hero"><div><p class="eyebrow">RouteFlow London</p><h1>Explore London bus routes</h1><p class="hero-copy">Search current and withdrawn routes, compare operators and garages, and load live TfL stop sequences.</p></div>
+      <div class="search-panel"><label for="searchInput">Route number or place</label><div class="search-row"><input id="searchInput" type="search" placeholder="Try 1, N1, Hampstead or Canada Water" autocomplete="off"><button id="searchButton" type="button">Search</button></div><div class="filters" role="group" aria-label="Route status filters"><button class="filter active" data-filter="current" type="button">Current</button><button class="filter" data-filter="withdrawn" type="button">Withdrawn</button><button class="filter" data-filter="all" type="button">All</button></div></div>
+    </section>
+
+    <section class="advanced-filters" aria-labelledby="filterHeading"><div class="advanced-filter-heading"><div><p class="eyebrow">Refine your search</p><h2 id="filterHeading">More filters</h2></div><button id="clearFiltersButton" class="ghost-button" type="button">Clear filters</button></div><div class="filter-grid"><label>Operator<select id="operatorFilter"><option value="">All operators</option></select></label><label>Garage<select id="garageFilter"><option value="">All garages</option></select></label><label>Route type<select id="routeTypeFilter"><option value="">All route types</option></select></label><label>Vehicle type<select id="vehicleTypeFilter"><option value="">All vehicle types</option></select></label><label>Power type<select id="powerTypeFilter"><option value="">All power types</option></select></label></div></section>
+
+    <section class="summary-grid" aria-label="Database summary"><article><strong id="currentCount">0</strong><span>Current routes</span></article><article><strong id="withdrawnCount">0</strong><span>Withdrawn routes</span></article><article><strong id="resultCount">0</strong><span>Results shown</span></article></section>
+
+    <section class="content-layout"><aside class="route-list-panel"><div class="panel-heading"><h2>Routes</h2><select id="sortSelect" aria-label="Sort routes"><option value="route">Route number</option><option value="start">Starting point</option><option value="destination">Destination</option></select></div><div id="routeList" class="route-list" aria-live="polite"></div></aside><section id="routeDetail" class="route-detail empty-state"><div><img class="empty-logo" src="IMG_3442.png" alt="RouteFlow London logo"><h2>Select a route</h2><p>Choose a route from the list to view its full information.</p></div></section></section>
+  </main>
+
+  <footer><p>RouteFlow London · Unofficial London transport service. Information supplied by Transport for London.</p></footer>
+  <script src="config.js"></script><script src="app.js"></script><script src="route-layout.js"></script><script src="route-gallery.js"></script>
+</body>
+</html>
