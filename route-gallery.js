@@ -2,7 +2,9 @@
   const previousRenderDetail = renderDetail;
 
   function routeExtras(route) {
-    return window.ROUTE_INFO?.[String(route.Route)] || {};
+    return typeof window.getRouteInfo === "function"
+      ? window.getRouteInfo(route.Route)
+      : (window.ROUTE_INFO?.[String(route.Route)] || {});
   }
 
   function normaliseGallery(route) {
@@ -75,7 +77,6 @@
     `;
 
     oldImage.replaceWith(gallery);
-
     if (images.length < 2) return;
 
     let activeIndex = 0;
