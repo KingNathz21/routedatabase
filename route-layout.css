@@ -1,0 +1,69 @@
+.api-message[hidden] { display: none !important; }
+
+.via-section {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.via-heading h3 {
+  margin: 4px 0 14px;
+  font-size: 1.45rem;
+}
+
+.via-section ul {
+  margin: 0;
+  padding-left: 1.35rem;
+  display: grid;
+  gap: 10px;
+}
+
+.via-section li::marker { color: var(--red); }
+.via-empty { margin: 0; color: var(--muted); }
+
+.full-stops-details {
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card);
+}
+
+.full-stops-details summary {
+  min-height: 58px;
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  font-weight: 800;
+  list-style: none;
+  background: var(--paper);
+}
+
+.full-stops-details summary::-webkit-details-marker { display: none; }
+
+.expand-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red);
+  color: white;
+  font-size: 1.25rem;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.full-stops-details .direction-tabs { padding: 0 16px; }
+.full-stops-details .stop-sequences { padding: 0 16px 16px; }
+
+@media (max-width: 600px) {
+  .via-section { padding: 18px; }
+  .full-stops-details .direction-tabs,
+  .full-stops-details .stop-sequences { padding-left: 10px; padding-right: 10px; }
+}
