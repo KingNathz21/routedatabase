@@ -20,7 +20,7 @@
       });
     }
 
-    return images.slice(0, 5);
+    return images.slice(0, 8);
   }
 
   function buildGallery(route) {
@@ -28,11 +28,23 @@
     if (!oldImage) return;
 
     const images = normaliseGallery(route);
-    if (!images.length) return;
-
     const gallery = document.createElement("section");
-    gallery.className = "route-gallery";
+    gallery.className = `route-gallery${images.length ? "" : " route-gallery-empty"}`;
     gallery.setAttribute("aria-label", `Route ${route.Route} photo gallery`);
+
+    if (!images.length) {
+      gallery.innerHTML = `
+        <div class="gallery-empty-state">
+          <span class="gallery-empty-route">${escapeHtml(route.Route)}</span>
+          <div>
+            <strong>Route photos coming soon</strong>
+            <small>Add image links to the route's <code>Images</code> list in <code>data/routes.json</code>.</small>
+          </div>
+        </div>
+      `;
+      oldImage.replaceWith(gallery);
+      return;
+    }
 
     gallery.innerHTML = `
       <div class="gallery-main">
@@ -41,7 +53,7 @@
           <button class="gallery-arrow gallery-previous" type="button" aria-label="Previous photo">‹</button>
           <button class="gallery-arrow gallery-next" type="button" aria-label="Next photo">›</button>
           <span class="gallery-counter" aria-live="polite">1 / ${images.length}</span>
-        ` : ""}
+        ` : '<span class="gallery-counter">1 photo</span>'}
       </div>
       ${images.length > 1 ? `
         <div class="gallery-thumbnails" role="list" aria-label="Choose a route photo">
@@ -59,6 +71,7 @@
     if (images.length < 2) return;
 
     let activeIndex = 0;
+    let autoplayTimer = null;
     const mainImage = gallery.querySelector(".gallery-main-image");
     const counter = gallery.querySelector(".gallery-counter");
     const thumbnails = [...gallery.querySelectorAll(".gallery-thumbnail")];
@@ -76,11 +89,22 @@
       });
     }
 
-    gallery.querySelector(".gallery-previous")?.addEventListener("click", () => showImage(activeIndex - 1));
-    gallery.querySelector(".gallery-next")?.addEventListener("click", () => showImage(activeIndex + 1));
+    function startAutoplay() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      clearInterval(autoplayTimer);
+      autoplayTimer = setInterval(() => showImage(activeIndex + 1), 5000);
+    }
+
+    gallery.querySelector(".gallery-previous")?.addEventListener("click", () => { showImage(activeIndex - 1); startAutoplay(); });
+    gallery.querySelector(".gallery-next")?.addEventListener("click", () => { showImage(activeIndex + 1); startAutoplay(); });
     thumbnails.forEach(thumbnail => {
-      thumbnail.addEventListener("click", () => showImage(Number(thumbnail.dataset.galleryIndex)));
+      thumbnail.addEventListener("click", () => { showImage(Number(thumbnail.dataset.galleryIndex)); startAutoplay(); });
     });
+    gallery.addEventListener("mouseenter", () => clearInterval(autoplayTimer));
+    gallery.addEventListener("mouseleave", startAutoplay);
+    gallery.addEventListener("focusin", () => clearInterval(autoplayTimer));
+    gallery.addEventListener("focusout", startAutoplay);
+    startAutoplay();
   }
 
   renderDetail = function () {
