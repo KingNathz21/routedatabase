@@ -7,7 +7,9 @@
   }
 
   function routeExtras(route) {
-    return window.ROUTE_INFO?.[String(route.Route)] || {};
+    return typeof window.getRouteInfo === "function"
+      ? window.getRouteInfo(route.Route)
+      : (window.ROUTE_INFO?.[String(route.Route)] || {});
   }
 
   function removeFields(grid, fields) {
