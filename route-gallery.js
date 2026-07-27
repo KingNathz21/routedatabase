@@ -1,17 +1,8 @@
 (() => {
   const previousRenderDetail = renderDetail;
 
-  function routeExtras(route) {
-    return typeof window.getRouteInfo === "function"
-      ? window.getRouteInfo(route.Route)
-      : (window.ROUTE_INFO?.[String(route.Route)] || {});
-  }
-
   function normaliseGallery(route) {
-    const extras = routeExtras(route);
-    const raw = Array.isArray(extras.Images)
-      ? extras.Images
-      : (Array.isArray(route.Images) ? route.Images : []);
+    const raw = Array.isArray(route.Images) ? route.Images : [];
 
     const images = raw.map((item, index) => {
       if (typeof item === "string") {
@@ -22,13 +13,6 @@
         alt: String(item?.alt || `Route ${route.Route} photo ${index + 1}`).trim()
       };
     }).filter(item => item.src);
-
-    if (!images.length && route.Image) {
-      images.push({
-        src: String(route.Image).trim(),
-        alt: String(route.ImageAlt || `Route ${route.Route}`).trim()
-      });
-    }
 
     return images.slice(0, 8);
   }
@@ -48,7 +32,7 @@
           <span class="gallery-empty-route">${escapeHtml(route.Route)}</span>
           <div>
             <strong>Route photos coming soon</strong>
-            <small>Add image paths to this route's <code>Images</code> list in <code>routes.js</code>.</small>
+            <small>Add image paths to this route's <code>Images</code> list in <code>data/routes.json</code>.</small>
           </div>
         </div>
       `;
