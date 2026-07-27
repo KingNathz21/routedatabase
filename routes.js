@@ -1,14 +1,20 @@
-// Route-specific information that you can edit manually.
+// Editable route extras used by every route in the database.
 //
-// For each route you can set:
-// - Via: the key places shown in the Via section.
-// - PVR: the peak vehicle requirement shown in Route Information.
-// - Images: one or more route photos used by the image gallery.
-// - OperatorLogo: optional logo override when automatic operator matching is unsuitable.
+// Every route automatically receives these fields:
+// - PVR
+// - Via
+// - Images
+// - OperatorLogo / OperatorLogoAlt
 //
-// Image paths can point to files stored in this repository, for example:
-// "images/routes/1/photo-1.jpg"
-// You can also use a full https:// image URL.
+// Add a route below only when you want to replace the defaults.
+
+window.ROUTE_INFO_DEFAULTS = {
+  PVR: "Not yet recorded",
+  Via: [],
+  Images: [],
+  OperatorLogo: "",
+  OperatorLogoAlt: ""
+};
 
 window.ROUTE_INFO = {
   "1": {
@@ -32,16 +38,11 @@ window.ROUTE_INFO = {
         src: "https://static.wikia.nocookie.net/bus-routes-in-london/images/1/17/1_CW.jpeg/revision/latest/scale-to-width-down/1000?cb=20250727165656",
         alt: "London bus route 1"
       }
-      // Add more photos by placing a comma after the item above, then add:
-      // {
-      //   src: "images/routes/1/photo-2.jpg",
-      //   alt: "Route 1 bus at Waterloo"
-      // }
     ]
   }
 
-  // Add another route by placing a comma after the route 1 block, for example:
-  // "2": {
+  // Add more routes using this pattern:
+  // ,"2": {
   //   PVR: "20",
   //   Via: ["Baker Street", "Victoria", "Brixton"],
   //   Images: [
@@ -49,4 +50,16 @@ window.ROUTE_INFO = {
   //     { src: "images/routes/2/photo-2.jpg", alt: "Route 2 at Victoria" }
   //   ]
   // }
+};
+
+window.getRouteInfo = function getRouteInfo(routeNumber) {
+  const routeId = String(routeNumber ?? "").trim();
+  const saved = window.ROUTE_INFO[routeId] || {};
+
+  return {
+    ...window.ROUTE_INFO_DEFAULTS,
+    ...saved,
+    Via: Array.isArray(saved.Via) ? saved.Via : [],
+    Images: Array.isArray(saved.Images) ? saved.Images : []
+  };
 };
