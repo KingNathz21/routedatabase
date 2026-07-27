@@ -23,5 +23,7 @@
     link.addEventListener('pointercancel', () => link.classList.remove('nav-pressed'), { passive: true });
   });
 
-  requestIdleCallback?.(() => navLinks.forEach(prefetch), { timeout: 1500 });
+  const warmNavigation = () => navLinks.forEach(prefetch);
+  if ('requestIdleCallback' in window) window.requestIdleCallback(warmNavigation, { timeout: 1500 });
+  else window.setTimeout(warmNavigation, 600);
 })();
