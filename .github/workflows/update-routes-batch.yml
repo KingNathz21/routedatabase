@@ -22,7 +22,9 @@ jobs:
           python-version: "3.12"
 
       - name: Update routes 15 to 25
-        run: python .github/scripts/update_routes_batch_15_25.py
+        run: |
+          python .github/scripts/update_routes_batch_15_25.py
+          python .github/scripts/update_route_16.py
 
       - name: Commit routes.json
         run: |
