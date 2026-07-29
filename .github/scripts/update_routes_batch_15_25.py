@@ -1,0 +1,258 @@
+import json
+from pathlib import Path
+
+ROUTES_PATH = Path("data/routes.json")
+
+updates = {
+    "15": {
+        "Start": "Blackwall Station",
+        "Destination": "Trafalgar Square",
+        "Operator": "GoAhead London: Blue Triangle",
+        "Garage": "Henley Road (DS)",
+        "Route Type": "Day route",
+        "Date Introduced": "30 August 1909",
+        "Peak Frequency": "About every 10–12 minutes",
+        "Off-Peak Frequency": "About every 10–12 minutes",
+        "Evening Frequency": "About every 10–12 minutes",
+        "Sunday Frequency": "About every 10–12 minutes",
+        "Night Frequency": "Route N15",
+        "Typical Journey Time": "38–75 minutes",
+        "Approximate Route Length": "7 miles (11 km)",
+        "Models Used": "New Routemaster",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Previous Route Number": "Route 23",
+        "Notes": "",
+        "PVR": "14",
+        "Via": ["Poplar", "Aldgate", "Tower of London", "Cannon Street", "St Paul's", "Aldwych"],
+        "OperatorLogo": "assets/operators/go-ahead-london.png",
+        "OperatorLogoAlt": "Go-Ahead London"
+    },
+    "17": {
+        "Start": "Archway",
+        "Destination": "London Bridge",
+        "Operator": "Metroline",
+        "Garage": "Holloway (HT)",
+        "Route Type": "Day route",
+        "Date Introduced": "1 February 1961",
+        "Peak Frequency": "About every 8–15 minutes",
+        "Off-Peak Frequency": "About every 8–15 minutes",
+        "Evening Frequency": "About every 8–15 minutes",
+        "Sunday Frequency": "About every 8–15 minutes",
+        "Night Frequency": "No night service",
+        "Typical Journey Time": "29–64 minutes",
+        "Approximate Route Length": "6 miles (9.7 km)",
+        "Models Used": "New Routemaster",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Notes": "",
+        "PVR": "15",
+        "Via": ["Holloway", "Caledonian Road", "King's Cross", "Holborn", "City Thameslink"],
+        "OperatorLogo": "assets/operators/metroline.png",
+        "OperatorLogoAlt": "Metroline"
+    },
+    "18": {
+        "Start": "Sudbury",
+        "Destination": "Euston",
+        "Operator": "First Bus London",
+        "Garage": "Westbourne Park (X)",
+        "Route Type": "Day route",
+        "Peak Frequency": "About every 4–7 minutes",
+        "Off-Peak Frequency": "About every 4–7 minutes",
+        "Evening Frequency": "About every 4–7 minutes",
+        "Sunday Frequency": "About every 4–7 minutes",
+        "Night Frequency": "Routes N18 and N118",
+        "Typical Journey Time": "42–90 minutes",
+        "Approximate Route Length": "9 miles (14 km)",
+        "Models Used": "BYD BD11 10.9m",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Electric",
+        "Notes": "",
+        "PVR": "37",
+        "Via": ["Wembley", "Stonebridge Park", "Harlesden", "Kensal Green", "Harrow Road", "Edgware Road", "Baker Street", "Great Portland Street", "Warren Street"],
+        "OperatorLogo": "assets/operators/ratp-dev.png",
+        "OperatorLogoAlt": "First Bus London"
+    },
+    "19": {
+        "Start": "Finsbury Park Interchange",
+        "Destination": "Battersea Bridge, South Side",
+        "Operator": "Arriva London",
+        "Garage": "Stamford Hill (SF)",
+        "Route Type": "Day route",
+        "Peak Frequency": "About every 8–10 minutes",
+        "Off-Peak Frequency": "About every 8–10 minutes",
+        "Evening Frequency": "About every 8–10 minutes",
+        "Sunday Frequency": "About every 8–10 minutes",
+        "Night Frequency": "Route N19",
+        "Typical Journey Time": "49–92 minutes",
+        "Approximate Route Length": "8 miles (13 km)",
+        "Models Used": "New Routemaster",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Notes": "",
+        "PVR": "21",
+        "Via": ["Highbury & Islington", "Angel", "Holborn", "Piccadilly Circus", "Hyde Park Corner", "Sloane Square", "Chelsea"],
+        "OperatorLogo": "assets/operators/arriva-london.png",
+        "OperatorLogoAlt": "Arriva London"
+    },
+    "20": {
+        "Start": "Walthamstow Central",
+        "Destination": "Debden",
+        "Operator": "Stagecoach London",
+        "Garage": "Leyton (T)",
+        "Route Type": "Day route",
+        "Date Introduced": "7 September 1968",
+        "Peak Frequency": "About every 15–30 minutes",
+        "Off-Peak Frequency": "About every 15–30 minutes",
+        "Evening Frequency": "About every 15–30 minutes",
+        "Sunday Frequency": "About every 15–30 minutes",
+        "Night Frequency": "No night service",
+        "Typical Journey Time": "34–53 minutes",
+        "Approximate Route Length": "10.37 miles (16.69 km)",
+        "Models Used": "Alexander Dennis Enviro400H City",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Previous Route Number": "Route 38A",
+        "Notes": "",
+        "PVR": "10",
+        "Via": ["Leyton", "Woodford Green", "Buckhurst Hill", "Loughton"],
+        "OperatorLogo": "assets/operators/stagecoach-london.png",
+        "OperatorLogoAlt": "Stagecoach London"
+    },
+    "21": {
+        "Start": "Lewisham Shopping Centre",
+        "Destination": "Holloway, Nags Head",
+        "Operator": "GoAhead London: London Central",
+        "Garage": "New Cross (NX)",
+        "Route Type": "Day route",
+        "Date Introduced": "6 April 1911",
+        "Peak Frequency": "About every 7–13 minutes",
+        "Off-Peak Frequency": "About every 7–13 minutes",
+        "Evening Frequency": "About every 7–13 minutes",
+        "Sunday Frequency": "About every 7–13 minutes",
+        "Night Frequency": "Routes N21 and N263",
+        "Typical Journey Time": "38–71 minutes",
+        "Approximate Route Length": "10 miles (16 km)",
+        "Models Used": "New Routemaster",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Notes": "",
+        "PVR": "24",
+        "Via": ["New Cross", "Bricklayer's Arms", "London Bridge", "Bank", "Moorgate", "Old Street", "Hoxton", "Highbury & Islington"],
+        "OperatorLogo": "assets/operators/go-ahead-london.png",
+        "OperatorLogoAlt": "Go-Ahead London"
+    },
+    "22": {
+        "Start": "Putney Common",
+        "Destination": "Oxford Circus",
+        "Operator": "GoAhead London: London General",
+        "Garage": "Putney (AF)",
+        "Route Type": "Day route",
+        "Peak Frequency": "About every 7 minutes",
+        "Off-Peak Frequency": "About every 7 minutes",
+        "Evening Frequency": "About every 7 minutes",
+        "Sunday Frequency": "About every 7 minutes",
+        "Night Frequency": "Route N22",
+        "Typical Journey Time": "31–58 minutes",
+        "Approximate Route Length": "6 miles (9 km)",
+        "Models Used": "Wright StreetDeck Electroliner EV 10.6m",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Electric",
+        "Notes": "",
+        "PVR": "18",
+        "Via": ["Putney Bridge", "Parsons Green", "Chelsea", "Sloane Square", "Hyde Park Corner", "Berkeley Square"],
+        "OperatorLogo": "assets/operators/go-ahead-london.png",
+        "OperatorLogoAlt": "Go-Ahead London"
+    },
+    "23": {
+        "Start": "Westbourne Park",
+        "Destination": "Aldwych",
+        "Operator": "First Bus London",
+        "Garage": "Westbourne Park (X)",
+        "Route Type": "24-hour route",
+        "Peak Frequency": "About every 12–15 minutes",
+        "Off-Peak Frequency": "About every 12–15 minutes",
+        "Evening Frequency": "About every 12–15 minutes",
+        "Sunday Frequency": "About every 12–15 minutes",
+        "Night Frequency": "24-hour service",
+        "Typical Journey Time": "46–95 minutes",
+        "Approximate Route Length": "8 miles (13 km)",
+        "Models Used": "Alexander Dennis Enviro400H (temporary allocation)",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Previous Route Number": "Routes 10 and 15",
+        "Notes": "Optare MetroDecker EVs were temporarily suspended from 25 June 2026.",
+        "PVR": "Day: 14; Night: 4",
+        "Via": ["Ladbroke Grove", "Paddington", "Marble Arch", "Hyde Park Corner", "Trafalgar Square", "Covent Garden"],
+        "OperatorLogo": "assets/operators/ratp-dev.png",
+        "OperatorLogoAlt": "First Bus London"
+    },
+    "24": {
+        "Start": "Hampstead Heath",
+        "Destination": "Pimlico",
+        "Operator": "Transport UK London Bus",
+        "Garage": "Battersea (QB)",
+        "Route Type": "24-hour route",
+        "Date Introduced": "5 May 1910",
+        "Peak Frequency": "About every 6 minutes",
+        "Off-Peak Frequency": "About every 6 minutes",
+        "Evening Frequency": "About every 6 minutes",
+        "Sunday Frequency": "About every 6 minutes",
+        "Night Frequency": "24-hour service",
+        "Typical Journey Time": "39–66 minutes",
+        "Approximate Route Length": "7 miles (11 km)",
+        "Models Used": "New Routemaster",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Hybrid",
+        "Notes": "",
+        "PVR": "Day: 16; Night: 3",
+        "Via": ["Chalk Farm", "Camden Town", "Mornington Crescent", "Warren Street", "Tottenham Court Road", "Leicester Square", "Trafalgar Square", "Westminster", "Victoria"],
+        "OperatorLogo": "assets/operators/transport-uk-london-bus.png",
+        "OperatorLogoAlt": "Transport UK London Bus"
+    },
+    "25": {
+        "Start": "Ilford",
+        "Destination": "City Thameslink, Holborn Circus",
+        "Operator": "Stagecoach London",
+        "Garage": "Bow (BW)",
+        "Route Type": "Day route",
+        "Date Introduced": "30 October 1910",
+        "Peak Frequency": "About every 6–7 minutes",
+        "Off-Peak Frequency": "About every 6–7 minutes",
+        "Evening Frequency": "About every 6–7 minutes",
+        "Sunday Frequency": "About every 6–7 minutes",
+        "Night Frequency": "Route N25",
+        "Typical Journey Time": "64–100 minutes",
+        "Approximate Route Length": "10 miles (16 km)",
+        "Models Used": "Alexander Dennis Enviro400 MMC",
+        "Vehicle Type (Single/Double Deck)": "Double Decker",
+        "Power Type": "Diesel",
+        "Notes": "",
+        "PVR": "31",
+        "Via": ["Manor Park", "Forest Gate", "Stratford", "Bow", "Mile End", "Stepney Green", "Whitechapel", "Aldgate East", "Aldgate", "Bank", "St Paul's"],
+        "OperatorLogo": "assets/operators/stagecoach-london.png",
+        "OperatorLogoAlt": "Stagecoach London"
+    }
+}
+
+with ROUTES_PATH.open("r", encoding="utf-8") as handle:
+    data = json.load(handle)
+
+found = set()
+for route in data.get("current", []):
+    route_number = str(route.get("Route", "")).strip()
+    if route_number in updates:
+        images = route.get("Images", [])
+        route.update(updates[route_number])
+        route["Images"] = images
+        found.add(route_number)
+
+missing = sorted(set(updates) - found, key=lambda value: int(value))
+if missing:
+    raise RuntimeError(f"Routes not found in current list: {', '.join(missing)}")
+
+with ROUTES_PATH.open("w", encoding="utf-8") as handle:
+    json.dump(data, handle, ensure_ascii=False, indent=2)
+    handle.write("\n")
+
+print("Updated routes:", ", ".join(sorted(found, key=lambda value: int(value))))
