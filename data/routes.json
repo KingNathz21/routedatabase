@@ -378,7 +378,7 @@
     {
       "Route": "15",
       "Start": "Blackwall Station",
-      "Destination": "Trafalgar Square",
+      "Destination": "Charing Cross Station",
       "Operator": "GoAhead London: Blue Triangle",
       "Garage": "Henley Road (DS)",
       "Route Type": "Day route",
@@ -410,8 +410,8 @@
     },
     {
       "Route": "16",
-      "Start": "Brent Park",
-      "Destination": "Paddington",
+      "Start": "Brent Park Tesco",
+      "Destination": "Bishops Bridge / Paddington Station",
       "Operator": "Metroline",
       "Garage": "Cricklewood (W)",
       "Route Type": "Day route",
@@ -442,8 +442,8 @@
     },
     {
       "Route": "17",
-      "Start": "Archway",
-      "Destination": "London Bridge",
+      "Start": "Archway Station  / Holloway Road",
+      "Destination": "London Bridge Station",
       "Operator": "Metroline",
       "Garage": "Holloway (HT)",
       "Route Type": "Day route",
@@ -474,8 +474,8 @@
     },
     {
       "Route": "18",
-      "Start": "Sudbury",
-      "Destination": "Euston",
+      "Start": "Sudbury & Harrow Road Station",
+      "Destination": "Euston Station",
       "Operator": "First Bus London",
       "Garage": "Westbourne Park (X)",
       "Route Type": "Day route",
@@ -511,7 +511,7 @@
     {
       "Route": "19",
       "Start": "Finsbury Park Interchange",
-      "Destination": "Battersea Bridge, South Side",
+      "Destination": "Parkgate Road",
       "Operator": "Arriva London",
       "Garage": "Stamford Hill (SF)",
       "Route Type": "Day route",
@@ -544,8 +544,8 @@
     },
     {
       "Route": "20",
-      "Start": "Walthamstow Central",
-      "Destination": "Debden",
+      "Start": "Walthamstow Bus Station",
+      "Destination": "Burton Road",
       "Operator": "Stagecoach London",
       "Garage": "Leyton (T)",
       "Route Type": "Day route",
@@ -575,8 +575,8 @@
     },
     {
       "Route": "21",
-      "Start": "Lewisham Shopping Centre",
-      "Destination": "Holloway, Nags Head",
+      "Start": "Lewisham Centre",
+      "Destination": "Caledonian Road",
       "Operator": "GoAhead London: London Central",
       "Garage": "New Cross (NX)",
       "Route Type": "Day route",
@@ -611,7 +611,7 @@
     {
       "Route": "22",
       "Start": "Putney Common",
-      "Destination": "Oxford Circus",
+      "Destination": "Margaret Street / Oxford Circus",
       "Operator": "GoAhead London: London General",
       "Garage": "Putney (AF)",
       "Route Type": "Day route",
@@ -643,8 +643,8 @@
     },
     {
       "Route": "23",
-      "Start": "Westbourne Park",
-      "Destination": "Aldwych",
+      "Start": "Great Western Road",
+      "Destination": "Aldwych / Drury Lane",
       "Operator": "First Bus London",
       "Garage": "Westbourne Park (X)",
       "Route Type": "24-hour route",
@@ -676,8 +676,8 @@
     },
     {
       "Route": "24",
-      "Start": "Hampstead Heath",
-      "Destination": "Pimlico",
+      "Start": "Grosvenor Road",
+      "Destination": "Royal Free Hospital",
       "Operator": "Transport UK London Bus",
       "Garage": "Battersea (QB)",
       "Route Type": "24-hour route",
@@ -712,8 +712,8 @@
     },
     {
       "Route": "25",
-      "Start": "Ilford",
-      "Destination": "City Thameslink, Holborn Circus",
+      "Start": "Hainault Street",
+      "Destination": "Holborn Circus",
       "Operator": "Stagecoach London",
       "Garage": "Bow (BW)",
       "Route Type": "Day route",
@@ -959,7 +959,7 @@
     {
       "Route": "34",
       "Start": "Barnet High Street / Barnet Church",
-      "Destination": "Walthamstow Central Station",
+      "Destination": "Walthamstow Bus Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -1557,7 +1557,7 @@
     {
       "Route": "58",
       "Start": "East Ham / Central Park",
-      "Destination": "Walthamstow Central Station",
+      "Destination": "South Grove",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -6808,7 +6808,7 @@
     },
     {
       "Route": "263",
-      "Start": "Highbury Barn",
+      "Start": "Parkhurst Road / Holloway Nags Head",
       "Destination": "Barnet Hospital",
       "Operator": "Not yet verified",
       "Garage": "PB",
@@ -7094,7 +7094,7 @@
     },
     {
       "Route": "275",
-      "Start": "St James Street Station",
+      "Start": "Walthamstow Bus Station",
       "Destination": "Barkingside Tesco",
       "Operator": "Not yet verified",
       "Garage": "T",
@@ -7641,7 +7641,7 @@
     {
       "Route": "297",
       "Start": "Pound Lane / Willesden Bus Garage",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "PV",
       "Route Type": "Day route",
@@ -8654,7 +8654,7 @@
     },
     {
       "Route": "341",
-      "Start": "Northumberland Park",
+      "Start": "Meridian Water Station",
       "Destination": "Waterloo Station   / Waterloo Road",
       "Operator": "Not yet verified",
       "Garage": "AR",
@@ -11956,7 +11956,7 @@
     },
     {
       "Route": "632",
-      "Start": "Saracens High School / South Mead",
+      "Start": "South Mead",
       "Destination": "Kilburn Park Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
@@ -13855,7 +13855,7 @@
     {
       "Route": "E7",
       "Start": "Ruislip Station",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13881,7 +13881,7 @@
     {
       "Route": "E8",
       "Start": "The Bell",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -18431,7 +18431,7 @@
     {
       "Route": "SL1",
       "Start": "North Finchley Bus Station",
-      "Destination": "Walthamstow Central Station",
+      "Destination": "Walthamstow Bus Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Express / Superloop",
@@ -19445,7 +19445,7 @@
     {
       "Route": "W11",
       "Start": "Chingford Hall Estate",
-      "Destination": "Walthamstow Central Station",
+      "Destination": "Walthamstow Bus Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
