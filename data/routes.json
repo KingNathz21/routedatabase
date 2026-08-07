@@ -1193,7 +1193,7 @@
     {
       "Route": "43",
       "Start": "Halliwick Park",
-      "Destination": "London Bridge Station",
+      "Destination": "London Bridge Bus Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -3663,7 +3663,7 @@
     {
       "Route": "141",
       "Start": "Tottenhall Road",
-      "Destination": "London Bridge Station",
+      "Destination": "London Bridge Bus Station",
       "Operator": "Not yet verified",
       "Garage": "AD",
       "Route Type": "Day route",
@@ -7641,7 +7641,7 @@
     {
       "Route": "297",
       "Start": "Pound Lane / Willesden Bus Garage",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "PV",
       "Route Type": "Day route",
@@ -7978,7 +7978,7 @@
     },
     {
       "Route": "312",
-      "Start": "Canons Hill",
+      "Start": "Old Lodge Lane Bus Terminus",
       "Destination": "Norwood Junction Station",
       "Operator": "Not yet verified",
       "Garage": "TC",
@@ -13855,7 +13855,7 @@
     {
       "Route": "E7",
       "Start": "Ruislip Station",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13881,7 +13881,7 @@
     {
       "Route": "E8",
       "Start": "The Bell",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
