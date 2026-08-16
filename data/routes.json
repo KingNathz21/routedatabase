@@ -9409,7 +9409,7 @@
     {
       "Route": "378",
       "Start": "Mortlake Bus Station",
-      "Destination": "Putney Bridge Stn  / Gonville Street",
+      "Destination": "Putney Bridge Station",
       "Operator": "Not yet verified",
       "Garage": "AF",
       "Route Type": "Day route",
@@ -10007,7 +10007,7 @@
     {
       "Route": "406",
       "Start": "Cromwell Road Bus Station",
-      "Destination": "Epsom High Street",
+      "Destination": "Epsom Hospital",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -11176,7 +11176,7 @@
     },
     {
       "Route": "485",
-      "Start": "Lonsdale Road",
+      "Start": "Mortlake Bus Station",
       "Destination": "Ram Street",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
