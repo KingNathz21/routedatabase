@@ -7641,7 +7641,7 @@
     {
       "Route": "297",
       "Start": "Pound Lane / Willesden Bus Garage",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "PV",
       "Route Type": "Day route",
@@ -7978,7 +7978,7 @@
     },
     {
       "Route": "312",
-      "Start": "Old Lodge Lane Bus Terminus",
+      "Start": "Canons Hill",
       "Destination": "Norwood Junction Station",
       "Operator": "Not yet verified",
       "Garage": "TC",
@@ -11073,7 +11073,7 @@
     {
       "Route": "481",
       "Start": "Cromwell Road Bus Station",
-      "Destination": "Turing House School Grounds",
+      "Destination": "West London Mental Health Trust",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -13855,7 +13855,7 @@
     {
       "Route": "E7",
       "Start": "Ruislip Station",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13881,7 +13881,7 @@
     {
       "Route": "E8",
       "Start": "The Bell",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -14661,7 +14661,7 @@
     {
       "Route": "K3",
       "Start": "Roehampton Vale / Asda",
-      "Destination": "Esher High Street",
+      "Destination": "Esher High School",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -18431,7 +18431,7 @@
     {
       "Route": "SL1",
       "Start": "North Finchley Bus Station",
-      "Destination": "Walthamstow Central Station",
+      "Destination": "Walthamstow Bus Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Express / Superloop",
