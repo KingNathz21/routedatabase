@@ -2596,7 +2596,7 @@
     },
     {
       "Route": "100",
-      "Start": "King Edward Street / St Pauls Station",
+      "Start": "St Bartholomew's Hospital",
       "Destination": "St George's Town Hall / Shadwell Stn",
       "Operator": "London Central",
       "Garage": "Camberwell (Q)",
@@ -5327,7 +5327,7 @@
     {
       "Route": "205",
       "Start": "Portman Street / Selfridges",
-      "Destination": "Bow Church Station",
+      "Destination": "Bow Church",
       "Operator": "Not yet verified",
       "Garage": "BW",
       "Route Type": "Day route",
@@ -8967,7 +8967,7 @@
     {
       "Route": "357",
       "Start": "Chingdale Road",
-      "Destination": "Whipps Cross Hospital / A & E",
+      "Destination": "Whipps Cross Bus Stand",
       "Operator": "Not yet verified",
       "Garage": "NP",
       "Route Type": "Day route",
