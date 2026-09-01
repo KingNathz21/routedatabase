@@ -881,7 +881,7 @@
     {
       "Route": "31",
       "Start": "Bayham Street",
-      "Destination": "Harrow Road",
+      "Destination": "White City Bus Station",
       "Operator": "First Bus London",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -8395,7 +8395,7 @@
     {
       "Route": "328",
       "Start": "Golders Green Station",
-      "Destination": "Westminster Registration Office",
+      "Destination": "Limerston Street",
       "Operator": "Not yet verified",
       "Garage": "W",
       "Route Type": "Day route",
