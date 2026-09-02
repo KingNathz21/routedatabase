@@ -802,7 +802,7 @@
     },
     {
       "Route": "28",
-      "Start": "White City Bus Station",
+      "Start": "Station Terrace",
       "Destination": "Mapleton Crescent",
       "Operator": "Metroline",
       "Garage": "Not yet verified",
@@ -1869,7 +1869,7 @@
     {
       "Route": "70",
       "Start": "Chiswick Business Park",
-      "Destination": "White City Station",
+      "Destination": "Queensberry Place",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -5925,7 +5925,7 @@
     {
       "Route": "228",
       "Start": "Central Middlesex Hospital",
-      "Destination": "White City Bus Station",
+      "Destination": "Chippenham Road / Shirland Road",
       "Operator": "Not yet verified",
       "Garage": "RP",
       "Route Type": "Day route",
@@ -8083,7 +8083,7 @@
     {
       "Route": "316",
       "Start": "Brent Cross West Station",
-      "Destination": "Elgin Avenue / Chippenham Road",
+      "Destination": "White City Bus Station",
       "Operator": "Not yet verified",
       "Garage": "WJ",
       "Route Type": "Day route",
@@ -15311,7 +15311,7 @@
     {
       "Route": "N27",
       "Start": "Hammersmith Bus Station",
-      "Destination": "Camden Town Station",
+      "Destination": "Hartland Road / Camden Market",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Night route",
