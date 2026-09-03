@@ -643,7 +643,7 @@
     },
     {
       "Route": "23",
-      "Start": "Harrow Road",
+      "Start": "Great Western Road",
       "Destination": "Aldwych / Drury Lane",
       "Operator": "First Bus London",
       "Garage": "Westbourne Park (X)",
@@ -7588,7 +7588,7 @@
     },
     {
       "Route": "295",
-      "Start": "Shepherd's Bush Station",
+      "Start": "Ladbroke Grove Sainsbury's",
       "Destination": "Clapham Junction Stn  / the Falcon",
       "Operator": "Not yet verified",
       "Garage": "X",
