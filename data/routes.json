@@ -4547,7 +4547,7 @@
     {
       "Route": "175",
       "Start": "Hillrise Estate",
-      "Destination": "Oval Road South",
+      "Destination": "Ballards Road / Princess Parade",
       "Operator": "Not yet verified",
       "Garage": "DX",
       "Route Type": "Day route",
@@ -6704,8 +6704,8 @@
     },
     {
       "Route": "259",
-      "Start": "Edmonton Green Bus Station",
-      "Destination": "King's Cross Road / Pentonville Road",
+      "Start": "Glyn Road",
+      "Destination": "Caledonian Road / Camden Road",
       "Operator": "Not yet verified",
       "Garage": "AR",
       "Route Type": "Day route",
@@ -7199,7 +7199,7 @@
     {
       "Route": "279",
       "Start": "Waltham Cross Bus Station",
-      "Destination": "Manor House Station",
+      "Destination": "Rookwood Road",
       "Operator": "Not yet verified",
       "Garage": "E",
       "Route Type": "Day route",
@@ -7952,7 +7952,7 @@
     },
     {
       "Route": "310",
-      "Start": "Stamford Hill Broadway",
+      "Start": "Rookwood Road",
       "Destination": "Golders Green Station",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
@@ -13309,7 +13309,7 @@
     {
       "Route": "B11",
       "Start": "Bexleyheath Bus Garage",
-      "Destination": "Yarnton Way / Harrow Manorway",
+      "Destination": "St Andrew's Parish Church",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -14661,7 +14661,7 @@
     {
       "Route": "K3",
       "Start": "Roehampton Vale / Asda",
-      "Destination": "Esher High School",
+      "Destination": "Esher High Street",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
