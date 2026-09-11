@@ -2285,7 +2285,7 @@
     {
       "Route": "88",
       "Start": "Parliament Hill Fields",
-      "Destination": "Omnibus Clapham",
+      "Destination": "Clapham Old Town / Omnibus",
       "Operator": "GoAhead London: London General",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -7641,7 +7641,7 @@
     {
       "Route": "297",
       "Start": "Pound Lane / Willesden Bus Garage",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "PV",
       "Route Type": "Day route",
@@ -10189,7 +10189,7 @@
     {
       "Route": "417",
       "Start": "Crystal Palace Bus Station",
-      "Destination": "Omnibus Clapham",
+      "Destination": "Clapham Old Town / Omnibus",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -13309,7 +13309,7 @@
     {
       "Route": "B11",
       "Start": "Bexleyheath Bus Garage",
-      "Destination": "St Andrew's Parish Church",
+      "Destination": "Yarnton Way / Harrow Manorway",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13855,7 +13855,7 @@
     {
       "Route": "E7",
       "Start": "Ruislip Station",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13881,7 +13881,7 @@
     {
       "Route": "E8",
       "Start": "The Bell",
-      "Destination": "Ealing Broadway Station   / Haven Green",
+      "Destination": "Ealing Broadway Stn   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -14505,7 +14505,7 @@
     {
       "Route": "H32",
       "Start": "School Road",
-      "Destination": "Hamilton Road",
+      "Destination": "Southall Town Hall",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -14661,7 +14661,7 @@
     {
       "Route": "K3",
       "Start": "Roehampton Vale / Asda",
-      "Destination": "Esher High Street",
+      "Destination": "Esher High School",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
