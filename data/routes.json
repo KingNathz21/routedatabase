@@ -352,7 +352,7 @@
     {
       "Route": "14",
       "Start": "Putney Heath / Green Man",
-      "Destination": "Russell Square",
+      "Destination": ".Russell Square",
       "Operator": "GoAhead London: London General",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -4391,7 +4391,7 @@
     {
       "Route": "169",
       "Start": "Clayhall / the Glade",
-      "Destination": "Barking Town Centre",
+      "Destination": "North Street",
       "Operator": "Not yet verified",
       "Garage": "BK",
       "Route Type": "Day route",
@@ -7641,7 +7641,7 @@
     {
       "Route": "297",
       "Start": "Pound Lane / Willesden Bus Garage",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "PV",
       "Route Type": "Day route",
@@ -7978,7 +7978,7 @@
     },
     {
       "Route": "312",
-      "Start": "Old Lodge Lane Bus Terminus",
+      "Start": "Canons Hill",
       "Destination": "Norwood Junction Station",
       "Operator": "Not yet verified",
       "Garage": "TC",
@@ -10423,7 +10423,7 @@
     {
       "Route": "430",
       "Start": "Danebury Avenue / Minstead Gardens",
-      "Destination": "Victoria & Albert Museum",
+      "Destination": "Victoria and Albert Museum",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -11073,7 +11073,7 @@
     {
       "Route": "481",
       "Start": "Cromwell Road Bus Station",
-      "Destination": "West London Mental Health Trust",
+      "Destination": "Turing House School Grounds",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Day route",
@@ -13855,7 +13855,7 @@
     {
       "Route": "E7",
       "Start": "Ruislip Station",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
@@ -13881,7 +13881,7 @@
     {
       "Route": "E8",
       "Start": "The Bell",
-      "Destination": "Ealing Broadway Stn   / Haven Green",
+      "Destination": "Ealing Broadway Station   / Haven Green",
       "Operator": "Not yet verified",
       "Garage": "Not yet verified",
       "Route Type": "Letter-prefixed route",
