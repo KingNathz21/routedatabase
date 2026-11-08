@@ -2,7 +2,7 @@ const CACHE_NAME = "routeflow-app-v2";
 const APP_SHELL = [
   "./",
   "./routes.html",
-  "./styles.css",\n  "./accessibility.css",\n  "./accessibility.js",\n  "./arrivals.html",\n  "./disruptions.html",\n  "./arrivals.js",\n  "./disruptions.js",\n  "./live.css",\n  "./arrivals-pro.css",\n  "./home.css",\n  "./site.js",\n  "./nav-performance.js",\n  "./config.js",
+  "./styles.css",\n  "./arrivals.html",\n  "./disruptions.html",\n  "./arrivals.js",\n  "./disruptions.js",\n  "./live.css",\n  "./arrivals-pro.css",\n  "./home.css",\n  "./site.js",\n  "./nav-performance.js",\n  "./config.js",
   "./brand.css",
   "./nav.css",
   "./filters.css",
