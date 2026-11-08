@@ -71,7 +71,7 @@
   const panel = toolbar.querySelector(".accessibility-panel");
   const trigger = toolbar.querySelector(".accessibility-trigger");
   const apply = () => {
-    document.documentElement.style.setProperty("--rf-text-scale", String(preferences.scale));
+    document.documentElement.style.fontSize = `${preferences.scale * 100}%`;
     document.body.classList.toggle("rf-high-contrast", preferences.contrast);
     document.body.classList.toggle("rf-reduce-motion", preferences.motion);
     document.body.classList.toggle("rf-extra-spacing", preferences.spacing);
