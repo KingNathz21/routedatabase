@@ -124,4 +124,7 @@
     if (event.key === "Escape" && !panel.hidden) closePanel();
   });
   apply();
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+  }
 })();
