@@ -32,6 +32,8 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 main { padding-bottom: 34px; }
 .eyebrow { color: var(--rf-red); font-size: .73rem; letter-spacing: .12em; font-weight: 800; }
 h1, h2, h3, h4 { color: var(--rf-ink); letter-spacing: -.035em; }
+.hero h1, .hero h2, .hero p, .home-hero h1, .home-hero h2, .home-hero p { color: #fff; }
+.hero .eyebrow, .home-hero .eyebrow { color: #ffe0e5; }
 .hero, .home-hero, .live-hero { border-radius: 26px; box-shadow: var(--rf-shadow); }
 .hero { margin: 28px 0 20px; padding: clamp(24px,4vw,42px); background: linear-gradient(120deg,#172b83 0%,#253f9a 60%,#c8102e 140%); gap: 28px; }
 .hero h1, .home-hero h1, .live-hero h1 { letter-spacing: -.05em; line-height: 1.04; }
