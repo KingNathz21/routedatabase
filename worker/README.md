@@ -70,9 +70,7 @@ SELECT status, COUNT(*) AS total FROM routes GROUP BY status ORDER BY status;
 
 Expected initial totals from the current archive are 750 current and 93 withdrawn routes.
 
-## Data import
-
-The existing `data/routes.json` remains the source of truth for the current website. Do not delete, rename, or replace it. The D1 import process will be added and tested separately so both `current` and `withdrawn` route records and all original fields are preserved in each row's `raw_json` column.
+The existing `data/routes.json` remains the source of truth for the current website. Do not delete, rename, or replace it. The importer preserves all original route fields in `raw_json` and also populates normalized operator and garage tables.
 
 ## Security and limits
 
