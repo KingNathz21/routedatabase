@@ -155,7 +155,7 @@ async function main() {
     }
 
     for (let index = 0; index < batches.length; index++) {
-      const sql = batches[index].map(insertStatement).join("\n\n") + "\n";
+      const sql = batches[index].join("\n\n") + "\n";
       const sqlPath = join(tempDir, `routes-${String(index + 1).padStart(3, "0")}.sql`);
       await writeFile(sqlPath, sql, "utf8");
 
