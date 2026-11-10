@@ -8,7 +8,7 @@ const workerDir = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const repoRoot = resolve(workerDir, "..");
 const sourcePath = join(repoRoot, "data", "routes.json");
 const databaseName = "routeflow-london";
-const batchSize = 25;
+const batchSize = 10;
 
 function sqlString(value) {
   if (value === null || value === undefined || value === "") return "NULL";
@@ -79,11 +79,69 @@ function insertStatement(row) {
     updated_at=CURRENT_TIMESTAMP;`;
 }
 
+function slug(value) {
+  return String(value ?? "")
+    .normalize("NFKD")
+    .replace(/[\\u0300-\\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "unknown";
+}
+
+function entityStatements(data) {
+  const operators = new Map();
+  const garages = new Map();
+
+  for (const status of ["current", "withdrawn"]) {
+    for (const route of data[status] || []) {
+      const operatorName = cleanText(status === "current" ? route.Operator : route["Final Operator"]);
+      const garageName = cleanText(status === "current" ? route.Garage : route["Final Garage"]);
+      const logo = cleanText(route.OperatorLogo);
+
+      let operatorId = null;
+      if (operatorName) {
+        const operatorKey = operatorName.toLowerCase();
+        operatorId = "op:" + slug(operatorName);
+        const existing = operators.get(operatorKey);
+        operators.set(operatorKey, {
+          id: operatorId,
+          name: operatorName,
+          logo: existing?.logo || logo
+        });
+      }
+
+      if (garageName) {
+        const garageKey = (operatorName || "").toLowerCase() + "|" + garageName.toLowerCase();
+        garages.set(garageKey, {
+          id: "garage:" + slug(operatorName) + ":" + slug(garageName),
+          name: garageName,
+          operatorId
+        });
+      }
+    }
+  }
+
+  const statements = [];
+  for (const operator of operators.values()) {
+    statements.push(`INSERT INTO operators (id, name, logo_url)
+      VALUES (${sqlString(operator.id)}, ${sqlString(operator.name)}, ${sqlString(operator.logo)})
+      ON CONFLICT(id) DO UPDATE SET name=excluded.name,
+      logo_url=COALESCE(excluded.logo_url, operators.logo_url);`);
+  }
+  for (const garage of garages.values()) {
+    statements.push(`INSERT INTO garages (id, name, operator_id)
+      VALUES (${sqlString(garage.id)}, ${sqlString(garage.name)}, ${sqlString(garage.operatorId)})
+      ON CONFLICT(id) DO UPDATE SET name=excluded.name, operator_id=excluded.operator_id;`);
+  }
+  return statements;
+}
+
 async function main() {
   const data = JSON.parse(await readFile(sourcePath, "utf8"));
   const records = [
-    ...(data.current || []).map((route) => mapRoute(route, "current")),
-    ...(data.withdrawn || []).map((route) => mapRoute(route, "withdrawn"))
+    ...entityStatements(data),
+    ...(data.current || []).map((route) => insertStatement(mapRoute(route, "current"))),
+    ...(data.withdrawn || []).map((route) => insertStatement(mapRoute(route, "withdrawn")))
   ];
   if (!records.length) throw new Error("No current or withdrawn route records found.");
 
