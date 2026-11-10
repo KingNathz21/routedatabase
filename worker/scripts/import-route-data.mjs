@@ -138,11 +138,12 @@ function entityStatements(data) {
 
 async function main() {
   const data = JSON.parse(await readFile(sourcePath, "utf8"));
-  const records = [
-    ...entityStatements(data),
+  const entitySql = entityStatements(data);
+  const routeSql = [
     ...(data.current || []).map((route) => insertStatement(mapRoute(route, "current"))),
     ...(data.withdrawn || []).map((route) => insertStatement(mapRoute(route, "withdrawn")))
   ];
+  const records = [...entitySql, ...routeSql];
   if (!records.length) throw new Error("No current or withdrawn route records found.");
 
   const execute = process.argv.includes("--execute");
@@ -170,7 +171,7 @@ async function main() {
       }
     }
 
-    console.log(`${execute ? "Imported" : "Prepared"} ${records.length} route records (${data.current?.length || 0} current, ${data.withdrawn?.length || 0} withdrawn) in ${batches.length} batches.`);
+    console.log(`${execute ? "Imported" : "Prepared"} ${routeSql.length} route records (${data.current?.length || 0} current, ${data.withdrawn?.length || 0} withdrawn), plus ${entitySql.length} operator/garage records, in ${batches.length} batches.`);
     if (!execute) console.log("Run again with --execute to apply the batches to the remote D1 database.");
   } finally {
     await rm(tempDir, { recursive: true, force: true });
