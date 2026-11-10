@@ -40,6 +40,36 @@ The Cloudflare dashboard binding already created for this Worker should use the 
 
 The API is deliberately read-only in this first foundation release. Admin writes and user-specific data must not be exposed until Firebase ID-token verification and role checks are implemented.
 
+## Import the existing route archive
+
+The importer reads the existing root-level `data/routes.json` file without modifying it. It imports all current and withdrawn entries, stores every original field in `raw_json`, and is safe to re-run because it uses stable IDs and upserts.
+
+From the repository root:
+
+```bash
+node worker/scripts/validate-route-data.mjs
+cd worker
+npx wrangler d1 migrations apply routeflow-london --remote
+cd ..
+node worker/scripts/import-route-data.mjs --execute
+```
+
+The import runs in small batches against the remote D1 database. Review the Wrangler output; if a batch fails, fix the reported issue before continuing. Re-running the importer updates the same route records rather than creating duplicates.
+
+To preview the batches without writing to D1, run:
+
+```bash
+node worker/scripts/import-route-data.mjs
+```
+
+After import, check the totals in the Cloudflare D1 Console with:
+
+```sql
+SELECT status, COUNT(*) AS total FROM routes GROUP BY status ORDER BY status;
+```
+
+Expected initial totals from the current archive are 750 current and 93 withdrawn routes.
+
 ## Data import
 
 The existing `data/routes.json` remains the source of truth for the current website. Do not delete, rename, or replace it. The D1 import process will be added and tested separately so both `current` and `withdrawn` route records and all original fields are preserved in each row's `raw_json` column.
