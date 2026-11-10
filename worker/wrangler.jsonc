@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "routeflow-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-10",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "routeflow-london",
+      "database_id": "fffa80de-d09f-4fb5-aa47-99c6968672b6",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
