@@ -19,6 +19,13 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           find . -maxdepth 1 -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check
+      - name: Check backend JavaScript syntax
+        run: |
+          node --check worker/src/index.js
+          node --check worker/scripts/import-route-data.mjs
+          node --check worker/scripts/validate-route-data.mjs
+      - name: Validate route archive for D1 import
+        run: node worker/scripts/validate-route-data.mjs
       - name: Validate JSON data and app manifest
         run: |
           node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest', 'utf8')); JSON.parse(require('fs').readFileSync('data/routes.json', 'utf8')); console.log('Manifest and route database JSON are valid.')"
