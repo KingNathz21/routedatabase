@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = resolve(fileURLToPath(new URL("../../..", import.meta.url)));
+const repoRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const source = JSON.parse(await readFile(resolve(repoRoot, "data/routes.json"), "utf8"));
 const current = source.current || [];
 const withdrawn = source.withdrawn || [];
