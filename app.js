@@ -121,7 +121,7 @@ function renderEmptyDetail() {
 function renderDetail() {
   const route = state.selected;
   if (!route) return;
-  const current = !("Date Withdrawn" in route);
+  const current = route.__status ? route.__status === "current" : !("Date Withdrawn" in route);
   const start = route.Start || route["Former Start"] || "Unknown start";
   const destination = route.Destination || route["Former Destination"] || "Unknown destination";
   const imageStyle = route.Image ? `style="background-image:url('${encodeURI(route.Image)}')"` : "";
@@ -334,15 +334,14 @@ function applySearch() {
 
 async function init() {
   try {
-    const response = await fetch("data/routes.json");
-    if (!response.ok) throw new Error("Route database could not be loaded.");
-    state.data = await response.json();
+    if (!window.RouteFlowDatabase) throw new Error("The live route database connector is unavailable. Refresh the page and try again.");
+    state.data = await window.RouteFlowDatabase.getArchive();
     el("currentCount").textContent = state.data.current.length.toLocaleString("en-GB");
     el("withdrawnCount").textContent = state.data.withdrawn.length.toLocaleString("en-GB");
     populateAdvancedFilters();
     renderList();
   } catch (error) {
-    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} Open the site through a local web server rather than double-clicking index.html.</p>`;
+    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} The live RouteFlow database could not be reached.</p>`;
   }
 }
 
