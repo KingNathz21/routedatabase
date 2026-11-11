@@ -105,7 +105,7 @@
     actions.className = "route-app-actions";
     actions.innerHTML = `<button id="favouriteRouteButton" type="button" aria-pressed="${saved}">${saved ? "★ Saved" : "☆ Save route"}</button><button id="shareRouteButton" class="ghost-button" type="button">Share</button>`;
     hero.appendChild(actions);
-    document.getElementById("favouriteRouteButton")?.addEventListener("click", () => toggleFavourite(route));
+    document.getElementById("favouriteRouteButton")?.addEventListener("click", async () => { const button=document.getElementById("favouriteRouteButton"); const saved=readList(FAVOURITES_KEY).includes(key); try { const signedIn=await window.RouteFlowAuth?.ready; if(signedIn){ if(saved) await window.RouteFlowAuth.removeRoute(route.Route); else await window.RouteFlowAuth.saveRoute(route.Route); } toggleFavourite(route); if(!signedIn&&button) button.title="Saved on this device. Sign in to sync across devices."; } catch(error) { if(button) button.title=error.message; } });
     document.getElementById("shareRouteButton")?.addEventListener("click", () => shareRoute(route));
   }
 
