@@ -180,3 +180,5 @@ footer p{margin:0;font-size:inherit}
 @media(max-width:700px){.mobile-app-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
 @media(min-width:701px) and (max-width:1050px){.site-nav{max-width:calc(100vw - 260px);overflow-x:auto;scrollbar-width:none}.site-nav::-webkit-scrollbar{display:none}.site-nav a{white-space:nowrap;flex:0 0 auto}}
+
+.account-link{padding:9px 13px;border:1px solid var(--border);border-radius:11px;text-decoration:none;color:var(--accent);font-weight:800;white-space:nowrap}.account-secondary{min-height:38px;padding:7px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--ink);font-weight:750;cursor:pointer}.account-secondary:hover{border-color:var(--accent);color:var(--accent)}
