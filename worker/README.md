@@ -32,13 +32,14 @@ The Cloudflare dashboard binding already created for this Worker should use the 
 ## API endpoints
 
 - `GET /api/health` — Worker and database health.
+- `GET /api/stats` — live current/withdrawn route, operator and garage totals for the homepage.
 - `GET /api/routes?status=current&search=...&limit=50&offset=0` — paginated route list.
 - `GET /api/routes/:routeNumber` — one route; defaults to current before withdrawn.
 - `GET /api/operators` — operators.
 - `GET /api/garages` — garages.
 - `GET /api/fleet?search=...&limit=50&offset=0` — fleet records.
 
-The API is deliberately read-only in this first foundation release. Admin writes and user-specific data must not be exposed until Firebase ID-token verification and role checks are implemented.
+Public route, operator, garage, fleet and statistics endpoints are read-only. User profile, settings and saved-item endpoints are protected by Firebase ID-token verification; administrative writes are not exposed.
 
 ## Import the existing route archive
 
