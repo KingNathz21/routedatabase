@@ -45,3 +45,12 @@ You may also use a full HTTPS image URL, but local images are more dependable.
 ## Editing route information
 
 All editable route content is stored in `data/routes.json`. Search for the route number and change the fields directly.
+
+
+## RouteFlow pages
+
+- `journey-planner.html` uses the TfL Journey Planner API to compare public transport options.
+- `operators.html` groups current and withdrawn route records by operator and garage.
+- `fleet.html` explores vehicle models, power types and route associations recorded in `data/routes.json`.
+
+The operator and fleet directories describe archive records; they are not live vehicle tracking or fleet allocation feeds.

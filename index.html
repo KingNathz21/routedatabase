@@ -10,7 +10,7 @@
 <body>
 <header class="site-header"><div class="header-inner">
 <a class="brand" href="index.html" aria-label="RouteFlow London home"><img class="brand-logo" src="IMG_3442.png" alt=""><span>RouteFlow London</span></a>
-<nav class="site-nav" aria-label="Main navigation"><a class="active" href="index.html">Home</a><a href="routes.html">Routes</a><a href="arrivals.html">Live arrivals</a><a href="disruptions.html">Disruptions</a></nav>
+<nav class="site-nav" aria-label="Main navigation"><a class="active" aria-current="page" href="index.html">Home</a><a  href="routes.html">Routes</a><a  href="journey-planner.html">Plan a journey</a><a  href="arrivals.html">Live arrivals</a><a  href="disruptions.html">Disruptions</a><a  href="operators.html">Operators</a><a  href="fleet.html">Fleet</a></nav>
 <button id="themeButton" class="ghost-button" type="button">Dark mode</button>
 </div></header>
 <main class="home-main">
@@ -21,22 +21,25 @@
 </section>
 <section class="operator-strip" aria-labelledby="operatorHeading"><div class="operator-strip-heading"><div><p class="eyebrow">The people moving London</p><h2 id="operatorHeading">London bus operators</h2></div><span>Across the capital</span></div>
 <div class="operator-carousel" role="region" aria-label="London bus operator logos"><div class="operator-track">
-<div class="operator-logo"><img src="assets/operators/arriva.png" alt="Arriva"><span>Arriva London</span></div>
-<div class="operator-logo"><img src="assets/operators/go-ahead-london.png" alt="Go-Ahead"><span>Go-Ahead London</span></div>
-<div class="operator-logo"><img src="assets/operators/metroline.png" alt="Metroline"><span>Metroline</span></div>
-<div class="operator-logo"><img src="assets/operators/stagecoach.png" alt="Stagecoach"><span>Stagecoach London</span></div>
-<div class="operator-logo"><img src="assets/operators/ratp-dev-transit-london.png" alt="RATP Dev"><span>RATP Dev Transit London</span></div>
-<div class="operator-logo"><img src="assets/operators/transport-uk-london-bus.png" alt="Transport UK"><span>Transport UK London Bus</span></div>
+<div class="operator-logo"><span class="operator-mark">AL</span><span>Arriva London</span></div>
+<div class="operator-logo"><span class="operator-mark">GA</span><span>Go-Ahead London</span></div>
+<div class="operator-logo"><span class="operator-mark">M</span><span>Metroline</span></div>
+<div class="operator-logo"><span class="operator-mark">S</span><span>Stagecoach London</span></div>
+<div class="operator-logo"><span class="operator-mark">R</span><span>RATP Dev Transit London</span></div>
+<div class="operator-logo"><span class="operator-mark">TU</span><span>Transport UK London Bus</span></div>
 </div></div></section>
 <section class="feature-grid" aria-label="Explore RouteFlow">
 <a class="feature-card" href="arrivals.html"><span class="feature-icon" aria-hidden="true">↗</span><h2>Live arrivals</h2><p>Find a stop, choose your direction and see live TfL predictions that keep you moving.</p><span class="card-link">Explore live arrivals →</span></a>
 <a class="feature-card" href="routes.html"><span class="feature-icon" aria-hidden="true">↔</span><h2>London bus routes</h2><p>Explore current and withdrawn routes, operators, garages, vehicles and stop sequences.</p><span class="card-link">Browse all routes →</span></a>
 <a class="feature-card" href="disruptions.html"><span class="feature-icon" aria-hidden="true">!</span><h2>Service status</h2><p>Check London transport disruptions and quickly identify the services affected.</p><span class="card-link">View service status →</span></a>
+<a class="feature-card" href="journey-planner.html"><span class="feature-icon" aria-hidden="true">⇢</span><h2>Journey planner</h2><p>Compare public transport options between two places with TfL journey results.</p><span class="card-link">Plan a journey →</span></a>
+<a class="feature-card" href="operators.html"><span class="feature-icon" aria-hidden="true">◎</span><h2>Operators & garages</h2><p>Explore the operators and garages connected to the London bus network.</p><span class="card-link">Explore operators →</span></a>
+<a class="feature-card" href="fleet.html"><span class="feature-icon" aria-hidden="true">▰</span><h2>Fleet & vehicles</h2><p>Discover vehicle models and power types recorded across route services.</p><span class="card-link">Explore vehicles →</span></a>
 </section>
 <section class="home-section"><div><p class="eyebrow">Made for everyday journeys</p><h2>Less searching. More getting there.</h2><p>RouteFlow makes useful London transport information easier to find, understand and use — whether you're planning ahead or already on the move.</p></div>
 <div class="benefit-list"><div><strong>Find it quickly</strong><span>Search route numbers, places, stops and Countdown codes.</span></div><div><strong>Know before you go</strong><span>Check service updates and live arrival predictions.</span></div><div><strong>Works on the move</strong><span>A responsive experience with app-style navigation on mobile.</span></div></div></section>
 </main>
-<nav class="mobile-app-nav" aria-label="Mobile navigation"><a class="active" href="index.html"><span>⌂</span>Home</a><a href="routes.html"><span>↔</span>Routes</a><a href="arrivals.html"><span>◷</span>Arrivals</a><a href="disruptions.html"><span>!</span>Status</a></nav>
+<nav class="mobile-app-nav" aria-label="Mobile navigation"><a class="active" href="index.html"><span>⌂</span>Home</a><a  href="routes.html"><span>↔</span>Routes</a><a  href="journey-planner.html"><span>⇢</span>Plan</a><a  href="arrivals.html"><span>◷</span>Arrivals</a><a  href="operators.html"><span>＋</span>More</a></nav>
 <footer><p>RouteFlow London · An independent London transport information project. Live service information supplied by Transport for London.</p></footer>
 <script src="nav-performance.js"></script><script src="site.js"></script>
 </body></html>

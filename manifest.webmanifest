@@ -1,7 +1,7 @@
 {
   "name": "RouteFlow London",
   "short_name": "RouteFlow",
-  "description": "London bus routes, live arrivals and service status.",
+  "description": "Plan London journeys, explore bus routes, live arrivals, service status, operators and vehicles.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
