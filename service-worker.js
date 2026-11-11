@@ -1,9 +1,9 @@
-const CACHE_NAME = "routeflow-app-v5";
+const CACHE_NAME = "routeflow-app-v6";
 const APP_SHELL = [
-  "./","./index.html","./routes.html","./arrivals.html","./disruptions.html","./journey-planner.html","./operators.html","./fleet.html",
-  "./styles.css","./design-system.css","./directory.css","./routeflow-redesign.css","./brand.css","./nav.css",
+  "./","./index.html","./routes.html","./arrivals.html","./disruptions.html","./journey-planner.html","./operators.html","./fleet.html","./login.html","./dashboard.html","./profile.html","./settings.html",
+  "./styles.css","./design-system.css","./directory.css","./account.css","./routeflow-redesign.css","./brand.css","./nav.css",
   "./filters.css","./route-layout.css","./route-gallery.css","./route-app.css","./live.css",
-  "./arrivals-pro.css","./home.css","./site.js","./nav-performance.js","./config.js",
+  "./arrivals-pro.css","./home.css","./site.js","./nav-performance.js","./config.js","./firebase-config.js","./auth.js","./login-page.js","./dashboard.js","./profile.js","./settings.js",
   "./app.js","./routes.js","./arrivals.js","./disruptions.js","./journey-planner.js","./operators.js","./fleet.js","./app-shell.js","./route-data-overrides.js",
   "./route-layout.js","./route-gallery.js","./route-app.js","./IMG_3442.png","./manifest.webmanifest"
 ];
