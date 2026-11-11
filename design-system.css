@@ -174,3 +174,7 @@ footer p{margin:0;font-size:inherit}
 }
 @media(max-width:390px){.filter-grid{grid-template-columns:1fr}.hero-actions{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}.ghost-button{font-size:.76rem}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* RouteFlow v2 navigation and operator identity refinements */
+.operator-mark{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:13px;background:linear-gradient(145deg,#14233d,#315b9d);color:#fff;font-size:.78rem;font-weight:900;letter-spacing:-.04em}
+@media(max-width:700px){.mobile-app-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
