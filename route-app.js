@@ -15,7 +15,7 @@
   }
 
   function routeKey(route) {
-    const status = route && Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current";
+    const status = route?.__status || (route && Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current");
     return `${status}:${route?.Route || ""}`;
   }
 
@@ -27,7 +27,7 @@
 
   function selectRoute(route) {
     if (!route) return;
-    state.filter = Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current";
+    state.filter = route.__status || (Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current");
     state.selected = route;
     state.selectedDirection = "outbound";
     document.querySelectorAll(".filter").forEach(button => button.classList.toggle("active", button.dataset.filter === state.filter));
@@ -39,7 +39,7 @@
   function updateUrl(route) {
     const url = new URL(location.href);
     url.searchParams.set("route", route.Route);
-    url.searchParams.set("status", Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current");
+    url.searchParams.set("status", route.__status || (Object.prototype.hasOwnProperty.call(route, "Date Withdrawn") ? "withdrawn" : "current"));
     history.replaceState({}, "", url);
   }
 
