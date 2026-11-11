@@ -45,6 +45,10 @@ async function handle(request,env){
    }
    return json({error:"Not found"},404,request);
   }
+  if(method==="GET"&&path==="/api/stats"){
+   const counts=await env.DB.prepare("SELECT COUNT(*) AS total,SUM(CASE WHEN status='current' THEN 1 ELSE 0 END) AS current,SUM(CASE WHEN status='withdrawn' THEN 1 ELSE 0 END) AS withdrawn,COUNT(DISTINCT CASE WHEN operator_name IS NOT NULL AND TRIM(operator_name)<>'' THEN operator_name END) AS operators,COUNT(DISTINCT CASE WHEN garage_name IS NOT NULL AND TRIM(garage_name)<>'' THEN garage_name END) AS garages FROM routes").first();
+   return json({data:{total:counts?.total||0,current:counts?.current||0,withdrawn:counts?.withdrawn||0,operators:counts?.operators||0,garages:counts?.garages||0},source:"routeflow-london"},200,request);
+  }
   if(method==="GET"&&path==="/api/routes"){const status=url.searchParams.get("status"),search=(url.searchParams.get("search")||"").trim().slice(0,80),limit=Math.min(100,Math.max(1,Number(url.searchParams.get("limit"))||50)),offset=Math.max(0,Number(url.searchParams.get("offset"))||0),where=[],values=[];if(status==="current"||status==="withdrawn"){where.push("status=?");values.push(status);}if(search){where.push("(route_number LIKE ? OR start_point LIKE ? OR destination LIKE ? OR operator_name LIKE ?)");const term="%"+search+"%";values.push(term,term,term,term);}const clause=where.length?" WHERE "+where.join(" AND "):"";const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM routes"+clause).bind(...values).first(),rows=await env.DB.prepare("SELECT * FROM routes"+clause+" ORDER BY route_number COLLATE NOCASE LIMIT ? OFFSET ?").bind(...values,limit,offset).all();return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);}
   const routeMatch=path.match(/^\/api\/routes\/([^/]+)$/);
   if(method==="GET"&&routeMatch){
