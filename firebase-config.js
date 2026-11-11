@@ -6,5 +6,5 @@ window.ROUTEFLOW_CONFIG={
   projectId:"rflofficial",
   appId:"1:692125768573:web:4eb970fd9bfcd44f93ca14"
  },
- apiBaseUrl:"https://routeflow-api.REPLACE_WITH_CLOUDFLARE_SUBDOMAIN.workers.dev"
+ apiBaseUrl:"https://routeflow-api.nmorris210509.workers.dev"
 };
