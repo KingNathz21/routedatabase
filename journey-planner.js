@@ -2,7 +2,8 @@
   const form=document.querySelector("#journeyForm"),from=document.querySelector("#journeyFrom"),to=document.querySelector("#journeyTo");
   const results=document.querySelector("#journeyResults"),heading=document.querySelector("#journeyResultsHeading"),meta=document.querySelector("#journeyResultMeta"),submit=document.querySelector("#planJourneyButton");
   const dateInput=document.querySelector("#journeyDate"),timeInput=document.querySelector("#journeyTime");
-  const today=new Date(),pad=n=>String(n).padStart(2,"0");\n  let lastJourneys=[],lastSearch={};
+  const today=new Date(),pad=n=>String(n).padStart(2,"0");
+  let lastJourneys=[],lastSearch={};
   dateInput.min=`${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
   const escape=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
   const api=(path)=>{const key=window.APP_CONFIG?.tflApiKey?.trim();return `https://api.tfl.gov.uk${path}${key?`${path.includes("?")?"&":"?"}app_key=${encodeURIComponent(key)}`:""}`;};
