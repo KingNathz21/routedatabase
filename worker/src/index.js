@@ -46,6 +46,16 @@ async function handle(request,env){
    return json({error:"Not found"},404,request);
   }
   if(method==="GET"&&path==="/api/routes"){const status=url.searchParams.get("status"),search=(url.searchParams.get("search")||"").trim().slice(0,80),limit=Math.min(100,Math.max(1,Number(url.searchParams.get("limit"))||50)),offset=Math.max(0,Number(url.searchParams.get("offset"))||0),where=[],values=[];if(status==="current"||status==="withdrawn"){where.push("status=?");values.push(status);}if(search){where.push("(route_number LIKE ? OR start_point LIKE ? OR destination LIKE ? OR operator_name LIKE ?)");const term="%"+search+"%";values.push(term,term,term,term);}const clause=where.length?" WHERE "+where.join(" AND "):"";const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM routes"+clause).bind(...values).first(),rows=await env.DB.prepare("SELECT * FROM routes"+clause+" ORDER BY route_number COLLATE NOCASE LIMIT ? OFFSET ?").bind(...values,limit,offset).all();return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);}
+  const routeMatch=path.match(/^\/api\/routes\/([^/]+)$/);
+  if(method==="GET"&&routeMatch){
+    const number=decodeURIComponent(routeMatch[1]),status=url.searchParams.get("status");
+    let q="SELECT * FROM routes WHERE route_number=?",values=[number];
+    if(status==="current"||status==="withdrawn"){q+=" AND status=?";values.push(status);}
+    const row=await env.DB.prepare(q+" ORDER BY CASE status WHEN 'current' THEN 0 ELSE 1 END LIMIT 1").bind(...values).first();
+    if(!row)return json({error:"Route not found"},404,request);
+    let raw={};try{raw=JSON.parse(row.raw_json||"{}");}catch{}
+    return json({data:{...raw,id:row.id,routeNumber:row.route_number,status:row.status,startPoint:row.start_point,destination:row.destination,operator:row.operator_name,garage:row.garage_name,routeType:row.route_type,vehicleType:row.vehicle_type,powerType:row.power_type,pvr:row.pvr,via:row.via,serviceNotes:row.service_notes,updatedAt:row.updated_at}},200,request);
+  }
   if(method==="GET"&&path==="/api/operators"){const r=await env.DB.prepare("SELECT id,name,website_url AS websiteUrl,logo_url AS logoUrl FROM operators ORDER BY name").all();return json({data:r.results||[]},200,request);}
   if(method==="GET"&&path==="/api/garages"){const r=await env.DB.prepare("SELECT id,name,operator_id AS operatorId,address,postcode FROM garages ORDER BY name").all();return json({data:r.results||[]},200,request);}
   if(method==="GET"&&path==="/api/fleet"){const r=await env.DB.prepare("SELECT id,fleet_number AS fleetNumber,registration,manufacturer,model,vehicle_type AS vehicleType,power_type AS powerType,operator_id AS operatorId,garage_id AS garageId,status,notes,updated_at AS updatedAt FROM vehicles ORDER BY fleet_number LIMIT 100").all();return json({data:r.results||[]},200,request);}
