@@ -19,6 +19,16 @@
 <div class="hero-actions"><a class="home-primary" href="arrivals.html">Find live arrivals <span aria-hidden="true">↗</span></a><a class="home-secondary" href="routes.html">Explore the route database</a></div></div>
 <div class="network-panel" aria-label="London transport network visual"><span class="network-dot red"></span><span class="network-line"></span><span class="network-dot blue"></span><span class="network-line short"></span><span class="network-dot red"></span><strong>One platform. All of London.</strong></div>
 </section>
+<section class="network-stats" aria-labelledby="networkStatsHeading">
+  <div class="network-stats-heading"><div><p class="eyebrow">The RouteFlow archive</p><h2 id="networkStatsHeading">London's bus network, at a glance.</h2></div><span id="statsUpdated" class="stats-updated" aria-live="polite">Connecting to live database…</span></div>
+  <div class="network-stats-grid">
+    <article><span class="stats-value" id="statCurrent">—</span><span class="stats-label">Current routes</span></article>
+    <article><span class="stats-value" id="statWithdrawn">—</span><span class="stats-label">Withdrawn routes</span></article>
+    <article><span class="stats-value" id="statTotal">—</span><span class="stats-label">Routes in archive</span></article>
+    <article><span class="stats-value" id="statOperators">—</span><span class="stats-label">Operators recorded</span></article>
+  </div>
+  <p id="statsNote" class="stats-note">Figures are loaded from the RouteFlow Cloudflare database, not hard-coded sample data.</p>
+</section>
 <section class="operator-strip" aria-labelledby="operatorHeading"><div class="operator-strip-heading"><div><p class="eyebrow">The people moving London</p><h2 id="operatorHeading">London bus operators</h2></div><span>Across the capital</span></div>
 <div class="operator-carousel" role="region" aria-label="London bus operator logos"><div class="operator-track">
 <div class="operator-logo"><span class="operator-mark">AL</span><span>Arriva London</span></div>
@@ -41,5 +51,5 @@
 </main>
 <nav class="mobile-app-nav" aria-label="Mobile navigation"><a class="active" href="index.html"><span>⌂</span>Home</a><a  href="routes.html"><span>↔</span>Routes</a><a  href="journey-planner.html"><span>⇢</span>Plan</a><a  href="arrivals.html"><span>◷</span>Arrivals</a><a href="dashboard.html"><span>◉</span>Account</a></nav>
 <footer><p>RouteFlow London · An independent London transport information project. Live service information supplied by Transport for London.</p></footer>
-<script src="nav-performance.js"></script><script src="site.js"></script>
+<script src="nav-performance.js"></script><script src="site.js"></script><script src="home-dashboard.js" defer></script>
 <script src="firebase-config.js"></script><script type="module" src="auth.js"></script></body></html>
