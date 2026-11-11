@@ -9,7 +9,7 @@ async function verifyToken(request,env){
  const decoder=new TextDecoder(),header=JSON.parse(decoder.decode(decodePart(parts[0]))),claims=JSON.parse(decoder.decode(decodePart(parts[1])));
  if(header.alg!=="RS256"||!header.kid)throw new Error("Invalid token");
  if(!firebaseKeysPromise)firebaseKeysPromise=fetch("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com").then(r=>{if(!r.ok)throw new Error("Firebase key lookup failed");return r.json();}).then(x=>x.keys||[]);
- const jwk=(await firebaseKeysPromise).find(k=>k.kid===header.kid);if(!jwk)throw new Error("Unknown signing key");
+ let jwk=(await firebaseKeysPromise).find(k=>k.kid===header.kid);if(!jwk){firebaseKeysPromise=null;firebaseKeysPromise=fetch("https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com").then(r=>{if(!r.ok)throw new Error("Firebase key lookup failed");return r.json();}).then(x=>x.keys||[]);jwk=(await firebaseKeysPromise).find(k=>k.kid===header.kid);}if(!jwk)throw new Error("Unknown signing key");
  const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
  const valid=await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,decodePart(parts[2]),new TextEncoder().encode(parts[0]+"."+parts[1]));
  const now=Math.floor(Date.now()/1000),project=env.FIREBASE_PROJECT_ID;
