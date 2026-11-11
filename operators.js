@@ -12,11 +12,10 @@
   }
   async function init(){
     try{
-      const response=await fetch("data/routes.json");if(!response.ok)throw new Error("The route archive could not be loaded.");
-      const data=await response.json(),map=new Map();
+      const data=await window.RouteFlowDatabase.getArchive(),map=new Map();
       [...(data.current||[]).map(r=>({...r,__withdrawn:false})),...(data.withdrawn||[]).map(r=>({...r,__withdrawn:true}))].forEach(route=>{
-        const name=operatorName(route.Operator);if(!map.has(name))map.set(name,{name,routes:new Set(),garages:new Set(),withdrawn:0});
-        const group=map.get(name);if(route.Route)group.routes.add(String(route.Route));if(route.Garage&&route.Garage!=="Not yet verified")group.garages.add(clean(route.Garage));if(route.__withdrawn)group.withdrawn++;
+        const name=operatorName(route.Operator||route["Final Operator"]);if(!map.has(name))map.set(name,{name,routes:new Set(),garages:new Set(),withdrawn:0});
+        const group=map.get(name);if(route.Route)group.routes.add(String(route.Route));const garage=route.Garage||route["Final Garage"];if(garage&&garage!=="Not yet verified")group.garages.add(clean(garage));if(route.__withdrawn)group.withdrawn++;
       });
       groups=[...map.values()].map(g=>({...g,routes:[...g.routes].sort((a,b)=>a.localeCompare(b,"en",{numeric:true})),garages:[...g.garages].sort()})).sort((a,b)=>a.name.localeCompare(b.name));
       total.textContent=groups.length;render();
