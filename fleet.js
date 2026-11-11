@@ -13,8 +13,7 @@
   }
   async function init(){
     try{
-      const response=await fetch("data/routes.json");if(!response.ok)throw new Error("The route archive could not be loaded.");
-      const data=await response.json(),map=new Map(),all=data.current||[];
+      const data=await window.RouteFlowDatabase.getArchive(),map=new Map(),all=data.current||[];
       all.forEach(route=>{
         const names=split(route["Models Used"]);names.forEach(name=>{
           if(!map.has(name))map.set(name,{name,routes:new Set(),operators:new Set(),powers:new Set(),decks:new Set()});
