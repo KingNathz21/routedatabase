@@ -22,6 +22,7 @@
       const warnings=(journey.legs||[]).flatMap(l=>l.disruptions||[]).slice(0,2);
       return `<article class="journey-card"><div class="journey-card-top"><div><div class="journey-times">${fmt(journey.startDateTime)} <span>→</span> ${fmt(journey.arrivalDateTime)}</div><small>${legs.length} leg${legs.length===1?"":"s"} · ${escape(journey.routeOptions?.[0]?.name||"Public transport")}</small></div><div><span class="journey-duration">${duration(journey.duration)}</span> <button class="account-secondary save-journey-button" type="button" data-save-trip="${index}">Save journey</button></div></div><div class="journey-legs">${legMarkup}</div>${warnings.length?`<div class="journey-warning">${escape(warnings[0].description||"Disruption information supplied by TfL")}</div>`:""}</article>`;
     }).join("");
+    results.querySelectorAll("[data-save-trip]").forEach(button=>button.addEventListener("click",async()=>{const user=await window.RouteFlowAuth?.ready;if(!user){location.href="login.html?next=dashboard.html";return;}button.disabled=true;try{const journey=lastJourneys[Number(button.dataset.saveTrip)]||{};await window.RouteFlowAuth.saveJourney({origin:lastSearch.origin,destination:lastSearch.destination,journey:{duration:journey.duration,startDateTime:journey.startDateTime,arrivalDateTime:journey.arrivalDateTime}});button.textContent="Saved";}catch(error){button.disabled=false;button.textContent="Try again";alert(error.message);}}));
   }
   async function plan(event){
     event.preventDefault();
