@@ -184,3 +184,5 @@ body.rf-reduce-motion *, body.rf-reduce-motion *::before, body.rf-reduce-motion 
   .mobile-app-nav { left: 6px; right: 6px; padding-inline: 3px; }
   .mobile-app-nav a { font-size: .61rem; }
 }
+
+.nav-more.nav-more-current > summary { color: var(--rf-red); background: color-mix(in srgb,var(--rf-red) 8%,transparent); }
