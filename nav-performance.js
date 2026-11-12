@@ -10,13 +10,37 @@
   const navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
   const prefetched = new Set();
 
-  // Keep less-frequent destinations available without overcrowding the header.
+  // Keep the header focused on the four most-used destinations.
   const desktopNav = document.querySelector(".site-nav");
-  if (desktopNav && !desktopNav.querySelector(".nav-more")) {
-    const more = document.createElement("details");
-    more.className = "nav-more";
-    more.innerHTML = '<summary>More</summary><div class="nav-more-menu"><a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a></div>';
-    desktopNav.append(more);
+  if (desktopNav) {
+    let more = desktopNav.querySelector(".nav-more");
+    if (!more) {
+      more = document.createElement("details");
+      more.className = "nav-more";
+      more.innerHTML = '<summary>More</summary><div class="nav-more-menu"></div>';
+      desktopNav.append(more);
+    }
+    const menu = more.querySelector(".nav-more-menu");
+    ["disruptions.html", "operators.html", "fleet.html"].forEach(file => {
+      const link = [...desktopNav.querySelectorAll(":scope > a")].find(item => item.pathname.endsWith(file));
+      if (link) menu.append(link);
+    });
+    if (!menu.querySelector('a[href="routes.html?status=withdrawn"]')) {
+      const withdrawn = document.createElement("a");
+      withdrawn.href = "routes.html?status=withdrawn";
+      withdrawn.textContent = "Withdrawn routes";
+      menu.append(withdrawn);
+    }
+    if (!menu.querySelector('a[href="blog.html"]')) {
+      const blog = document.createElement("a");
+      blog.href = "blog.html";
+      blog.textContent = "Guides & updates";
+      menu.append(blog);
+    }
+    if (["disruptions.html", "operators.html", "fleet.html", "blog.html"].includes(currentPath)) {
+      more.classList.add("nav-more-current");
+      more.open = false;
+    }
   }
 
   function prefetch(link) {
