@@ -70,7 +70,8 @@
     document.body.append(mobileNav);
   }
   mobileNav.innerHTML = pageLinks.map(item => {
-    const active = currentPath === item.href || (item.href === "routes.html" && currentPath === "routes.html");
+    const accountPage = ["dashboard.html", "profile.html", "settings.html", "login.html"].includes(currentPath);
+    const active = currentPath === item.href || (item.href === "dashboard.html" && accountPage);
     return `<a href="${item.href}" class="${active ? "active" : ""}" ${active ? 'aria-current="page"' : ""}><span class="mobile-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span></a>`;
   }).join("");
 
