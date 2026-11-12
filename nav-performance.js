@@ -75,6 +75,15 @@
     return `<a href="${item.href}" class="${active ? "active" : ""}" ${active ? 'aria-current="page"' : ""}><span class="mobile-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span></a>`;
   }).join("");
 
+  const footer = document.querySelector("footer");
+  if (footer && !footer.querySelector(".site-footer-links")) {
+    const footerLinks = document.createElement("nav");
+    footerLinks.className = "site-footer-links";
+    footerLinks.setAttribute("aria-label", "More RouteFlow pages");
+    footerLinks.innerHTML = '<a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a><a href="dashboard.html">My account</a>';
+    footer.append(footerLinks);
+  }
+
   const main = document.querySelector("main");
   if (main) {
     if (!main.id) main.id = "main-content";
