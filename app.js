@@ -359,6 +359,11 @@ document.querySelectorAll(".filter").forEach(button => {
     document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
     button.classList.add("active");
     state.filter = button.dataset.filter;
+    document.querySelectorAll(".filter").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+    const url = new URL(location.href);
+    url.searchParams.set("status", state.filter);
+    url.searchParams.delete("route");
+    history.replaceState({}, "", url);
     state.selected = null;
     renderList();
     renderEmptyDetail();
