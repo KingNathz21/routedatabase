@@ -2,12 +2,22 @@
   const pageLinks = [
     { href: "index.html", label: "Home", icon: "⌂" },
     { href: "routes.html", label: "Routes", icon: "⇄" },
+    { href: "journey-planner.html", label: "Plan", icon: "⇢" },
     { href: "arrivals.html", label: "Arrivals", icon: "◷" },
-    { href: "disruptions.html", label: "Status", icon: "!" }
+    { href: "dashboard.html", label: "Account", icon: "◉" }
   ];
   const currentPath = location.pathname.split("/").pop() || "index.html";
   const navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
   const prefetched = new Set();
+
+  // Keep less-frequent destinations available without overcrowding the header.
+  const desktopNav = document.querySelector(".site-nav");
+  if (desktopNav && !desktopNav.querySelector(".nav-more")) {
+    const more = document.createElement("details");
+    more.className = "nav-more";
+    more.innerHTML = '<summary>More</summary><div class="nav-more-menu"><a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a></div>';
+    desktopNav.append(more);
+  }
 
   function prefetch(link) {
     const url = new URL(link.href, location.href);
@@ -36,7 +46,7 @@
     document.body.append(mobileNav);
   }
   mobileNav.innerHTML = pageLinks.map(item => {
-    const active = currentPath === item.href;
+    const active = currentPath === item.href || (item.href === "routes.html" && currentPath === "routes.html");
     return `<a href="${item.href}" class="${active ? "active" : ""}" ${active ? 'aria-current="page"' : ""}><span class="mobile-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span></a>`;
   }).join("");
 
