@@ -2,12 +2,46 @@
   const pageLinks = [
     { href: "index.html", label: "Home", icon: "⌂" },
     { href: "routes.html", label: "Routes", icon: "⇄" },
+    { href: "journey-planner.html", label: "Plan", icon: "⇢" },
     { href: "arrivals.html", label: "Arrivals", icon: "◷" },
-    { href: "disruptions.html", label: "Status", icon: "!" }
+    { href: "dashboard.html", label: "Account", icon: "◉" }
   ];
   const currentPath = location.pathname.split("/").pop() || "index.html";
   const navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
   const prefetched = new Set();
+
+  // Keep the header focused on the four most-used destinations.
+  const desktopNav = document.querySelector(".site-nav");
+  if (desktopNav) {
+    let more = desktopNav.querySelector(".nav-more");
+    if (!more) {
+      more = document.createElement("details");
+      more.className = "nav-more";
+      more.innerHTML = '<summary>More</summary><div class="nav-more-menu"></div>';
+      desktopNav.append(more);
+    }
+    const menu = more.querySelector(".nav-more-menu");
+    ["disruptions.html", "operators.html", "fleet.html"].forEach(file => {
+      const link = [...desktopNav.querySelectorAll(":scope > a")].find(item => item.pathname.endsWith(file));
+      if (link) menu.append(link);
+    });
+    if (!menu.querySelector('a[href="routes.html?status=withdrawn"]')) {
+      const withdrawn = document.createElement("a");
+      withdrawn.href = "routes.html?status=withdrawn";
+      withdrawn.textContent = "Withdrawn routes";
+      menu.append(withdrawn);
+    }
+    if (!menu.querySelector('a[href="blog.html"]')) {
+      const blog = document.createElement("a");
+      blog.href = "blog.html";
+      blog.textContent = "Guides & updates";
+      menu.append(blog);
+    }
+    if (["disruptions.html", "operators.html", "fleet.html", "blog.html"].includes(currentPath)) {
+      more.classList.add("nav-more-current");
+      more.open = false;
+    }
+  }
 
   function prefetch(link) {
     const url = new URL(link.href, location.href);
@@ -36,9 +70,19 @@
     document.body.append(mobileNav);
   }
   mobileNav.innerHTML = pageLinks.map(item => {
-    const active = currentPath === item.href;
+    const accountPage = ["dashboard.html", "profile.html", "settings.html", "login.html"].includes(currentPath);
+    const active = currentPath === item.href || (item.href === "dashboard.html" && accountPage);
     return `<a href="${item.href}" class="${active ? "active" : ""}" ${active ? 'aria-current="page"' : ""}><span class="mobile-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span></a>`;
   }).join("");
+
+  const footer = document.querySelector("footer");
+  if (footer && !footer.querySelector(".site-footer-links")) {
+    const footerLinks = document.createElement("nav");
+    footerLinks.className = "site-footer-links";
+    footerLinks.setAttribute("aria-label", "More RouteFlow pages");
+    footerLinks.innerHTML = '<a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a><a href="dashboard.html">My account</a>';
+    footer.append(footerLinks);
+  }
 
   const main = document.querySelector("main");
   if (main) {

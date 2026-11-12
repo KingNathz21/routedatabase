@@ -336,6 +336,12 @@ async function init() {
   try {
     if (!window.RouteFlowDatabase) throw new Error("The live route database connector is unavailable. Refresh the page and try again.");
     state.data = await window.RouteFlowDatabase.getArchive();
+    const requestedStatus = new URLSearchParams(location.search).get("status");
+    if (["current", "withdrawn", "all"].includes(requestedStatus)) state.filter = requestedStatus;
+    document.querySelectorAll(".filter").forEach(button => {
+      button.classList.toggle("active", button.dataset.filter === state.filter);
+      button.setAttribute("aria-pressed", String(button.dataset.filter === state.filter));
+    });
     el("currentCount").textContent = state.data.current.length.toLocaleString("en-GB");
     el("withdrawnCount").textContent = state.data.withdrawn.length.toLocaleString("en-GB");
     populateAdvancedFilters();
@@ -353,6 +359,11 @@ document.querySelectorAll(".filter").forEach(button => {
     document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
     button.classList.add("active");
     state.filter = button.dataset.filter;
+    document.querySelectorAll(".filter").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+    const url = new URL(location.href);
+    url.searchParams.set("status", state.filter);
+    url.searchParams.delete("route");
+    history.replaceState({}, "", url);
     state.selected = null;
     renderList();
     renderEmptyDetail();
