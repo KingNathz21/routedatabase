@@ -1,4 +1,4 @@
-const CACHE_NAME = "routeflow-app-v7";
+const CACHE_NAME = "routeflow-app-v8";
 const APP_SHELL = [
   "./","./index.html","./routes.html","./arrivals.html","./disruptions.html","./journey-planner.html","./operators.html","./fleet.html","./login.html","./dashboard.html","./profile.html","./settings.html","./blog.html",
   "./styles.css","./design-system.css","./directory.css","./account.css","./routeflow-redesign.css","./brand.css","./nav.css",
