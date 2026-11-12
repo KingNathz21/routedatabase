@@ -186,3 +186,7 @@ body.rf-reduce-motion *, body.rf-reduce-motion *::before, body.rf-reduce-motion 
 }
 
 .nav-more.nav-more-current > summary { color: var(--rf-red); background: color-mix(in srgb,var(--rf-red) 8%,transparent); }
+
+.site-footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 22px; margin: 12px 0 4px; }
+.site-footer-links a { color: var(--rf-muted); font-weight: 700; text-decoration: none; }
+.site-footer-links a:hover { color: var(--rf-red); text-decoration: underline; }
