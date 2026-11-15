@@ -334,7 +334,7 @@ function applySearch() {
 
 async function init() {
   try {
-    if (!window.RouteFlowDatabase) throw new Error("The live route database connector is unavailable. Refresh the page and try again.");
+    if (!window.RouteFlowDatabase) throw new Error("Routes couldn't be loaded just now. Refresh the page and try again.");
     state.data = await window.RouteFlowDatabase.getArchive();
     const requestedStatus = new URLSearchParams(location.search).get("status");
     if (["current", "withdrawn", "all"].includes(requestedStatus)) state.filter = requestedStatus;
