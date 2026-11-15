@@ -742,7 +742,24 @@
         "Sloane Square",
         "Chelsea"
       ],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/9/92/London_Bus_route_19.jpg",
+          "alt": "Arriva London route 19 bus at Finsbury Park",
+          "credit": "Oxyman",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_19.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/3.0/",
+          "licenseLabel": "CC BY-SA 3.0"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/5/d0/London_Buses_route_19_Finsbury_Park.jpg",
+          "alt": "London route 19 bus at Finsbury Park",
+          "credit": "David Howard",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Buses_route_19_Finsbury_Park.jpg",
+          "license": "https://creativecommons.org/licenses/by/2.0/",
+          "licenseLabel": "CC BY 2.0"
+        }
+      ],
       "OperatorLogo": "assets/operators/arriva-london.png",
       "OperatorLogoAlt": "Arriva London"
     },
