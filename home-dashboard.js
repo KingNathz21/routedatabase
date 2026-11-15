@@ -1,5 +1,5 @@
 (() => {
-  const API = (window.ROUTEFLOW_CONFIG?.apiBaseUrl || "https://routeflow-api.nmorris210509.workers.dev").replace(/\\/$/, "");
+  const API = (window.ROUTEFLOW_CONFIG?.apiBaseUrl || "https://routeflow-api.nmorris210509.workers.dev").replace(/\/+$/, "");
   const ids = { current: "statCurrent", withdrawn: "statWithdrawn", total: "statTotal", operators: "statOperators" };
   const section = document.querySelector(".network-stats");
   if (!section) return;
