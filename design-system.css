@@ -182,3 +182,17 @@ footer p{margin:0;font-size:inherit}
 @media(min-width:701px) and (max-width:1050px){.site-nav{max-width:calc(100vw - 260px);overflow-x:auto;scrollbar-width:none}.site-nav::-webkit-scrollbar{display:none}.site-nav a{white-space:nowrap;flex:0 0 auto}}
 
 .account-link{padding:9px 13px;border:1px solid var(--border);border-radius:11px;text-decoration:none;color:var(--accent);font-weight:800;white-space:nowrap}.account-secondary{min-height:38px;padding:7px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--ink);font-weight:750;cursor:pointer}.account-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+
+/* Polished operator strip and compact PWA controls. */
+.operator-track { animation: none !important; scroll-snap-type: x proximity; }
+.operator-logo { scroll-snap-align: start; }
+.operator-logo span { display: block !important; }
+.operator-logo .operator-mark { display: grid !important; place-items: center; flex: 0 0 42px; width: 42px; height: 42px; border-radius: 12px; background: var(--navy); color: #fff; font-size: .82rem; font-weight: 850; }
+.advanced-filter-heading { align-items: center; }
+.advanced-filter-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.archive-status { margin: 5px 0 0; color: var(--muted); font-size: .82rem; }
+.install-app-button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: var(--accent); color: #fff; font: inherit; font-size: .88rem; font-weight: 800; cursor: pointer; }
+.install-app-button:hover { background: var(--accent-dark); }
+.install-app-button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 720px) { .advanced-filter-heading { align-items: flex-start; flex-direction: column; } .advanced-filter-actions { width: 100%; } .advanced-filter-actions button { flex: 1; } }
