@@ -34,4 +34,4 @@ The app shell is cached by the service worker. The complete current/withdrawn ro
 
 ## Current image coverage
 
-Route-specific, attributed multi-photo galleries are currently populated for routes 1–14 and 19 (route 10 is withdrawn). Further route photography should be added only when the image, source and reuse licence can be verified.
+Verified multi-photo galleries are currently populated for routes 2–14 and 19 (route 10 is withdrawn). Route 1 retains its existing five legacy images and now includes one separately verified, attributed Commons photo; its older images still need individual licence review. Further route photography should be added only when the image, source and reuse licence can be verified.
