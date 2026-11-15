@@ -11,7 +11,7 @@ const APP_SHELL = [
   "./dashboard.js", "./profile.js", "./settings.js", "./app.js", "./routes.js",
   "./arrivals.js", "./disruptions.js", "./journey-planner.js", "./operators.js",
   "./fleet.js", "./route-data-overrides.js", "./database-api.js", "./route-layout.js",
-  "./route-gallery.js", "./route-app.js", "./home-dashboard.js",
+  "./route-gallery.js", "./route-app.js", "./home-dashboard.js", "./firebase-config.js",
   "./IMG_3442.png", "./manifest.webmanifest"
 ];
 
