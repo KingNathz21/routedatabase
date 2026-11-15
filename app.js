@@ -390,12 +390,14 @@ el("refreshArchiveButton")?.addEventListener("click", async event => {
   button.textContent = "Updating…";
   if (status) status.textContent = "Checking for route archive updates…";
   try {
+    const selectedKey = state.selected ? { route: String(state.selected.Route), status: state.selected.__status || "current" } : null;
     state.data = await window.RouteFlowDatabase.refresh();
     el("currentCount").textContent = state.data.current.length.toLocaleString("en-GB");
     el("withdrawnCount").textContent = state.data.withdrawn.length.toLocaleString("en-GB");
+    if (selectedKey) state.selected = (state.data[selectedKey.status] || []).find(route => String(route.Route) === selectedKey.route) || null;
     populateAdvancedFilters();
     renderList();
-    renderEmptyDetail();
+    if (state.selected) renderDetail(); else renderEmptyDetail();
     if (status) status.textContent = state.data.offline
       ? "No connection · showing the saved archive from " + new Date(state.data.cachedAt).toLocaleString("en-GB")
       : "Archive refreshed and saved for offline use.";
