@@ -50,6 +50,14 @@
         {
           "src": "https://static.wikia.nocookie.net/bus-routes-in-london/images/4/4b/London_Bus_1_%28Leyland_Titan_by_Ian_Armstrong%29.jpg/revision/latest/scale-to-width-down/1000?cb=20210224185513",
           "alt": "Route 1 near Waterloo"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/0/c6/London_Bus_route_1.jpg",
+          "alt": "London Buses route 1 bus at Waterloo Road bus station",
+          "credit": "Oxyman",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_1.jpg",
+          "license": "https://creativecommons.org/licenses/by/2.5/",
+          "licenseLabel": "CC BY 2.5"
         }
       ],
       "OperatorLogo": "assets/operators/go-ahead-london.png",
