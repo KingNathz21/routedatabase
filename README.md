@@ -31,7 +31,9 @@ The frontend is static HTML, CSS and JavaScript. Its production route archive an
 
 ## Services and configuration
 
-- **Frontend:** GitHub Pages deployment is configured in `.github/workflows/static.yml`. The repository's Pages address is `https://kingnathz21.github.io/routedatabase/` once Pages deployment is enabled and completed.
+- **Live website:** https://kingnathz21.github.io/routedatabase/ (GitHub Pages deployment verified).
+- **Cloudflare Worker API:** https://routeflow-api.nmorris210509.workers.dev
+- **Cloudflare Pages:** not connected yet, so there is no `*.pages.dev` frontend URL at present.
 - **API:** `https://routeflow-api.nmorris210509.workers.dev`
 - **D1 database:** `routeflow-london`
 - **Firebase project:** `rflofficial`
