@@ -74,6 +74,17 @@ async function handle(request,env){
    const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM bus_sightings WHERE status='approved'").first();
    return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);
   }
+  if(path==="/api/admin/sightings"&&method==="GET"){
+   let user;try{user=await userFor(request,env);}catch(e){return json({error:e.message||"Unauthorised"},401,request);}
+   const profile=await env.DB.prepare("SELECT role FROM user_profiles WHERE auth_uid=?").bind(user.uid).first();
+   if(profile?.role!=="admin")return json({error:"Administrator access required"},403,request);
+   const status=url.searchParams.get("status")||"pending",allowed=["pending","approved","rejected","all"];
+   if(!allowed.includes(status))return json({error:"Invalid moderation status"},400,request);
+   const limit=Math.min(100,Math.max(1,Number(url.searchParams.get("limit"))||50)),where=status==="all"?"":"WHERE s.status=?";
+   const query="SELECT s.id,s.title,s.route_number AS routeNumber,s.fleet_number AS fleetNumber,s.registration,s.location,s.observed_at AS observedAt,s.notes,s.photo_url AS photoUrl,s.status,s.created_at AS createdAt,COALESCE(p.display_name,'RouteFlow member') AS contributor FROM bus_sightings s LEFT JOIN user_profiles p ON p.auth_uid=s.auth_uid "+where+" ORDER BY CASE s.status WHEN 'pending' THEN 0 ELSE 1 END,s.created_at ASC LIMIT ?";
+   const rows=await env.DB.prepare(query).bind(...(status==="all"?[limit]:[status,limit])).all();
+   return json({data:rows.results||[]},200,request);
+  }
   const moderationMatch=path.match(/^\/api\/admin\/sightings\/([^/]+)$/);
   if(moderationMatch&&method==="PATCH"){
    let user;try{user=await userFor(request,env);}catch(e){return json({error:e.message||"Unauthorised"},401,request);}

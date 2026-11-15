@@ -34,6 +34,12 @@
       const link = [...desktopNav.querySelectorAll(":scope > a")].find(item => item.pathname.endsWith(file));
       if (link) menu.append(link);
     });
+    if (!menu.querySelector('a[href="moderate-sightings.html"]')) {
+      const moderation = document.createElement("a");
+      moderation.href = "moderate-sightings.html";
+      moderation.textContent = "Moderate sightings";
+      menu.append(moderation);
+    }
     if (!menu.querySelector('a[href="sightings.html"]')) {
       const community = document.createElement("a");
       community.href = "sightings.html";
@@ -52,7 +58,7 @@
       blog.textContent = "Guides & updates";
       menu.append(blog);
     }
-    if (["disruptions.html", "operators.html", "fleet.html", "blog.html"].includes(currentPath)) {
+    if (["disruptions.html", "operators.html", "fleet.html", "blog.html", "sightings.html", "moderate-sightings.html"].includes(currentPath)) {
       more.classList.add("nav-more-current");
       more.open = false;
     }
