@@ -40,4 +40,16 @@ jobs:
           const missing = assets.filter(asset => !fs.existsSync(asset.replace(/^\.\//, '') || 'index.html'));
           if (missing.length) throw new Error('Missing app-shell assets: ' + missing.join(', '));
           console.log('All ' + assets.length + ' app-shell assets exist.');
+          const migrationDir = 'worker/migrations';
+          const migrations = fs.readdirSync(migrationDir).filter(name => name.endsWith('.sql'));
+          const versions = migrations.map(name => name.match(/^(\\d+)_/)?.[1]).filter(Boolean);
+          if (new Set(versions).size !== versions.length) throw new Error('Duplicate D1 migration version prefixes: ' + versions.join(', '));
+          const routes = JSON.parse(fs.readFileSync('data/routes.json', 'utf8'));
+          const allRoutes = [...(routes.current || []), ...(routes.withdrawn || [])];
+          for (const route of allRoutes) for (const photo of (route.Images || [])) {
+            const src = typeof photo === 'string' ? photo : photo.src;
+            if (!/^https:\\/\\//i.test(src || '')) throw new Error('Route ' + route.Route + ' has a non-HTTPS photo URL');
+            if (typeof photo === 'object' && photo.source && !/^https:\\/\\//i.test(photo.source)) throw new Error('Route ' + route.Route + ' has an invalid photo source URL');
+          }
+          console.log('D1 migration versions and route photo URLs are valid.');
           NODE
