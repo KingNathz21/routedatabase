@@ -8,6 +8,7 @@
   let map=null,markers=null,activeRoute="",timer=null,loading=false,markerByVehicle=new Map();
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const due=seconds=>seconds<=30?"Due":Math.max(1,Math.round(seconds/60))+" min";
+  const hasCoordinates=item=>item.lat!==null&&item.lat!==undefined&&item.lat!==""&&item.lon!==null&&item.lon!==undefined&&item.lon!==""&&Number.isFinite(Number(item.lat))&&Number.isFinite(Number(item.lon));
   const apiUrl=path=>api+path+(key?(path.includes("?")?"&":"?")+"app_key="+encodeURIComponent(key):"");
   async function fetchPredictions(route){
     const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
@@ -38,7 +39,7 @@
     const byVehicle=new Map();
     items.forEach(item=>{
       const lat=Number(item.lat),lon=Number(item.lon);
-      if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return;
+      if(!hasCoordinates(item)||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return;
       const id=String(item.vehicleId||item.id||item.naptanId||"position-"+lat+"-"+lon);
       const previous=byVehicle.get(id);
       if(!previous||(Number(item.timeToStation)||0)<(Number(previous.timeToStation)||0))byVehicle.set(id,item);
@@ -64,7 +65,7 @@
       statusTitle.textContent="Route "+route+" · "+mapped+" mapped vehicle"+(mapped===1?"":"s");
       statusDetail.textContent=items.length+" TfL prediction"+(items.length===1?"":"s")+" received. Only predictions with coordinates appear on the map.";
       const unique=new Map();
-      items.filter(item=>Number.isFinite(Number(item.lat))&&Number.isFinite(Number(item.lon))).forEach(item=>unique.set(String(item.vehicleId||item.id||item.naptanId||item.lat+"-"+item.lon),item));
+      items.filter(hasCoordinates).forEach(item=>unique.set(String(item.vehicleId||item.id||item.naptanId||item.lat+"-"+item.lon),item));
       renderVehicleList([...unique.values()],route);
     }catch(error){
       if(!silent){statusTitle.textContent="Live tracking unavailable";statusDetail.textContent=error.message;list.innerHTML='<div class="rf-map-empty"><strong>Could not load this route</strong><p>'+esc(error.message)+'</p></div>';}
