@@ -21,6 +21,7 @@
         });
       });
       models=[...map.values()].map(m=>({name:m.name,routes:[...m.routes].sort((a,b)=>a.localeCompare(b,"en",{numeric:true})),operators:[...m.operators].sort(),powers:[...m.powers].sort(),decks:[...m.decks].sort()})).sort((a,b)=>a.name.localeCompare(b.name));
+      const requestedQuery=new URLSearchParams(location.search).get("q");if(requestedQuery)search.value=requestedQuery;
       const unique=(key)=>[...new Set(models.flatMap(m=>m[key]).filter(Boolean))].sort();
       unique("power").forEach(v=>power.add(new Option(v,v)));unique("deck").forEach(v=>deck.add(new Option(v,v)));
       document.querySelector("#fleetModelTotal").textContent=models.length;

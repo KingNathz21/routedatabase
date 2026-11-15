@@ -1,55 +1,72 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#14233d"><meta name="description" content="RouteFlow London brings live arrivals, London bus routes and service updates together in one clear travel platform.">
+<meta name="theme-color" content="#101b32"><meta name="description" content="Explore London's bus routes, live arrivals, real-time vehicle positions, fleet records and service updates with RouteFlow London.">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="IMG_3442.png"><link rel="apple-touch-icon" href="IMG_3442.png">
-<title>RouteFlow London · London travel, reimagined</title>
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand.css"><link rel="stylesheet" href="nav.css"><link rel="stylesheet" href="home.css"><link rel="stylesheet" href="routeflow-redesign.css"><link rel="stylesheet" href="design-system.css">
+<title>RouteFlow London — London's buses, in the moment</title>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand.css"><link rel="stylesheet" href="nav.css"><link rel="stylesheet" href="home.css"><link rel="stylesheet" href="routeflow-redesign.css"><link rel="stylesheet" href="design-system.css"><link rel="stylesheet" href="home-v3.css">
 </head>
-<body>
+<body class="rf-home">
 <header class="site-header"><div class="header-inner">
 <a class="brand" href="index.html" aria-label="RouteFlow London home"><img class="brand-logo" src="IMG_3442.png" alt=""><span>RouteFlow London</span></a>
-<nav class="site-nav" aria-label="Main navigation"><a class="active" aria-current="page" href="index.html">Home</a><a  href="routes.html">Routes</a><a  href="journey-planner.html">Plan a journey</a><a  href="arrivals.html">Live arrivals</a><a  href="disruptions.html">Disruptions</a><a  href="operators.html">Operators</a><a  href="fleet.html">Fleet</a></nav>
+<nav class="site-nav" aria-label="Main navigation"><a class="active" aria-current="page" href="index.html">Home</a><a href="routes.html">Routes</a><a href="journey-planner.html">Plan a journey</a><a href="arrivals.html">Live arrivals</a><a href="disruptions.html">Disruptions</a><a href="operators.html">Operators</a><a href="fleet.html">Fleet</a></nav>
 <a class="account-link" data-auth-link href="login.html">Sign in</a><button id="themeButton" class="ghost-button" type="button">Dark mode</button>
 </div></header>
-<main class="home-main">
-<section class="home-hero">
-<div><p class="eyebrow">London travel. Reimagined.</p><h1>Your city. Your routes. Your journey.</h1><p>Everything you need to move around London, brought together in one clear, easy-to-use place.</p>
-<div class="hero-actions"><a class="home-primary" href="arrivals.html">Find live arrivals <span aria-hidden="true">↗</span></a><a class="home-secondary" href="routes.html">Explore the route database</a></div></div>
-<div class="network-panel" aria-label="London transport network visual"><span class="network-dot red"></span><span class="network-line"></span><span class="network-dot blue"></span><span class="network-line short"></span><span class="network-dot red"></span><strong>One platform. All of London.</strong></div>
+<main class="home-main rf-home-main">
+<section class="rf-hero">
+<div class="rf-hero-copy">
+<p class="rf-kicker"><span class="rf-kicker-dot"></span> Independent London transport platform</p>
+<h1>London's buses,<br><em>in the moment.</em></h1>
+<p class="rf-hero-intro">Find your next bus, follow a route across the city and explore the people, vehicles and history behind London's network.</p>
+<form class="rf-search" id="homeSearchForm">
+<label class="sr-only" for="homeSearchInput">Search RouteFlow</label>
+<div class="rf-search-controls">
+<select id="homeSearchType" aria-label="Search category"><option value="route">Bus route</option><option value="stop">Stop or station</option><option value="fleet">Fleet or vehicle model</option></select>
+<input id="homeSearchInput" type="search" placeholder="Try 21, London Bridge or Enviro400…" autocomplete="off" required>
+<button type="submit" aria-label="Search">Search <span aria-hidden="true">↗</span></button>
+</div>
+<p id="homeSearchStatus" class="rf-search-status" aria-live="polite">Search the route archive, TfL stops or fleet records.</p>
+</form>
+<div class="rf-hero-actions"><a class="rf-button rf-button-light" href="live-map.html">Open live bus map <span aria-hidden="true">→</span></a><a class="rf-text-link" href="routes.html">Explore all routes <span aria-hidden="true">↗</span></a></div>
+</div>
+<div class="rf-hero-art" aria-label="Illustration of a connected London bus network">
+<div class="rf-art-topline"><span>THE NETWORK, CONNECTED</span><span class="rf-live-indicator">ROUTEFLOW</span></div>
+<div class="rf-network-graphic">
+<svg viewBox="0 0 520 340" role="img" aria-label="Abstract red and blue bus route lines crossing London">
+<defs><linearGradient id="rfRouteRed" x1="0" x2="1"><stop offset="0" stop-color="#ff6b7d"/><stop offset="1" stop-color="#df193c"/></linearGradient><linearGradient id="rfRouteBlue" x1="0" x2="1"><stop offset="0" stop-color="#7ab8ff"/><stop offset="1" stop-color="#3f70d9"/></linearGradient></defs>
+<path d="M35 250 C120 230 120 105 230 125 S365 245 485 75" fill="none" stroke="url(#rfRouteRed)" stroke-width="12" stroke-linecap="round"/>
+<path d="M75 45 C145 105 170 260 290 260 S385 150 470 185" fill="none" stroke="url(#rfRouteBlue)" stroke-width="9" stroke-linecap="round"/>
+<path d="M30 160 C125 165 175 40 285 55 S395 110 490 290" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="3" stroke-dasharray="8 10"/>
+<g fill="#101b32" stroke="#fff" stroke-width="5"><circle cx="35" cy="250" r="12"/><circle cx="230" cy="125" r="12"/><circle cx="485" cy="75" r="12"/><circle cx="75" cy="45" r="10"/><circle cx="290" cy="260" r="10"/><circle cx="470" cy="185" r="10"/></g>
+<g fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="700"><text x="50" y="278">SOUTH</text><text x="244" y="111">CENTRAL</text><text x="410" y="55">NORTH</text></g>
+</svg>
+<div class="rf-map-caption"><span class="rf-caption-icon">↗</span><span><strong>One city. Countless connections.</strong><small>Routes · Stops · Vehicles · Stories</small></span></div>
+</div></div>
 </section>
-<section class="network-stats" aria-labelledby="networkStatsHeading">
-  <div class="network-stats-heading"><div><p class="eyebrow">The RouteFlow archive</p><h2 id="networkStatsHeading">London's bus network, at a glance.</h2></div><span id="statsUpdated" class="stats-updated" aria-live="polite">Connecting to live database…</span></div>
-  <div class="network-stats-grid">
-    <article><span class="stats-value" id="statCurrent">—</span><span class="stats-label">Current routes</span></article>
-    <article><span class="stats-value" id="statWithdrawn">—</span><span class="stats-label">Withdrawn routes</span></article>
-    <article><span class="stats-value" id="statTotal">—</span><span class="stats-label">Routes in archive</span></article>
-    <article><span class="stats-value" id="statOperators">—</span><span class="stats-label">Operators recorded</span></article>
-  </div>
-  <p id="statsNote" class="stats-note">Route information is refreshed as the archive is maintained.</p>
+<section class="rf-stats-section" aria-labelledby="networkStatsHeading">
+<div class="rf-section-heading rf-stats-heading"><div><p class="eyebrow">The RouteFlow archive</p><h2 id="networkStatsHeading">London's network, at a glance.</h2></div><span id="statsUpdated" class="stats-updated" aria-live="polite">Connecting to the database…</span></div>
+<div class="network-stats-grid rf-stats-grid"><article><span class="stats-value" id="statCurrent">—</span><span class="stats-label">Current routes</span></article><article><span class="stats-value" id="statWithdrawn">—</span><span class="stats-label">Withdrawn routes</span></article><article><span class="stats-value" id="statTotal">—</span><span class="stats-label">Routes in archive</span></article><article><span class="stats-value" id="statOperators">—</span><span class="stats-label">Operators recorded</span></article></div>
+<p id="statsNote" class="stats-note">Figures come from the RouteFlow route archive.</p>
 </section>
-<section class="operator-strip" aria-labelledby="operatorHeading"><div class="operator-strip-heading"><div><p class="eyebrow">The people moving London</p><h2 id="operatorHeading">London bus operators</h2></div><span>Across the capital</span></div>
-<div class="operator-carousel" role="region" aria-label="London bus operator logos"><div class="operator-track">
-<div class="operator-logo"><span class="operator-mark">AL</span><span>Arriva London</span></div>
-<div class="operator-logo"><span class="operator-mark">GA</span><span>Go-Ahead London</span></div>
-<div class="operator-logo"><span class="operator-mark">M</span><span>Metroline</span></div>
-<div class="operator-logo"><span class="operator-mark">S</span><span>Stagecoach London</span></div>
-<div class="operator-logo"><span class="operator-mark">R</span><span>RATP Dev Transit London</span></div>
-<div class="operator-logo"><span class="operator-mark">TU</span><span>Transport UK London Bus</span></div>
-</div></div></section>
-<section class="feature-grid" aria-label="Explore RouteFlow">
-<a class="feature-card" href="arrivals.html"><span class="feature-icon" aria-hidden="true">↗</span><h2>Live arrivals</h2><p>Find a stop, choose your direction and see live TfL predictions that keep you moving.</p><span class="card-link">Explore live arrivals →</span></a>
-<a class="feature-card" href="routes.html"><span class="feature-icon" aria-hidden="true">↔</span><h2>London bus routes</h2><p>Explore current and withdrawn routes, operators, garages, vehicles and stop sequences.</p><span class="card-link">Browse all routes →</span></a>
-<a class="feature-card" href="disruptions.html"><span class="feature-icon" aria-hidden="true">!</span><h2>Service status</h2><p>Check London transport disruptions and quickly identify the services affected.</p><span class="card-link">View service status →</span></a>
-<a class="feature-card" href="journey-planner.html"><span class="feature-icon" aria-hidden="true">⇢</span><h2>Journey planner</h2><p>Compare public transport options between two places with TfL journey results.</p><span class="card-link">Plan a journey →</span></a>
-<a class="feature-card" href="operators.html"><span class="feature-icon" aria-hidden="true">◎</span><h2>Operators & garages</h2><p>Explore the operators and garages connected to the London bus network.</p><span class="card-link">Explore operators →</span></a>
-<a class="feature-card" href="fleet.html"><span class="feature-icon" aria-hidden="true">▰</span><h2>Fleet & vehicles</h2><p>Discover vehicle models and power types recorded across route services.</p><span class="card-link">Explore vehicles →</span></a>
+<section class="rf-section rf-live-feature">
+<div class="rf-live-copy"><p class="eyebrow">Follow the service</p><h2>See the buses moving across the map.</h2><p>Choose a London route to see vehicle positions returned by TfL, with destinations and arrival predictions. Positions appear when TfL supplies valid location data.</p><a class="rf-button rf-button-red" href="live-map.html">Explore live tracking <span aria-hidden="true">→</span></a></div>
+<div class="rf-live-preview"><div class="rf-preview-toolbar"><span><i></i> LIVE MAP</span><span>ROUTE-BASED VIEW</span></div><div class="rf-preview-lines"><span class="rf-preview-road road-one"></span><span class="rf-preview-road road-two"></span><span class="rf-preview-road road-three"></span><b class="rf-preview-bus bus-one">21</b><b class="rf-preview-bus bus-two">343</b><b class="rf-preview-stop stop-one"></b><b class="rf-preview-stop stop-two"></b><b class="rf-preview-stop stop-three"></b></div><div class="rf-preview-foot"><span>Live locations supplied by TfL</span><span>Open interactive map ↗</span></div></div>
 </section>
-<section class="home-section"><div><p class="eyebrow">Made for everyday journeys</p><h2>Less searching. More getting there.</h2><p>RouteFlow makes useful London transport information easier to find, understand and use — whether you're planning ahead or already on the move.</p></div>
-<div class="benefit-list"><div><strong>Find it quickly</strong><span>Search route numbers, places, stops and Countdown codes.</span></div><div><strong>Know before you go</strong><span>Check service updates and live arrival predictions.</span></div><div><strong>Works on the move</strong><span>A responsive experience with app-style navigation on mobile.</span></div></div></section>
+<section class="rf-section">
+<div class="rf-section-heading"><div><p class="eyebrow">Explore RouteFlow</p><h2>Everything connected in one place.</h2></div><p>Useful tools for the everyday passenger and the dedicated bus enthusiast.</p></div>
+<div class="rf-feature-grid">
+<a class="rf-feature-card rf-feature-primary" href="arrivals.html"><span class="rf-feature-icon">◷</span><span class="rf-feature-label">LIVE INFORMATION</span><h3>Live arrivals</h3><p>Search stops and stations, choose your boarding point and follow live TfL predictions.</p><span class="rf-card-link">Find your next bus <b>↗</b></span></a>
+<a class="rf-feature-card" href="routes.html"><span class="rf-feature-icon">⇄</span><span class="rf-feature-label">ROUTE ARCHIVE</span><h3>Route archive</h3><p>Explore current and withdrawn services, route details, operators and stop sequences.</p><span class="rf-card-link">Browse routes <b>↗</b></span></a>
+<a class="rf-feature-card" href="fleet.html"><span class="rf-feature-icon">▰</span><span class="rf-feature-label">VEHICLE DATABASE</span><h3>Fleet & models</h3><p>Discover vehicle models, power types and the routes they're associated with.</p><span class="rf-card-link">Explore the fleet <b>↗</b></span></a>
+<a class="rf-feature-card" href="disruptions.html"><span class="rf-feature-icon">!</span><span class="rf-feature-label">SERVICE STATUS</span><h3>Disruptions</h3><p>Check reported service issues across London's bus and wider transport network.</p><span class="rf-card-link">Check service status <b>↗</b></span></a>
+<a class="rf-feature-card" href="journey-planner.html"><span class="rf-feature-icon">⌁</span><span class="rf-feature-label">PLAN A JOURNEY</span><h3>Journey planner</h3><p>Compare public transport journey options between two places with TfL results.</p><span class="rf-card-link">Plan your trip <b>↗</b></span></a>
+<a class="rf-feature-card" href="operators.html"><span class="rf-feature-icon">◎</span><span class="rf-feature-label">OPERATORS & GARAGES</span><h3>Who runs your route?</h3><p>Explore the operators and garages represented in the RouteFlow archive.</p><span class="rf-card-link">Meet the operators <b>↗</b></span></a>
+</div></section>
+<section class="rf-section rf-archive-section"><div class="rf-section-heading"><div><p class="eyebrow">From the database</p><h2>Explore routes from the archive.</h2></div><a class="rf-inline-link" href="routes.html">View the full archive ↗</a></div><div id="homeRouteGrid" class="rf-route-grid" aria-live="polite"><div class="rf-route-loading">Loading route records…</div></div></section>
+<section class="rf-community"><div class="rf-community-copy"><p class="eyebrow">Built around the bus community</p><h2>More than getting from A to B.</h2><p>RouteFlow is being developed into a place to document the vehicles, memories and moments that make London's bus network special.</p><a class="rf-button rf-button-light" href="blog.html">Read project updates <span aria-hidden="true">→</span></a></div>
+<div class="rf-community-grid"><article><span>📸</span><strong>Bus sightings & photography</strong><small>Community submissions are in development.</small></article><article><span>🚌</span><strong>Fleet histories</strong><small>Vehicle-level histories are planned.</small></article><article><span>✦</span><strong>Spotting achievements</strong><small>Community profiles and challenges are planned.</small></article></div></section>
 </main>
-<nav class="mobile-app-nav" aria-label="Mobile navigation"><a class="active" href="index.html"><span>⌂</span>Home</a><a  href="routes.html"><span>↔</span>Routes</a><a  href="journey-planner.html"><span>⇢</span>Plan</a><a  href="arrivals.html"><span>◷</span>Arrivals</a><a href="dashboard.html"><span>◉</span>Account</a></nav>
-<footer><p>RouteFlow London · An independent London transport information project. Live service information supplied by Transport for London.</p></footer>
-<script src="nav-performance.js"></script><script src="site.js"></script><script src="home-dashboard.js" defer></script>
-<script src="firebase-config.js"></script><script type="module" src="auth.js"></script></body></html>
+<footer class="rf-footer"><div><a class="brand" href="index.html"><img class="brand-logo" src="IMG_3442.png" alt=""><span>RouteFlow London</span></a><p>Independent London transport information. Live service data supplied by Transport for London.</p></div><nav aria-label="Footer navigation"><a href="routes.html">Routes</a><a href="live-map.html">Live map</a><a href="arrivals.html">Arrivals</a><a href="fleet.html">Fleet</a><a href="blog.html">Updates</a><a href="dashboard.html">My account</a></nav><small>RouteFlow London · London travel. Reimagined.</small></footer>
+<script src="nav-performance.js"></script><script src="site.js"></script><script src="firebase-config.js"></script><script src="home-dashboard.js" defer></script><script type="module" src="auth.js"></script>
+</body></html>

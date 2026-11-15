@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101b32"><meta name="description" content="Follow London bus vehicles on an interactive map using live TfL arrival prediction coordinates.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="IMG_3442.png">
+<title>Live bus map · RouteFlow London</title>
+<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="brand.css"><link rel="stylesheet" href="nav.css"><link rel="stylesheet" href="routeflow-redesign.css"><link rel="stylesheet" href="design-system.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="live-map.css">
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+<a class="brand" href="index.html"><img class="brand-logo" src="IMG_3442.png" alt=""><span>RouteFlow London</span></a>
+<nav class="site-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="routes.html">Routes</a><a href="journey-planner.html">Plan a journey</a><a href="arrivals.html">Live arrivals</a><a href="disruptions.html">Disruptions</a><a href="operators.html">Operators</a><a href="fleet.html">Fleet</a></nav>
+<a class="account-link" data-auth-link href="login.html">Sign in</a><button id="themeButton" class="ghost-button" type="button">Dark mode</button>
+</div></header>
+<main class="rf-map-main">
+<section class="rf-map-hero"><div><p class="eyebrow">Live vehicle tracking</p><h1>Follow your route.</h1><p>Choose a London bus route to plot the vehicle positions currently supplied in TfL arrival predictions.</p></div>
+<form id="mapRouteForm" class="rf-map-search"><label for="mapRouteInput">Bus route number</label><div><input id="mapRouteInput" type="search" placeholder="Try 21, 343, N1 or SL6" autocomplete="off" required><button type="submit">Track route <span aria-hidden="true">→</span></button></div><small>Positions refresh every 20 seconds while this page is open.</small></form></section>
+<section class="rf-map-status" aria-live="polite"><div><span class="rf-map-live-dot"></span><strong id="mapStatusTitle">Choose a route to begin</strong><small id="mapStatusDetail">The map will show vehicles with valid location coordinates from TfL.</small></div><div class="rf-map-metrics"><span><b id="mapVehicleCount">—</b><small>Mapped vehicles</small></span><span><b id="mapPredictionCount">—</b><small>Predictions</small></span><span><b id="mapUpdated">—</b><small>Last updated</small></span></div><button id="mapRefreshButton" class="ghost-button" type="button" disabled>Refresh now</button></section>
+<section class="rf-map-layout"><div class="rf-map-panel"><div id="liveMap" role="application" aria-label="Interactive map of live bus vehicle positions"></div><div class="rf-map-legend"><span><i class="rf-legend-bus"></i> TfL vehicle position</span><span><i class="rf-legend-stop"></i> Map location</span><span>Tap a vehicle for details</span></div></div><aside class="rf-map-sidebar"><div class="rf-map-sidebar-heading"><div><p class="eyebrow">Route activity</p><h2 id="mapRouteHeading">No route selected</h2></div><span class="rf-route-live-tag">LIVE</span></div><div id="mapVehicleList" class="rf-map-vehicle-list"><div class="rf-map-empty"><strong>Ready when you are</strong><p>Search a route above to see vehicles and their latest TfL prediction details.</p></div></div><div class="rf-map-disclaimer"><strong>About these positions</strong><p>This map plots coordinates included in TfL's arrival prediction feed. It is not a guaranteed GPS feed: some predictions have no vehicle location, and positions can be delayed or unavailable.</p><a href="arrivals.html">Open live stop arrivals ↗</a></div></aside></section>
+</main>
+<nav class="mobile-app-nav" aria-label="Mobile navigation"></nav>
+<footer><p>RouteFlow London · Independent transport information. Live vehicle and arrival information supplied by Transport for London.</p></footer>
+<script src="config.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="live-map.js"></script><script src="nav-performance.js"></script><script src="firebase-config.js"></script><script type="module" src="auth.js"></script>
+</body></html>

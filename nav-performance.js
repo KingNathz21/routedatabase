@@ -1,18 +1,27 @@
 (() => {
   const pageLinks = [
     { href: "index.html", label: "Home", icon: "⌂" },
+    { href: "live-map.html", label: "Map", icon: "⌖" },
     { href: "routes.html", label: "Routes", icon: "⇄" },
     { href: "journey-planner.html", label: "Plan", icon: "⇢" },
     { href: "arrivals.html", label: "Arrivals", icon: "◷" },
     { href: "dashboard.html", label: "Account", icon: "◉" }
   ];
   const currentPath = location.pathname.split("/").pop() || "index.html";
-  const navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
+  let navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
   const prefetched = new Set();
 
   // Keep the header focused on the four most-used destinations.
   const desktopNav = document.querySelector(".site-nav");
   if (desktopNav) {
+    const routesLink = [...desktopNav.querySelectorAll(":scope > a")].find(item => item.pathname.endsWith("routes.html"));
+    if (routesLink && ![...desktopNav.querySelectorAll(":scope > a")].some(item => item.pathname.endsWith("live-map.html"))) {
+      const mapLink = document.createElement("a");
+      mapLink.href = "live-map.html";
+      mapLink.textContent = "Live map";
+      routesLink.insertAdjacentElement("afterend", mapLink);
+    }
+    navLinks = [...document.querySelectorAll(".site-nav a, .brand")].filter(link => link.origin === location.origin);
     let more = desktopNav.querySelector(".nav-more");
     if (!more) {
       more = document.createElement("details");
