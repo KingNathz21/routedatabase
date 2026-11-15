@@ -8,7 +8,15 @@ function notify(target,message,type){const el=typeof target==="string"?document.
 async function api(path,options){
  if(!user)throw new Error("Please sign in to continue.");
  const token=await user.getIdToken();
- const response=await fetch(base+path,{...(options||{}),headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,...((options||{}).headers||{})}});
+ const controller=new AbortController();
+ const timeout=window.setTimeout(()=>controller.abort(),12000);
+ let response;
+ try{
+  response=await fetch(base+path,{...(options||{}),headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,...((options||{}).headers||{})},signal:controller.signal});
+ }catch(error){
+  if(error.name==="AbortError")throw new Error("The RouteFlow account service took too long to respond. Please try again.");
+  throw error;
+ }finally{window.clearTimeout(timeout);}
  const data=await response.json().catch(()=>({}));
  if(!response.ok)throw new Error(data.error||"Request failed ("+response.status+")");
  return data;
