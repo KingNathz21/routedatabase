@@ -1,5 +1,9 @@
 # RouteFlow London deployment
 
+**Current live frontend:** https://kingnathz21.github.io/routedatabase/ (GitHub Pages). The Cloudflare Worker API is https://routeflow-api.nmorris210509.workers.dev. A Cloudflare Pages frontend project has not yet been created, so no `*.pages.dev` URL exists yet.
+
+Before moving the frontend to Cloudflare Pages, create the Pages project in the Cloudflare account and add its exact origin to the Worker CORS allowlist. Until then, continue using the live GitHub Pages site.
+
 ## Frontend — Cloudflare Pages
 
 1. In the Cloudflare dashboard, open **Workers & Pages → Create → Pages → Connect to Git**.
