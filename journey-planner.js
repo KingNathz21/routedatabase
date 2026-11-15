@@ -39,7 +39,11 @@
       const when=document.querySelector("#journeyWhen").value;
       const query=new URLSearchParams({date,time,timeIs:when,mode,journeyPreference:"LeastTime"});
       const url=api(`/Journey/JourneyResults/${encodeURIComponent(origin)}/to/${encodeURIComponent(destination)}?${query}`);
-      const response=await fetch(url);
+      const controller=new AbortController(),timeout=window.setTimeout(()=>controller.abort(),20000);
+      let response;
+      try{response=await fetch(url,{headers:{Accept:"application/json"},signal:controller.signal});}
+      catch(error){if(error.name==="AbortError")throw new Error("TfL journey planning took too long. Try a nearby station or search again.");throw error;}
+      finally{window.clearTimeout(timeout);}
       if(!response.ok)throw new Error(response.status===404?"TfL could not match one of those locations. Try a station name or postcode.":`TfL journey search returned ${response.status}. Please try again.`);
       renderJourneys(await response.json());
     }catch(error){heading.textContent="Journey search unavailable";results.innerHTML=`<div class="empty-panel"><h3>We couldn't plan that journey</h3><p>${escape(error.message||"Please check your connection and try again.")}</p></div>`;}
