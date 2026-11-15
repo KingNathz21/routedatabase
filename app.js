@@ -153,7 +153,17 @@ async function tflFetch(path, retryCount = 0) {
   const config = window.APP_CONFIG || {};
   const url = new URL(`https://api.tfl.gov.uk${path}`);
   if (config.tflApiKey) url.searchParams.set("app_key", config.tflApiKey);
-  const response = await fetch(url, { headers: { Accept: "application/json" } });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 12000);
+  let response;
+  try {
+    response = await fetch(url, { headers: { Accept: "application/json" }, signal: controller.signal });
+  } catch (error) {
+    if (error.name === "AbortError") throw new Error("TfL took too long to return this stop sequence. Please try again.");
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+  }
   if (response.status === 429 && retryCount < 1) {
     const retryAfter = Number(response.headers.get("Retry-After"));
     await sleep(Number.isFinite(retryAfter) ? Math.min(retryAfter * 1000, 10000) : 3000);

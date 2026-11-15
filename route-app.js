@@ -147,5 +147,4 @@
     if (openDeepLink() || attempts > 20) clearInterval(deepLinkTimer);
   }, 250);
 
-  if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
 })();

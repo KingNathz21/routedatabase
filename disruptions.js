@@ -23,8 +23,21 @@
     return `${API}${path}${key ? `${separator}app_key=${encodeURIComponent(key)}` : ""}`;
   };
 
+  const fetchTimed = async (url, timeoutMs = 12000) => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, { signal: controller.signal });
+    } catch (error) {
+      if (error.name === "AbortError") throw new Error("TfL did not respond in time. Please try again shortly.");
+      throw error;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
+
   const fetchJson = async path => {
-    const response = await fetch(apiUrl(path));
+    const response = await fetchTimed(apiUrl(path));
     if (!response.ok) throw new Error(`TfL request failed (${response.status})`);
     return response.json();
   };
@@ -135,7 +148,7 @@
 
   async function loadBusServices() {
     const [routeDatabase, disruptions] = await Promise.all([
-      fetch("data/routes.json").then(response => {
+      fetchTimed("data/routes.json").then(response => {
         if (!response.ok) throw new Error("London route database could not be loaded");
         return response.json();
       }),
@@ -173,26 +186,38 @@
     }));
   }
 
+  let loading = false;
   async function loadDisruptions() {
+    if (loading) return;
+    loading = true;
     results.className = "status-text live-card-body";
     results.textContent = "Loading London routes and current service status…";
     refreshButton.disabled = true;
 
     try {
       const railModes = ["tube", "overground", "elizabeth-line", "dlr", "tram", "river-bus"];
-      const data = await Promise.all([
+      const outcomes = await Promise.allSettled([
         ...railModes.map(mode =>
           fetchJson(`/Line/Mode/${mode}/Status?detail=true`).then(lines => railServices(lines, mode))
         ),
         loadBusServices()
       ]);
-
-      services = data.flat();
+      const successful = outcomes.filter(item => item.status === "fulfilled").map(item => item.value);
+      const failures = outcomes.length - successful.length;
+      if (!successful.length) throw new Error("TfL did not return any service information. Please try again shortly.");
+      services = successful.flat();
       render();
+      if (failures) {
+        const notice = document.createElement("p");
+        notice.className = "api-message";
+        notice.textContent = `Some live service feeds are temporarily unavailable (${failures}). The available results are still shown.`;
+        results.prepend(notice);
+      }
     } catch (error) {
       results.className = "good-service";
       results.innerHTML = `<strong>Disruptions could not be loaded</strong><p>${escapeHtml(error.message)}</p>`;
     } finally {
+      loading = false;
       refreshButton.disabled = false;
     }
   }

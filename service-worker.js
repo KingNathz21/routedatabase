@@ -1,4 +1,4 @@
-const CACHE_NAME = "routeflow-app-v12";
+const CACHE_NAME = "routeflow-app-v13";
 const IMAGE_CACHE_NAME = "routeflow-route-photos-v1";
 const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org", "commons.wikimedia.org", "static.wikia.nocookie.net"]);
 const APP_SHELL = [
@@ -21,12 +21,11 @@ self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(async cache => {
-        // One missing optional asset must not prevent the entire offline shell installing.
         const results = await Promise.allSettled(APP_SHELL.map(path =>
           cache.add(new Request(path, { cache: "reload" }))
         ));
         const failed = results.filter(result => result.status === "rejected").length;
-        if (failed) console.warn("RouteFlow: some optional offline assets could not be cached:", failed);
+        if (failed) console.warn("RouteFlow: some offline assets could not be cached:", failed);
       })
       .then(() => self.skipWaiting())
   );
@@ -46,7 +45,7 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET") return;
   const url = new URL(request.url);
-  // Cache only the Wikimedia-hosted route photography that a visitor has actually opened.
+
   if (request.destination === "image" && IMAGE_HOSTS.has(url.hostname)) {
     event.respondWith((async () => {
       const cache = await caches.open(IMAGE_CACHE_NAME);
@@ -64,35 +63,34 @@ self.addEventListener("fetch", event => {
           }
         }
         return response;
-      } catch (error) {
+      } catch {
         return (await cache.match(request)) || Response.error();
       }
     })());
     return;
   }
+
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname.endsWith("/firebase-config.js")) {
-    event.respondWith(fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
+  // Navigation and application files are network-first so visitors receive fixes
+  // promptly. Cached copies remain available when the device is offline.
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request, { ignoreSearch: request.mode === "navigate" });
+    try {
+      const response = await fetch(request);
+      if (response.ok) {
+        try { await cache.put(request, response.clone()); } catch (error) {
+          console.warn("RouteFlow cache update failed:", error);
+        }
+      }
       return response;
-    }).catch(() => caches.match(request)));
-    return;
-  }
-
-  if (request.mode === "navigate") {
-    event.respondWith(fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-      return response;
-    }).catch(async () => (await caches.match(request, { ignoreSearch: true })) || (await caches.match("./offline.html")) || (await caches.match("./index.html"))));
-    return;
-  }
-
-  event.respondWith(caches.match(request).then(cached => {
-    const network = fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
-      return response;
-    });
-    return cached || network;
-  }));
+    } catch {
+      if (cached) return cached;
+      if (request.mode === "navigate") {
+        return (await cache.match("./offline.html")) || (await cache.match("./index.html")) || Response.error();
+      }
+      return Response.error();
+    }
+  })());
 });
