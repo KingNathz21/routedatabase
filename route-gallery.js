@@ -31,8 +31,8 @@
         <div class="gallery-empty-state">
           <span class="gallery-empty-route">${escapeHtml(route.Route)}</span>
           <div>
-            <strong>Route photos coming soon</strong>
-            <small>Add image paths to this route's <code>Images</code> list in <code>data/routes.json</code>.</small>
+            <strong>Route photography unavailable</strong>
+            <small>Verified photographs have not yet been added for this service.</small>
           </div>
         </div>
       `;
