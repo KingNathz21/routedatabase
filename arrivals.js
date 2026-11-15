@@ -3,7 +3,17 @@
   let selectedStop=null,suggestionTimer=null,refreshTimer=null,refreshActive=false,destroyed=false,saveStopButton=null;
   const apiUrl=path=>{const key=window.APP_CONFIG?.tflApiKey?.trim(),separator=path.includes("?")?"&":"?";return `${API}${path}${key?`${separator}app_key=${encodeURIComponent(key)}`:""}`};
   const escapeHtml=(value="")=>String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[c]);
-  const fetchJson=async path=>{const response=await fetch(apiUrl(path));if(!response.ok)throw new Error(`TfL request failed (${response.status})`);return response.json()};
+  const fetchJson=async path=>{
+    const controller=new AbortController(),timeout=window.setTimeout(()=>controller.abort(),12000);
+    try{
+      const response=await fetch(apiUrl(path),{headers:{Accept:"application/json"},signal:controller.signal});
+      if(!response.ok)throw new Error(`TfL request failed (${response.status})`);
+      return await response.json();
+    }catch(error){
+      if(error.name==="AbortError")throw new Error("TfL did not respond in time. Please try again.");
+      throw error;
+    }finally{window.clearTimeout(timeout);}
+  };
   const stopLetter=stop=>stop.stopLetter||stop.platformName||"•", towards=stop=>stop.towards||stop.additionalProperties?.find(item=>item.key==="Towards")?.value||"Direction not supplied", stopName=stop=>stop.commonName||stop.stationName||"Unnamed stop";
   const stopRefresh=message=>{clearTimeout(refreshTimer);refreshTimer=null;refreshActive=false;if(refreshStatus)refreshStatus.textContent=message||"Automatic refresh paused"};
   const scheduleRefresh=()=>{stopRefresh();if(!selectedStop||destroyed||document.hidden)return;refreshActive=true;if(refreshStatus)refreshStatus.textContent="Refreshing automatically every 5 seconds";refreshTimer=setTimeout(()=>{if(selectedStop&&!document.hidden&&!destroyed)loadArrivals(selectedStop,true)},5000)};
