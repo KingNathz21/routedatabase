@@ -8,7 +8,7 @@ Before moving the frontend to Cloudflare Pages, create the Pages project in the 
 
 1. In the Cloudflare dashboard, open **Workers & Pages → Create → Pages → Connect to Git**.
 2. Select `KingNathz21/routedatabase` and the `main` branch after the pull request is merged.
-3. Use no build command and set the build output directory to `/` (the repository root).
+3. Set the build command to `exit 0` and the build output directory to `.`. Leave the root directory at the repository root. This is a static HTML/CSS/JS site with no build step.
 4. Deploy. Cloudflare assigns a URL in the form `https://<your-pages-project>.pages.dev`.
 5. Add that exact HTTPS origin to the Worker CORS allowlist in `worker/src/index.js`, then deploy the Worker again. The Pages project name must be confirmed in your Cloudflare account; it is not safe to guess the final URL.
 
