@@ -1,4 +1,4 @@
-const ALLOWED_ORIGINS=new Set(["https://kingnathz21.github.io","http://localhost:8000","http://127.0.0.1:8000"]);
+const ALLOWED_ORIGINS=new Set(["https://kingnathz21.github.io","https://routeflowldn.nmorris210509.workers.dev","http://localhost:8000","http://127.0.0.1:8000"]);
 let firebaseKeysPromise;
 function corsHeaders(request){const origin=request.headers.get("Origin")||"";const h={"Access-Control-Allow-Methods":"GET, POST, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization","Access-Control-Max-Age":"86400","Vary":"Origin"};if(ALLOWED_ORIGINS.has(origin))h["Access-Control-Allow-Origin"]=origin;return h;}
 function json(data,status,request,extra){return new Response(JSON.stringify(data),{status:status||200,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin",...corsHeaders(request),...(extra||{})}});}
