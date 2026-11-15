@@ -172,3 +172,31 @@
     window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
   }
 })();
+  
+  // Register the offline app shell on every page that shares the main navigation.
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(error => console.warn("Offline mode unavailable:", error)), { once: true });
+  }
+  if (!document.querySelector(".routeflow-connectivity")) {
+    const networkStatus = document.createElement("div");
+    networkStatus.className = "routeflow-connectivity";
+    networkStatus.setAttribute("role", "status");
+    networkStatus.setAttribute("aria-live", "polite");
+    networkStatus.hidden = true;
+    document.body.append(networkStatus);
+    const announceNetwork = () => {
+      networkStatus.textContent = navigator.onLine ? "Back online · live transport services are reconnecting" : "You're offline · previously saved route information is still available";
+      networkStatus.dataset.state = navigator.onLine ? "online" : "offline";
+      networkStatus.hidden = false;
+      if (navigator.onLine) window.setTimeout(() => { if (navigator.onLine) networkStatus.hidden = true; }, 4000);
+    };
+    window.addEventListener("offline", announceNetwork);
+    window.addEventListener("online", announceNetwork);
+    window.addEventListener("routeflow:offline-data", event => {
+      const date = event.detail?.cachedAt ? new Date(event.detail.cachedAt).toLocaleString("en-GB") : "previously";
+      networkStatus.textContent = "Offline archive · saved " + date;
+      networkStatus.dataset.state = "offline";
+      networkStatus.hidden = false;
+    });
+    if (!navigator.onLine) announceNetwork();
+  }
