@@ -67,7 +67,7 @@ jobs:
               status = 'withdrawn' if number == '10' else 'current'
               db.execute('INSERT INTO routes VALUES (?, ?, ?)', (number, status, '{}'))
           db.executescript(pathlib.Path('worker/migrations/0003_route_image_galleries.sql').read_text())
-          for number in map(str, range(2, 15)):
+          for number in list(map(str, range(2, 15))) + ['19']:
               status = 'withdrawn' if number == '10' else 'current'
               raw = db.execute('SELECT raw_json FROM routes WHERE route_number=? AND status=?', (number, status)).fetchone()[0]
               images = json.loads(raw).get('Images', [])
