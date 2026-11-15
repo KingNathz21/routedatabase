@@ -1,5 +1,5 @@
 (() => {
-  const API = "https://routeflow-api.nmorris210509.workers.dev";
+  const API = (window.ROUTEFLOW_CONFIG?.apiBaseUrl || "https://routeflow-api.nmorris210509.workers.dev").replace(/\\/$/, "");
   const DB_NAME = "routeflow-offline";
   const STORE = "archive";
   const ARCHIVE_SCHEMA = 2;
