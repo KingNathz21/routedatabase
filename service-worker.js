@@ -1,15 +1,15 @@
-const CACHE_NAME = "routeflow-app-v14";
+const CACHE_NAME = "routeflow-app-v15";
 const IMAGE_CACHE_NAME = "routeflow-route-photos-v1";
 const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org", "commons.wikimedia.org", "static.wikia.nocookie.net"]);
 const APP_SHELL = [
   "./", "./index.html", "./live-map.html", "./routes.html", "./data/routes.json", "./arrivals.html", "./disruptions.html",
-  "./journey-planner.html", "./operators.html", "./fleet.html", "./login.html",
+  "./journey-planner.html", "./operators.html", "./fleet.html", "./sightings.html", "./login.html",
   "./dashboard.html", "./profile.html", "./settings.html", "./blog.html", "./offline.html",
-  "./styles.css", "./design-system.css", "./directory.css", "./account.css",
+  "./styles.css", "./design-system.css", "./directory.css", "./account.css", "./sightings.css",
   "./routeflow-redesign.css", "./brand.css", "./nav.css", "./live-map.css", "./home-v3.css", "./filters.css",
   "./route-layout.css", "./route-gallery.css", "./route-app.css", "./live.css",
   "./arrivals-pro.css", "./home.css", "./blog.css", "./app-shell.js", "./site.js",
-  "./nav-performance.js", "./live-map.js", "./config.js", "./auth.js", "./login-page.js",
+  "./nav-performance.js", "./live-map.js", "./sightings.js", "./config.js", "./auth.js", "./login-page.js",
   "./dashboard.js", "./profile.js", "./settings.js", "./app.js", "./routes.js",
   "./arrivals.js", "./disruptions.js", "./journey-planner.js", "./operators.js",
   "./fleet.js", "./route-data-overrides.js", "./database-api.js", "./route-layout.js",

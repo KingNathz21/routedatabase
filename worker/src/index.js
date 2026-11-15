@@ -32,6 +32,29 @@ async function handle(request,env){
     if(method==="PUT"){const b=await bodyOf(request),theme=["system","light","dark"].includes(b.theme)?b.theme:"system",mode=["all","bus","rail"].includes(b.defaultMode)?b.defaultMode:"all",notify=b.notificationsEnabled===true?1:0,home=String(b.homeLocation||"").trim().slice(0,100);await env.DB.prepare("INSERT INTO user_settings(auth_uid,theme,default_mode,notifications_enabled,home_location) VALUES(?,?,?,?,?) ON CONFLICT(auth_uid) DO UPDATE SET theme=excluded.theme,default_mode=excluded.default_mode,notifications_enabled=excluded.notifications_enabled,home_location=excluded.home_location,updated_at=CURRENT_TIMESTAMP").bind(user.uid,theme,mode,notify,home).run();}
     const settings=await env.DB.prepare("SELECT theme,default_mode AS defaultMode,notifications_enabled AS notificationsEnabled,home_location AS homeLocation FROM user_settings WHERE auth_uid=?").bind(user.uid).first();return json({settings:settings||{theme:"system",defaultMode:"all",notificationsEnabled:0,homeLocation:""}},200,request);
    }
+   if(path==="/api/me/sightings"){
+   if(method==="GET"){
+    const rows=await env.DB.prepare("SELECT id,title,route_number AS routeNumber,fleet_number AS fleetNumber,registration,location,observed_at AS observedAt,notes,photo_url AS photoUrl,status,moderation_note AS moderationNote,created_at AS createdAt FROM bus_sightings WHERE auth_uid=? ORDER BY created_at DESC LIMIT 50").bind(user.uid).all();
+    return json({data:rows.results||[]},200,request);
+   }
+   if(method==="POST"){
+    const b=await bodyOf(request),title=String(b.title||"").trim().slice(0,90),route=String(b.routeNumber||"").trim().slice(0,12),fleet=String(b.fleetNumber||"").trim().slice(0,24),registration=String(b.registration||"").trim().toUpperCase().slice(0,12),location=String(b.location||"").trim().slice(0,120),notes=String(b.notes||"").trim().slice(0,500),photo=String(b.photoUrl||"").trim().slice(0,500),observed=String(b.observedAt||"").trim();
+    if(!title||!observed)return json({error:"A sighting title and date/time are required"},400,request);
+    const when=new Date(observed);if(!Number.isFinite(when.getTime())||when.getTime()>Date.now()+300000||when.getTime()<Date.now()-366*86400000)return json({error:"Enter a valid sighting date within the last 12 months"},400,request);
+    if(photo){let parsed;try{parsed=new URL(photo);}catch{return json({error:"Photo link must be a valid HTTPS URL"},400,request);}if(parsed.protocol!=="https:"||parsed.username||parsed.password)return json({error:"Photo link must use HTTPS"},400,request);}
+    const daily=await env.DB.prepare("SELECT COUNT(*) AS total FROM bus_sightings WHERE auth_uid=? AND created_at>=datetime('now','-1 day')").bind(user.uid).first();
+    if((daily?.total||0)>=10)return json({error:"You have reached the daily limit of 10 sighting submissions"},429,request);
+    const id=crypto.randomUUID();
+    await env.DB.prepare("INSERT INTO bus_sightings(id,auth_uid,title,route_number,fleet_number,registration,location,observed_at,notes,photo_url,status) VALUES(?,?,?,?,?,?,?,?,?,?,'pending')").bind(id,user.uid,title,route||null,fleet||null,registration||null,location||null,when.toISOString(),notes||null,photo||null).run();
+    return json({saved:true,id,status:"pending"},201,request);
+   }
+   if(method==="DELETE"){
+    const id=(url.searchParams.get("id")||"").trim();if(!id)return json({error:"Sighting ID required"},400,request);
+    await env.DB.prepare("DELETE FROM bus_sightings WHERE id=? AND auth_uid=? AND status='pending'").bind(id,user.uid).run();
+    return json({deleted:true},200,request);
+   }
+   return json({error:"Method not allowed"},405,request);
+   }
    const match=path.match(/^\/api\/me\/(saved-routes|saved-stops|saved-journeys)$/);
    if(match){const kind=match[1],table=kind==="saved-routes"?"saved_routes":kind==="saved-stops"?"saved_stops":"saved_journeys";
     if(method==="GET"){const rows=await env.DB.prepare("SELECT * FROM "+table+" WHERE auth_uid=? ORDER BY created_at DESC LIMIT 100").bind(user.uid).all();return json({data:rows.results||[]},200,request);}
@@ -44,6 +67,24 @@ async function handle(request,env){
     if(method==="DELETE"){const key=kind==="saved-routes"?"routeNumber":kind==="saved-stops"?"stopId":"id",value=(url.searchParams.get(key)||"").trim();if(!value)return json({error:key+" required"},400,request);const col=kind==="saved-routes"?"route_number":kind==="saved-stops"?"stop_id":"id";await env.DB.prepare("DELETE FROM "+table+" WHERE auth_uid=? AND "+col+"=?").bind(user.uid,value).run();return json({deleted:true},200,request);}
    }
    return json({error:"Not found"},404,request);
+  }
+  if(method==="GET"&&path==="/api/sightings"){
+   const limit=Math.min(40,Math.max(1,Number(url.searchParams.get("limit"))||24)),offset=Math.max(0,Number(url.searchParams.get("offset"))||0);
+   const rows=await env.DB.prepare("SELECT s.id,s.title,s.route_number AS routeNumber,s.fleet_number AS fleetNumber,s.registration,s.location,s.observed_at AS observedAt,s.notes,s.photo_url AS photoUrl,s.created_at AS createdAt,COALESCE(p.display_name,'RouteFlow member') AS contributor FROM bus_sightings s LEFT JOIN user_profiles p ON p.auth_uid=s.auth_uid WHERE s.status='approved' ORDER BY s.observed_at DESC,s.created_at DESC LIMIT ? OFFSET ?").bind(limit,offset).all();
+   const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM bus_sightings WHERE status='approved'").first();
+   return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);
+  }
+  const moderationMatch=path.match(/^\/api\/admin\/sightings\/([^/]+)$/);
+  if(moderationMatch&&method==="PATCH"){
+   let user;try{user=await userFor(request,env);}catch(e){return json({error:e.message||"Unauthorised"},401,request);}
+   const profile=await env.DB.prepare("SELECT role FROM user_profiles WHERE auth_uid=?").bind(user.uid).first();
+   if(profile?.role!=="admin")return json({error:"Administrator access required"},403,request);
+   const b=await bodyOf(request),status=["approved","rejected"].includes(b.status)?b.status:"",note=String(b.moderationNote||"").trim().slice(0,300);
+   if(!status)return json({error:"Status must be approved or rejected"},400,request);
+   const id=decodeURIComponent(moderationMatch[1]);
+   await env.DB.prepare("UPDATE bus_sightings SET status=?,moderation_note=?,moderated_by=?,moderated_at=CURRENT_TIMESTAMP WHERE id=?").bind(status,note||null,user.uid,id).run();
+   await env.DB.prepare("INSERT INTO audit_log(id,auth_uid,action,entity_type,entity_id,details_json) VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(),user.uid,"moderate","bus_sighting",id,JSON.stringify({status})).run();
+   return json({updated:true,status},200,request);
   }
   if(method==="GET"&&path==="/api/stats"){
    const counts=await env.DB.prepare("SELECT COUNT(*) AS total,SUM(CASE WHEN status='current' THEN 1 ELSE 0 END) AS current,SUM(CASE WHEN status='withdrawn' THEN 1 ELSE 0 END) AS withdrawn,COUNT(DISTINCT CASE WHEN operator_name IS NOT NULL AND TRIM(operator_name)<>'' THEN operator_name END) AS operators,COUNT(DISTINCT CASE WHEN garage_name IS NOT NULL AND TRIM(garage_name)<>'' THEN garage_name END) AS garages FROM routes").first();

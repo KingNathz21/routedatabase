@@ -82,4 +82,18 @@ jobs:
               images = json.loads(raw).get('Images', [])
               assert len(images) >= 2, f'Route {number} migration did not create a two-photo gallery'
           print('Route gallery migration executes and populates all expected galleries.')
+      - name: Execute community sightings migration against SQLite
+        run: |
+          python3 - <<'PY'
+          import pathlib, sqlite3
+          db = sqlite3.connect(':memory:')
+          db.execute('CREATE TABLE user_profiles (auth_uid TEXT PRIMARY KEY)')
+          db.executescript(pathlib.Path('worker/migrations/0004_community_bus_sightings.sql').read_text())
+          columns = {row[1] for row in db.execute('PRAGMA table_info(bus_sightings)')}
+          required = {'id','auth_uid','title','route_number','fleet_number','registration','location','observed_at','notes','photo_url','status','moderation_note','moderated_by','moderated_at','created_at'}
+          assert required <= columns, f'Missing sightings columns: {required - columns}'
+          db.execute("INSERT INTO user_profiles(auth_uid) VALUES ('test-user')")
+          db.execute("INSERT INTO bus_sightings(id,auth_uid,title,observed_at) VALUES ('test-id','test-user','Test bus','2026-11-15T10:00:00.000Z')")
+          assert db.execute("SELECT status FROM bus_sightings WHERE id='test-id'").fetchone()[0] == 'pending'
+          print('Community sightings migration executes and defaults new submissions to pending.')
           PY
