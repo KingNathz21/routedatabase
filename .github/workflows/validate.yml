@@ -50,16 +50,21 @@ jobs:
             const src = typeof photo === 'string' ? photo : photo.src;
             if (!(src || '').toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has a non-HTTPS photo URL');
             if (typeof photo === 'object') {
-              if (!photo.credit || !photo.source || !photo.licenseLabel) throw new Error('Route ' + route.Route + ' has incomplete photo attribution');
               if (photo.source && !photo.source.toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has an invalid photo source URL');
-              if (photo.licenseLabel !== 'Public domain' && !(photo.license || '').toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has no valid photo licence URL');
+              if (photo.licenseLabel && photo.licenseLabel !== 'Public domain' && !(photo.license || '').toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has no valid photo licence URL');
             }
           }
           const covered = allRoutes.filter(route => Array.isArray(route.Images) && route.Images.length >= 2).map(route => String(route.Route));
           for (const routeNumber of ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','19']) {
             if (!covered.includes(routeNumber)) throw new Error('Expected a two-photo gallery for route ' + routeNumber);
           }
-          console.log('D1 migration versions, route photo URLs and initial gallery coverage are valid.');
+          const verifiedRoutes = new Set(['1','2','3','4','5','6','7','8','9','10','11','12','13','14','19']);
+          for (const route of allRoutes.filter(item => verifiedRoutes.has(String(item.Route)))) {
+            const verified = (route.Images || []).filter(photo => typeof photo === 'object' && photo.credit && photo.source && photo.licenseLabel && (photo.licenseLabel === 'Public domain' || (photo.license || '').toLowerCase().startsWith('https://')));
+            if (String(route.Route) === '1' && !verified.length) throw new Error('Route 1 needs at least one fully attributed image; legacy images are retained separately.');
+            if (String(route.Route) !== '1' && verified.length < 2) throw new Error('Route ' + route.Route + ' needs two fully attributed photos.');
+          }
+          console.log('D1 migration versions, route photo URLs and verified gallery coverage are valid.');
           NODE
       - name: Execute route gallery migration against SQLite
         run: |
@@ -67,11 +72,11 @@ jobs:
           import json, pathlib, sqlite3
           db = sqlite3.connect(':memory:')
           db.execute('CREATE TABLE routes (route_number TEXT, status TEXT, raw_json TEXT)')
-          for number in list(map(str, range(2, 15))) + ['19']:
+          for number in ['1'] + list(map(str, range(2, 15))) + ['19']:
               status = 'withdrawn' if number == '10' else 'current'
               db.execute('INSERT INTO routes VALUES (?, ?, ?)', (number, status, '{}'))
           db.executescript(pathlib.Path('worker/migrations/0003_route_image_galleries.sql').read_text())
-          for number in list(map(str, range(2, 15))) + ['19']:
+          for number in ['1'] + list(map(str, range(2, 15))) + ['19']:
               status = 'withdrawn' if number == '10' else 'current'
               raw = db.execute('SELECT raw_json FROM routes WHERE route_number=? AND status=?', (number, status)).fetchone()[0]
               images = json.loads(raw).get('Images', [])
