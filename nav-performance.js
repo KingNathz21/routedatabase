@@ -34,6 +34,12 @@
       const link = [...desktopNav.querySelectorAll(":scope > a")].find(item => item.pathname.endsWith(file));
       if (link) menu.append(link);
     });
+    if (!menu.querySelector('a[href="sightings.html"]')) {
+      const community = document.createElement("a");
+      community.href = "sightings.html";
+      community.textContent = "Community sightings";
+      menu.append(community);
+    }
     if (!menu.querySelector('a[href="routes.html?status=withdrawn"]')) {
       const withdrawn = document.createElement("a");
       withdrawn.href = "routes.html?status=withdrawn";
@@ -89,7 +95,7 @@
     const footerLinks = document.createElement("nav");
     footerLinks.className = "site-footer-links";
     footerLinks.setAttribute("aria-label", "More RouteFlow pages");
-    footerLinks.innerHTML = '<a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a><a href="dashboard.html">My account</a>';
+    footerLinks.innerHTML = '<a href="sightings.html">Community sightings</a><a href="routes.html?status=withdrawn">Withdrawn routes</a><a href="blog.html">Guides & updates</a><a href="dashboard.html">My account</a>';
     footer.append(footerLinks);
   }
 
