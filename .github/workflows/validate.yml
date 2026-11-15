@@ -52,7 +52,7 @@ jobs:
             if (typeof photo === 'object' && photo.source && !photo.source.toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has an invalid photo source URL');
           }
           const covered = allRoutes.filter(route => Array.isArray(route.Images) && route.Images.length >= 2).map(route => String(route.Route));
-          for (const routeNumber of ['1','2','3','4','5','6','7','8','9','10','11','12','13','14']) {
+          for (const routeNumber of ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','19']) {
             if (!covered.includes(routeNumber)) throw new Error('Expected a two-photo gallery for route ' + routeNumber);
           }
           console.log('D1 migration versions, route photo URLs and initial gallery coverage are valid.');
@@ -63,7 +63,7 @@ jobs:
           import json, pathlib, sqlite3
           db = sqlite3.connect(':memory:')
           db.execute('CREATE TABLE routes (route_number TEXT, status TEXT, raw_json TEXT)')
-          for number in map(str, range(2, 15)):
+          for number in list(map(str, range(2, 15))) + ['19']:
               status = 'withdrawn' if number == '10' else 'current'
               db.execute('INSERT INTO routes VALUES (?, ?, ?)', (number, status, '{}'))
           db.executescript(pathlib.Path('worker/migrations/0003_route_image_galleries.sql').read_text())
