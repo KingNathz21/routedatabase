@@ -39,7 +39,7 @@
 
     const viaContent = via.length
       ? `<ol class="route-via-list">${via.map(place => `<li>${escapeHtml(place)}</li>`).join("")}</ol>`
-      : `<p class="route-info-empty">No Via places have been added. Edit this route in <code>data/routes.json</code>.</p>`;
+      : `<p class="route-info-empty">Route via information is not currently recorded.</p>`;
 
     const section = document.createElement("section");
     section.className = "route-information-section";

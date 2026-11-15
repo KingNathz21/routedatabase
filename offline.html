@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14233d">
+<title>You're offline · RouteFlow London</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="design-system.css">
+<style>
+.offline-wrap{min-height:75vh;display:grid;place-items:center;text-align:center;padding:32px 20px}
+.offline-card{max-width:560px;padding:clamp(28px,5vw,52px);background:var(--surface);border:1px solid var(--border);border-radius:26px;box-shadow:var(--shadow)}
+.offline-mark{width:72px;height:72px;display:grid;place-items:center;margin:0 auto 22px;border-radius:22px;background:#14233d;color:white;font-size:2rem}
+.offline-card h1{font-size:clamp(2rem,5vw,3rem);margin:0 0 12px}
+.offline-card p{line-height:1.7}
+.offline-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.offline-actions a,.offline-actions button{padding:12px 17px;border:0;border-radius:12px;background:#c8102e;color:#fff;text-decoration:none;font-weight:800;cursor:pointer}
+.offline-actions a.secondary{background:var(--surface-2);color:var(--ink);border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<main class="offline-wrap"><section class="offline-card">
+<div class="offline-mark" aria-hidden="true">↔</div>
+<p class="eyebrow">RouteFlow London</p>
+<h1>You're offline.</h1>
+<p>Your internet connection isn't available right now. Previously downloaded route information and pages may still work on this device. Live arrivals, journey planning and account sync need a connection.</p>
+<div class="offline-actions"><a href="routes.html">Open saved routes</a><button type="button" onclick="location.reload()">Try again</button><a class="secondary" href="index.html">Home</a></div>
+</section></main>
+</body></html>

@@ -10,7 +10,11 @@
       }
       return {
         src: String(item?.src || item?.image || "").trim(),
-        alt: String(item?.alt || `Route ${route.Route} photo ${index + 1}`).trim()
+        alt: String(item?.alt || `Route ${route.Route} photo ${index + 1}`).trim(),
+        credit: String(item?.credit || "").trim(),
+        source: String(item?.source || "").trim(),
+        license: String(item?.license || "").trim(),
+        licenseLabel: String(item?.licenseLabel || "").trim()
       };
     }).filter(item => item.src);
 
@@ -31,8 +35,8 @@
         <div class="gallery-empty-state">
           <span class="gallery-empty-route">${escapeHtml(route.Route)}</span>
           <div>
-            <strong>Route photos coming soon</strong>
-            <small>Add image paths to this route's <code>Images</code> list in <code>data/routes.json</code>.</small>
+            <strong>Route photography unavailable</strong>
+            <small>Verified photographs have not yet been added for this service.</small>
           </div>
         </div>
       `;
@@ -61,10 +65,24 @@
     `;
 
     oldImage.replaceWith(gallery);
+    const attribution = document.createElement("p");
+    attribution.className = "gallery-attribution";
+    gallery.appendChild(attribution);
+    function showAttribution(image) {
+      const safeSource = /^https:\/\//i.test(image.source) ? image.source : "";
+      const safeLicense = /^https:\/\//i.test(image.license) ? image.license : "";
+      const credit = image.credit ? `Photo: ${escapeHtml(image.credit)}` : "";
+      const sourceLink = safeSource ? `<a href="${escapeHtml(safeSource)}" target="_blank" rel="noopener noreferrer">Source</a>` : "";
+      const licenseLink = image.licenseLabel
+        ? (safeLicense ? `<a href="${escapeHtml(safeLicense)}" target="_blank" rel="noopener noreferrer">${escapeHtml(image.licenseLabel)}</a>` : `<span>${escapeHtml(image.licenseLabel)}</span>`)
+        : "";
+      attribution.innerHTML = [credit, sourceLink, licenseLink].filter(Boolean).join(" · ");
+      attribution.hidden = !attribution.textContent.trim();
+    }
+    showAttribution(images[0]);
     if (images.length < 2) return;
 
     let activeIndex = 0;
-    let autoplayTimer = null;
     const mainImage = gallery.querySelector(".gallery-main-image");
     const counter = gallery.querySelector(".gallery-counter");
     const thumbnails = [...gallery.querySelectorAll(".gallery-thumbnail")];
@@ -74,6 +92,7 @@
       const selected = images[activeIndex];
       mainImage.src = selected.src;
       mainImage.alt = selected.alt;
+      showAttribution(selected);
       counter.textContent = `${activeIndex + 1} / ${images.length}`;
       thumbnails.forEach((thumbnail, thumbnailIndex) => {
         const active = thumbnailIndex === activeIndex;
@@ -82,22 +101,9 @@
       });
     }
 
-    function startAutoplay() {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      clearInterval(autoplayTimer);
-      autoplayTimer = setInterval(() => showImage(activeIndex + 1), 5000);
-    }
-
-    gallery.querySelector(".gallery-previous")?.addEventListener("click", () => { showImage(activeIndex - 1); startAutoplay(); });
-    gallery.querySelector(".gallery-next")?.addEventListener("click", () => { showImage(activeIndex + 1); startAutoplay(); });
-    thumbnails.forEach(thumbnail => {
-      thumbnail.addEventListener("click", () => { showImage(Number(thumbnail.dataset.galleryIndex)); startAutoplay(); });
-    });
-    gallery.addEventListener("mouseenter", () => clearInterval(autoplayTimer));
-    gallery.addEventListener("mouseleave", startAutoplay);
-    gallery.addEventListener("focusin", () => clearInterval(autoplayTimer));
-    gallery.addEventListener("focusout", startAutoplay);
-    startAutoplay();
+    gallery.querySelector(".gallery-previous")?.addEventListener("click", () => showImage(activeIndex - 1));
+    gallery.querySelector(".gallery-next")?.addEventListener("click", () => showImage(activeIndex + 1));
+    thumbnails.forEach(thumbnail => thumbnail.addEventListener("click", () => showImage(Number(thumbnail.dataset.galleryIndex))));
   }
 
   renderDetail = function () {

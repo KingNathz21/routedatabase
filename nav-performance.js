@@ -168,7 +168,65 @@
     if (event.key === "Escape" && !panel.hidden) closePanel();
   });
   apply();
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+})();
+  
+  // Register the offline app shell on every page that shares the main navigation.
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(error => console.warn("Offline mode unavailable:", error)), { once: true });
   }
+  if (!document.querySelector(".routeflow-connectivity")) {
+    const networkStatus = document.createElement("div");
+    networkStatus.className = "routeflow-connectivity";
+    networkStatus.setAttribute("role", "status");
+    networkStatus.setAttribute("aria-live", "polite");
+    networkStatus.hidden = true;
+    document.body.append(networkStatus);
+    const announceNetwork = () => {
+      networkStatus.textContent = navigator.onLine ? "Back online · live transport services are reconnecting" : "You're offline · previously saved route information is still available";
+      networkStatus.dataset.state = navigator.onLine ? "online" : "offline";
+      networkStatus.hidden = false;
+      if (navigator.onLine) window.setTimeout(() => { if (navigator.onLine) networkStatus.hidden = true; }, 4000);
+    };
+    window.addEventListener("offline", announceNetwork);
+    window.addEventListener("online", announceNetwork);
+    window.addEventListener("routeflow:offline-data", event => {
+      const date = event.detail?.cachedAt ? new Date(event.detail.cachedAt).toLocaleString("en-GB") : "previously";
+      networkStatus.textContent = "Offline archive · saved " + date;
+      networkStatus.dataset.state = "offline";
+      networkStatus.hidden = false;
+    });
+    if (!navigator.onLine) announceNetwork();
+  }
+
+
+// Offer native installation when the browser supports the PWA install prompt.
+(() => {
+  let installPrompt = null;
+  let installButton = null;
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    installPrompt = event;
+    const header = document.querySelector(".header-inner");
+    if (!header || installButton) return;
+    installButton = document.createElement("button");
+    installButton.className = "install-app-button";
+    installButton.type = "button";
+    installButton.textContent = "Install app";
+    installButton.addEventListener("click", async () => {
+      if (!installPrompt) return;
+      installButton.disabled = true;
+      try {
+        installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        installPrompt = null;
+        if (choice?.outcome === "accepted") installButton.remove();
+        else if (installButton.isConnected) installButton.disabled = false;
+      } catch {
+        installPrompt = null;
+        if (installButton.isConnected) installButton.disabled = false;
+      }
+    });
+    header.insertBefore(installButton, header.querySelector(".account-link") || header.lastElementChild);
+  });
+  window.addEventListener("appinstalled", () => installButton?.remove());
 })();

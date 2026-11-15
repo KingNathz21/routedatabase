@@ -344,10 +344,14 @@ async function init() {
     });
     el("currentCount").textContent = state.data.current.length.toLocaleString("en-GB");
     el("withdrawnCount").textContent = state.data.withdrawn.length.toLocaleString("en-GB");
+    const archiveStatus = el("archiveStatus");
+    if (archiveStatus) archiveStatus.textContent = state.data.offline
+      ? "Offline copy · saved " + new Date(state.data.cachedAt).toLocaleString("en-GB")
+      : "Archive is up to date · saved on this device for offline use";
     populateAdvancedFilters();
     renderList();
   } catch (error) {
-    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} The live RouteFlow database could not be reached.</p>`;
+    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} Check your connection and try again.</p>`;
   }
 }
 
@@ -379,6 +383,32 @@ Object.entries(filterBindings).forEach(([id, key]) => {
   });
 });
 el("clearFiltersButton").addEventListener("click", clearAdvancedFilters);
+el("refreshArchiveButton")?.addEventListener("click", async event => {
+  const button = event.currentTarget;
+  const status = el("archiveStatus");
+  button.disabled = true;
+  button.textContent = "Updating…";
+  if (status) status.textContent = "Checking for route archive updates…";
+  try {
+    const selectedKey = state.selected ? { route: String(state.selected.Route), status: state.selected.__status || "current" } : null;
+    state.data = await window.RouteFlowDatabase.refresh();
+    el("currentCount").textContent = state.data.current.length.toLocaleString("en-GB");
+    el("withdrawnCount").textContent = state.data.withdrawn.length.toLocaleString("en-GB");
+    if (selectedKey) state.selected = (state.data[selectedKey.status] || []).find(route => String(route.Route) === selectedKey.route) || null;
+    populateAdvancedFilters();
+    renderList();
+    if (state.selected) renderDetail(); else renderEmptyDetail();
+    if (status) status.textContent = state.data.offline
+      ? "No connection · showing the saved archive from " + new Date(state.data.cachedAt).toLocaleString("en-GB")
+      : "Archive refreshed and saved for offline use.";
+    button.textContent = state.data.offline ? "Using saved copy" : "Updated";
+  } catch (error) {
+    if (status) status.textContent = error.message;
+    button.textContent = "Try again";
+  } finally {
+    button.disabled = false;
+  }
+});
 el("sortSelect").addEventListener("change", event => { state.sort = event.target.value; renderList(); });
 el("themeButton").addEventListener("click", () => {
   document.body.classList.toggle("dark");

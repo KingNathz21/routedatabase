@@ -1,7 +1,7 @@
 const ALLOWED_ORIGINS=new Set(["https://kingnathz21.github.io","http://localhost:8000","http://127.0.0.1:8000"]);
 let firebaseKeysPromise;
 function corsHeaders(request){const origin=request.headers.get("Origin")||"";const h={"Access-Control-Allow-Methods":"GET, POST, PATCH, DELETE, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization","Access-Control-Max-Age":"86400","Vary":"Origin"};if(ALLOWED_ORIGINS.has(origin))h["Access-Control-Allow-Origin"]=origin;return h;}
-function json(data,status,request,extra){return new Response(JSON.stringify(data),{status:status||200,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",...corsHeaders(request),...(extra||{})}});}
+function json(data,status,request,extra){return new Response(JSON.stringify(data),{status:status||200,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin",...corsHeaders(request),...(extra||{})}});}
 function decodePart(s){s=s.replace(/-/g,"+").replace(/_/g,"/");return Uint8Array.from(atob(s.padEnd(Math.ceil(s.length/4)*4,"=")),c=>c.charCodeAt(0));}
 async function verifyToken(request,env){
  const token=(request.headers.get("Authorization")||"").replace(/^Bearer\s+/i,"");if(!token||!env.FIREBASE_PROJECT_ID)throw new Error("Authentication required");
@@ -13,11 +13,11 @@ async function verifyToken(request,env){
  const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
  const valid=await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,decodePart(parts[2]),new TextEncoder().encode(parts[0]+"."+parts[1]));
  const now=Math.floor(Date.now()/1000),project=env.FIREBASE_PROJECT_ID;
- if(!valid||claims.aud!==project||claims.iss!=="https://securetoken.google.com/"+project||!claims.sub||claims.sub.length>128||!claims.exp||claims.exp<=now||!claims.iat||claims.iat>now+300)throw new Error("Token invalid or expired");
+ if(!valid||claims.aud!==project||claims.iss!=="https://securetoken.google.com/"+project||typeof claims.sub!=="string"||claims.sub.length<1||claims.sub.length>128||typeof claims.exp!=="number"||claims.exp<=now||typeof claims.iat!=="number"||claims.iat>now+300)throw new Error("Token invalid or expired");
  return {uid:claims.sub,email:typeof claims.email==="string"?claims.email.slice(0,254):""};
 }
 async function userFor(request,env){const user=await verifyToken(request,env);await env.DB.prepare("INSERT INTO user_profiles(auth_uid,email) VALUES(?,?) ON CONFLICT(auth_uid) DO UPDATE SET email=excluded.email,updated_at=CURRENT_TIMESTAMP").bind(user.uid,user.email).run();return user;}
-async function bodyOf(request){const raw=await request.text();if(raw.length>12000)throw new Error("Request too large");try{return raw?JSON.parse(raw):{};}catch{throw new Error("Invalid JSON");}}
+async function bodyOf(request){const contentType=request.headers.get("Content-Type")||"";if(!contentType.toLowerCase().includes("application/json"))throw new Error("Content-Type must be application/json");const raw=await request.text();if(new TextEncoder().encode(raw).length>12000)throw new Error("Request too large");try{return raw?JSON.parse(raw):{};}catch{throw new Error("Invalid JSON");}}
 async function handle(request,env){
  const url=new URL(request.url),path=url.pathname.replace(/\/+$/,"")||"/",method=request.method;
  if(method==="OPTIONS")return new Response(null,{status:204,headers:corsHeaders(request)});
