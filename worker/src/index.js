@@ -20,7 +20,7 @@ async function userFor(request,env){const user=await verifyToken(request,env);aw
 async function bodyOf(request){const contentType=request.headers.get("Content-Type")||"";if(!contentType.toLowerCase().includes("application/json"))throw new Error("Content-Type must be application/json");const raw=await request.text();if(new TextEncoder().encode(raw).length>12000)throw new Error("Request too large");try{return raw?JSON.parse(raw):{};}catch{throw new Error("Invalid JSON");}}
 async function handle(request,env){
  const url=new URL(request.url),path=url.pathname.replace(/\/+$/,"")||"/",method=request.method;
- if(method==="OPTIONS")return new Response(null,{status:204,headers:corsHeaders(request)});
+ if(method==="OPTIONS")return new Response(null,{status:204,headers:{"X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin",...corsHeaders(request)}});
  if(!env.DB)return json({error:"Database binding DB is not configured"},503,request);
  try{
   if(method==="GET"&&(path==="/"||path==="/api/health")){const x=await env.DB.prepare("SELECT 1 AS ok").first();return json({service:"RouteFlow London API",status:x&&x.ok===1?"ok":"degraded",version:"0.2.0"},200,request);}
