@@ -200,3 +200,31 @@
     });
     if (!navigator.onLine) announceNetwork();
   }
+
+
+// Offer native installation when the browser supports the PWA install prompt.
+(() => {
+  let installPrompt = null;
+  let installButton = null;
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    installPrompt = event;
+    const header = document.querySelector(".header-inner");
+    if (!header || installButton) return;
+    installButton = document.createElement("button");
+    installButton.className = "install-app-button";
+    installButton.type = "button";
+    installButton.textContent = "Install app";
+    installButton.addEventListener("click", async () => {
+      if (!installPrompt) return;
+      installButton.disabled = true;
+      installPrompt.prompt();
+      const choice = await installPrompt.userChoice;
+      installPrompt = null;
+      if (choice?.outcome === "accepted") installButton.remove();
+      else if (installButton.isConnected) installButton.disabled = false;
+    });
+    header.insertBefore(installButton, header.querySelector(".account-link") || header.lastElementChild);
+  });
+  window.addEventListener("appinstalled", () => installButton?.remove());
+})();
