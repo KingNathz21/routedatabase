@@ -347,7 +347,7 @@ async function init() {
     populateAdvancedFilters();
     renderList();
   } catch (error) {
-    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} The live RouteFlow database could not be reached.</p>`;
+    el("routeList").innerHTML = `<p style="padding:20px">${escapeHtml(error.message)} Check your connection and try again.</p>`;
   }
 }
 
