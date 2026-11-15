@@ -42,7 +42,7 @@ The Cloudflare dashboard binding already created for this Worker should use the 
 - `GET /api/me/sightings` — the signed-in user’s submissions and moderation status.
 - `POST /api/me/sightings` — submit a sighting for moderation (maximum 10 per user per day).
 - `DELETE /api/me/sightings?id=...` — withdraw your own pending submission.
-- `PATCH /api/admin/sightings/:id` — approve/reject a submission (admin role only).
+- `GET /api/admin/sightings?status=pending|approved|rejected|all` — moderation queue (admin role only).\n- `PATCH /api/admin/sightings/:id` — approve/reject a submission (admin role only).
 
 Public route, operator, garage, fleet, statistics and approved-sighting endpoints are read-only. User profile, settings, saved-item and sighting submission endpoints are protected by Firebase ID-token verification. Sighting publication is moderated; only accounts with the `admin` role can approve or reject submissions.
 
