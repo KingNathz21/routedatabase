@@ -168,9 +168,6 @@
     if (event.key === "Escape" && !panel.hidden) closePanel();
   });
   apply();
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
-  }
 })();
   
   // Register the offline app shell on every page that shares the main navigation.
@@ -218,11 +215,16 @@
     installButton.addEventListener("click", async () => {
       if (!installPrompt) return;
       installButton.disabled = true;
-      installPrompt.prompt();
-      const choice = await installPrompt.userChoice;
-      installPrompt = null;
-      if (choice?.outcome === "accepted") installButton.remove();
-      else if (installButton.isConnected) installButton.disabled = false;
+      try {
+        installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        installPrompt = null;
+        if (choice?.outcome === "accepted") installButton.remove();
+        else if (installButton.isConnected) installButton.disabled = false;
+      } catch {
+        installPrompt = null;
+        if (installButton.isConnected) installButton.disabled = false;
+      }
     });
     header.insertBefore(installButton, header.querySelector(".account-link") || header.lastElementChild);
   });
