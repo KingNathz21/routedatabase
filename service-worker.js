@@ -1,6 +1,6 @@
 const CACHE_NAME = "routeflow-app-v12";
 const IMAGE_CACHE_NAME = "routeflow-route-photos-v1";
-const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org"]);
+const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org", "commons.wikimedia.org"]);
 const APP_SHELL = [
   "./", "./index.html", "./routes.html", "./data/routes.json", "./arrivals.html", "./disruptions.html",
   "./journey-planner.html", "./operators.html", "./fleet.html", "./login.html",
