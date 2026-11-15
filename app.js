@@ -13,6 +13,8 @@ const state = {
 };
 
 const el = id => document.getElementById(id);
+const initialSearch = new URLSearchParams(location.search).get("search");
+if (initialSearch) { state.query = initialSearch; if (el("searchInput")) el("searchInput").value = initialSearch; }
 const normalise = value => String(value ?? "").trim().toLowerCase();
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
