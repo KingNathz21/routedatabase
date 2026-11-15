@@ -51,5 +51,26 @@ jobs:
             if (!(src || '').toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has a non-HTTPS photo URL');
             if (typeof photo === 'object' && photo.source && !photo.source.toLowerCase().startsWith('https://')) throw new Error('Route ' + route.Route + ' has an invalid photo source URL');
           }
-          console.log('D1 migration versions and route photo URLs are valid.');
+          const covered = allRoutes.filter(route => Array.isArray(route.Images) && route.Images.length >= 2).map(route => String(route.Route));
+          for (const routeNumber of ['1','2','3','4','5','6','7','8','9','10','11','12','13','14']) {
+            if (!covered.includes(routeNumber)) throw new Error('Expected a two-photo gallery for route ' + routeNumber);
+          }
+          console.log('D1 migration versions, route photo URLs and initial gallery coverage are valid.');
           NODE
+      - name: Execute route gallery migration against SQLite
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sqlite3
+          db = sqlite3.connect(':memory:')
+          db.execute('CREATE TABLE routes (route_number TEXT, status TEXT, raw_json TEXT)')
+          for number in map(str, range(2, 15)):
+              status = 'withdrawn' if number == '10' else 'current'
+              db.execute('INSERT INTO routes VALUES (?, ?, ?)', (number, status, '{}'))
+          db.executescript(pathlib.Path('worker/migrations/0003_route_image_galleries.sql').read_text())
+          for number in map(str, range(2, 15)):
+              status = 'withdrawn' if number == '10' else 'current'
+              raw = db.execute('SELECT raw_json FROM routes WHERE route_number=? AND status=?', (number, status)).fetchone()[0]
+              images = json.loads(raw).get('Images', [])
+              assert len(images) >= 2, f'Route {number} migration did not create a two-photo gallery'
+          print('Route gallery migration executes and populates all expected galleries.')
+          PY
