@@ -32,27 +32,7 @@ async function handle(request,env){
     if(method==="PUT"){const b=await bodyOf(request),theme=["system","light","dark"].includes(b.theme)?b.theme:"system",mode=["all","bus","rail"].includes(b.defaultMode)?b.defaultMode:"all",notify=b.notificationsEnabled===true?1:0,home=String(b.homeLocation||"").trim().slice(0,100);await env.DB.prepare("INSERT INTO user_settings(auth_uid,theme,default_mode,notifications_enabled,home_location) VALUES(?,?,?,?,?) ON CONFLICT(auth_uid) DO UPDATE SET theme=excluded.theme,default_mode=excluded.default_mode,notifications_enabled=excluded.notifications_enabled,home_location=excluded.home_location,updated_at=CURRENT_TIMESTAMP").bind(user.uid,theme,mode,notify,home).run();}
     const settings=await env.DB.prepare("SELECT theme,default_mode AS defaultMode,notifications_enabled AS notificationsEnabled,home_location AS homeLocation FROM user_settings WHERE auth_uid=?").bind(user.uid).first();return json({settings:settings||{theme:"system",defaultMode:"all",notificationsEnabled:0,homeLocation:""}},200,request);
    }
-   const match=path.match(/^\/api\/me\/(saved-routes|saved-stops|saved-journeys)$/);
-   if(match){const kind=match[1],table=kind==="saved-routes"?"saved_routes":kind==="saved-stops"?"saved_stops":"saved_journeys";
-    if(method==="GET"){const rows=await env.DB.prepare("SELECT * FROM "+table+" WHERE auth_uid=? ORDER BY created_at DESC LIMIT 100").bind(user.uid).all();return json({data:rows.results||[]},200,request);}
-    if(method==="POST"){const b=await bodyOf(request);
-     if(kind==="saved-routes"){const n=String(b.routeNumber||"").trim().slice(0,12);if(!n)return json({error:"Route number required"},400,request);await env.DB.prepare("INSERT OR IGNORE INTO saved_routes(auth_uid,route_number) VALUES(?,?)").bind(user.uid,n).run();}
-     else if(kind==="saved-stops"){const id=String(b.stopId||"").trim().slice(0,40),name=String(b.stopName||"").trim().slice(0,120);if(!id)return json({error:"Stop ID required"},400,request);await env.DB.prepare("INSERT INTO saved_stops(auth_uid,stop_id,stop_name) VALUES(?,?,?) ON CONFLICT(auth_uid,stop_id) DO UPDATE SET stop_name=excluded.stop_name").bind(user.uid,id,name).run();}
-     else{const origin=String(b.origin||"").trim().slice(0,120),destination=String(b.destination||"").trim().slice(0,120);if(!origin||!destination)return json({error:"Journey origin and destination required"},400,request);await env.DB.prepare("INSERT INTO saved_journeys(auth_uid,origin,destination,journey_json) VALUES(?,?,?,?)").bind(user.uid,origin,destination,JSON.stringify(b.journey||{}).slice(0,5000)).run();}
-     return json({saved:true},201,request);
-    }
-    if(method==="DELETE"){const key=kind==="saved-routes"?"routeNumber":kind==="saved-stops"?"stopId":"id",value=(url.searchParams.get(key)||"").trim();if(!value)return json({error:key+" required"},400,request);const col=kind==="saved-routes"?"route_number":kind==="saved-stops"?"stop_id":"id";await env.DB.prepare("DELETE FROM "+table+" WHERE auth_uid=? AND "+col+"=?").bind(user.uid,value).run();return json({deleted:true},200,request);}
-   }
-   return json({error:"Not found"},404,request);
-  }
-  if(method==="GET"&&path==="/api/sightings"){
-   const limit=Math.min(40,Math.max(1,Number(url.searchParams.get("limit"))||24)),offset=Math.max(0,Number(url.searchParams.get("offset"))||0);
-   const rows=await env.DB.prepare("SELECT s.id,s.title,s.route_number AS routeNumber,s.fleet_number AS fleetNumber,s.registration,s.location,s.observed_at AS observedAt,s.notes,s.photo_url AS photoUrl,s.created_at AS createdAt,COALESCE(p.display_name,'RouteFlow member') AS contributor FROM bus_sightings s LEFT JOIN user_profiles p ON p.auth_uid=s.auth_uid WHERE s.status='approved' ORDER BY s.observed_at DESC,s.created_at DESC LIMIT ? OFFSET ?").bind(limit,offset).all();
-   const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM bus_sightings WHERE status='approved'").first();
-   return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);
-  }
-  if(path==="/api/me/sightings"){
-   let user;try{user=await userFor(request,env);}catch(e){return json({error:e.message||"Unauthorised"},401,request);}
+   if(path==="/api/me/sightings"){
    if(method==="GET"){
     const rows=await env.DB.prepare("SELECT id,title,route_number AS routeNumber,fleet_number AS fleetNumber,registration,location,observed_at AS observedAt,notes,photo_url AS photoUrl,status,moderation_note AS moderationNote,created_at AS createdAt FROM bus_sightings WHERE auth_uid=? ORDER BY created_at DESC LIMIT 50").bind(user.uid).all();
     return json({data:rows.results||[]},200,request);
@@ -74,6 +54,25 @@ async function handle(request,env){
     return json({deleted:true},200,request);
    }
    return json({error:"Method not allowed"},405,request);
+   }
+   const match=path.match(/^\/api\/me\/(saved-routes|saved-stops|saved-journeys)$/);
+   if(match){const kind=match[1],table=kind==="saved-routes"?"saved_routes":kind==="saved-stops"?"saved_stops":"saved_journeys";
+    if(method==="GET"){const rows=await env.DB.prepare("SELECT * FROM "+table+" WHERE auth_uid=? ORDER BY created_at DESC LIMIT 100").bind(user.uid).all();return json({data:rows.results||[]},200,request);}
+    if(method==="POST"){const b=await bodyOf(request);
+     if(kind==="saved-routes"){const n=String(b.routeNumber||"").trim().slice(0,12);if(!n)return json({error:"Route number required"},400,request);await env.DB.prepare("INSERT OR IGNORE INTO saved_routes(auth_uid,route_number) VALUES(?,?)").bind(user.uid,n).run();}
+     else if(kind==="saved-stops"){const id=String(b.stopId||"").trim().slice(0,40),name=String(b.stopName||"").trim().slice(0,120);if(!id)return json({error:"Stop ID required"},400,request);await env.DB.prepare("INSERT INTO saved_stops(auth_uid,stop_id,stop_name) VALUES(?,?,?) ON CONFLICT(auth_uid,stop_id) DO UPDATE SET stop_name=excluded.stop_name").bind(user.uid,id,name).run();}
+     else{const origin=String(b.origin||"").trim().slice(0,120),destination=String(b.destination||"").trim().slice(0,120);if(!origin||!destination)return json({error:"Journey origin and destination required"},400,request);await env.DB.prepare("INSERT INTO saved_journeys(auth_uid,origin,destination,journey_json) VALUES(?,?,?,?)").bind(user.uid,origin,destination,JSON.stringify(b.journey||{}).slice(0,5000)).run();}
+     return json({saved:true},201,request);
+    }
+    if(method==="DELETE"){const key=kind==="saved-routes"?"routeNumber":kind==="saved-stops"?"stopId":"id",value=(url.searchParams.get(key)||"").trim();if(!value)return json({error:key+" required"},400,request);const col=kind==="saved-routes"?"route_number":kind==="saved-stops"?"stop_id":"id";await env.DB.prepare("DELETE FROM "+table+" WHERE auth_uid=? AND "+col+"=?").bind(user.uid,value).run();return json({deleted:true},200,request);}
+   }
+   return json({error:"Not found"},404,request);
+  }
+  if(method==="GET"&&path==="/api/sightings"){
+   const limit=Math.min(40,Math.max(1,Number(url.searchParams.get("limit"))||24)),offset=Math.max(0,Number(url.searchParams.get("offset"))||0);
+   const rows=await env.DB.prepare("SELECT s.id,s.title,s.route_number AS routeNumber,s.fleet_number AS fleetNumber,s.registration,s.location,s.observed_at AS observedAt,s.notes,s.photo_url AS photoUrl,s.created_at AS createdAt,COALESCE(p.display_name,'RouteFlow member') AS contributor FROM bus_sightings s LEFT JOIN user_profiles p ON p.auth_uid=s.auth_uid WHERE s.status='approved' ORDER BY s.observed_at DESC,s.created_at DESC LIMIT ? OFFSET ?").bind(limit,offset).all();
+   const count=await env.DB.prepare("SELECT COUNT(*) AS total FROM bus_sightings WHERE status='approved'").first();
+   return json({data:rows.results||[],pagination:{total:count?.total||0,limit,offset}},200,request);
   }
   const moderationMatch=path.match(/^\/api\/admin\/sightings\/([^/]+)$/);
   if(moderationMatch&&method==="PATCH"){
