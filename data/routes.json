@@ -300,7 +300,24 @@
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
       "Via": [],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/7/71/London_Bus_route_7_A.jpg",
+          "alt": "Metroline route 7 bus on St Mark's Road",
+          "credit": "oyxman (Oxyman)",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_7_A.jpg",
+          "license": "https://creativecommons.org/licenses/by/2.5/",
+          "licenseLabel": "CC BY 2.5"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/0/04/TFL_bus_route_7_on_Oxford_Street_02.jpg",
+          "alt": "London bus routes 7 and 23 on Oxford Street",
+          "credit": "Leif Jørgensen",
+          "source": "https://commons.wikimedia.org/wiki/File:TFL_bus_route_7_on_Oxford_Street_02.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "licenseLabel": "CC BY-SA 4.0"
+        }
+      ],
       "OperatorLogo": "",
       "OperatorLogoAlt": "Metroline"
     },
@@ -326,7 +343,24 @@
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
       "Via": [],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/5/51/TFL_bus_route_8_on_Oxford_Street_01.jpg",
+          "alt": "Stagecoach route 8 New Routemaster on New Oxford Street",
+          "credit": "Leif Jørgensen",
+          "source": "https://commons.wikimedia.org/wiki/File:TFL_bus_route_8_on_Oxford_Street_01.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "licenseLabel": "CC BY-SA 4.0"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/f/f0/TFL_bus_route_8_on_Oxford_Street_02.jpg",
+          "alt": "Stagecoach route 8 bus on New Oxford Street",
+          "credit": "Leif Jørgensen",
+          "source": "https://commons.wikimedia.org/wiki/File:TFL_bus_route_8_on_Oxford_Street_02.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "licenseLabel": "CC BY-SA 4.0"
+        }
+      ],
       "OperatorLogo": "",
       "OperatorLogoAlt": "Stagecoach London"
     },
@@ -352,7 +386,24 @@
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
       "Via": [],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/6/6b/London_Buses_route_9%2C_Trafalgar_Square.jpg",
+          "alt": "London United route 9 passing Trafalgar Square",
+          "credit": "ThunderingTyphoons!",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Buses_route_9,_Trafalgar_Square.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "licenseLabel": "CC BY-SA 4.0"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/f/fd/London_Bus_route_9.jpg",
+          "alt": "Historic London heritage route 9 Routemaster",
+          "credit": "Bobik",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_9.jpg",
+          "license": "",
+          "licenseLabel": "Public domain"
+        }
+      ],
       "OperatorLogo": "",
       "OperatorLogoAlt": "Metroline"
     },
@@ -404,7 +455,24 @@
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
       "Via": [],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/2/2d/London_Bus_route_12.jpg",
+          "alt": "London route 12 bus showing Dulwich Library destination",
+          "credit": "oyxman (Oxyman)",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_12.jpg",
+          "license": "https://creativecommons.org/licenses/by/2.5/",
+          "licenseLabel": "CC BY 2.5"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/b/ba/TFL_bus_route_12_on_Regent_Street.jpg",
+          "alt": "London route 12 bus on Regent Street",
+          "credit": "Leif Jørgensen",
+          "source": "https://commons.wikimedia.org/wiki/File:TFL_bus_route_12_on_Regent_Street.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "licenseLabel": "CC BY-SA 4.0"
+        }
+      ],
       "OperatorLogo": "",
       "OperatorLogoAlt": "GoAhead London: London Central"
     },
@@ -430,7 +498,24 @@
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
       "Via": [],
-      "Images": [],
+      "Images": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/e/e9/Transdev_London_bus_route_13.jpg",
+          "alt": "Transdev London route 13 bus at Aldwych",
+          "credit": "Au Morandarte",
+          "source": "https://commons.wikimedia.org/wiki/File:Transdev_London_bus_route_13.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "licenseLabel": "CC BY-SA 2.0"
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/3/3b/London_Bus_route_13.jpg",
+          "alt": "Transdev route 13 bus at Aldwych",
+          "credit": "Matthew Black",
+          "source": "https://commons.wikimedia.org/wiki/File:London_Bus_route_13.jpg",
+          "license": "https://creativecommons.org/licenses/by-sa/2.0/",
+          "licenseLabel": "CC BY-SA 2.0"
+        }
+      ],
       "OperatorLogo": "",
       "OperatorLogoAlt": "First Bus London"
     },
