@@ -1,4 +1,6 @@
-const CACHE_NAME = "routeflow-app-v11";
+const CACHE_NAME = "routeflow-app-v12";
+const IMAGE_CACHE_NAME = "routeflow-route-photos-v1";
+const IMAGE_HOSTS = new Set(["upload.wikimedia.org", "thumb.wikimedia.org"]);
 const APP_SHELL = [
   "./", "./index.html", "./routes.html", "./arrivals.html", "./disruptions.html",
   "./journey-planner.html", "./operators.html", "./fleet.html", "./login.html",
@@ -44,6 +46,30 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET") return;
   const url = new URL(request.url);
+  // Cache only the Wikimedia-hosted route photography that a visitor has actually opened.
+  if (request.destination === "image" && IMAGE_HOSTS.has(url.hostname)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(IMAGE_CACHE_NAME);
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      try {
+        const response = await fetch(request);
+        if (response.ok || response.type === "opaque") {
+          try {
+            await cache.put(request, response.clone());
+            const keys = await cache.keys();
+            if (keys.length > 80) await cache.delete(keys[0]);
+          } catch (error) {
+            console.warn("RouteFlow photo cache is full:", error);
+          }
+        }
+        return response;
+      } catch (error) {
+        return (await cache.match(request)) || Response.error();
+      }
+    })());
+    return;
+  }
   if (url.origin !== self.location.origin) return;
 
   if (url.pathname.endsWith("/firebase-config.js")) {
