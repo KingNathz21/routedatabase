@@ -5,7 +5,7 @@
   const predictionCount=document.getElementById("mapPredictionCount"),updated=document.getElementById("mapUpdated");
   const routeHeading=document.getElementById("mapRouteHeading"),list=document.getElementById("mapVehicleList");
   const api="https://api.tfl.gov.uk",key=window.APP_CONFIG&&window.APP_CONFIG.tflApiKey?String(window.APP_CONFIG.tflApiKey).trim():"";
-  let map=null,markers=null,activeRoute="",timer=null,loading=false,markerByVehicle=new Map();
+  let map=null,markers=null,activeRoute="",timer=null,loading=false,hasFitCurrentRoute=false,markerByVehicle=new Map();
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const due=seconds=>seconds<=30?"Due":Math.max(1,Math.round(seconds/60))+" min";
   const hasCoordinates=item=>item.lat!==null&&item.lat!==undefined&&item.lat!==""&&item.lon!==null&&item.lon!==undefined&&item.lon!==""&&Number.isFinite(Number(item.lat))&&Number.isFinite(Number(item.lon));
@@ -29,7 +29,7 @@
   function renderVehicleList(items,route){
     if(!items.length){list.innerHTML='<div class="rf-map-empty"><strong>No mappable vehicle positions yet</strong><p>TfL returned predictions, but none included usable latitude and longitude values. Try refreshing in a moment or open live stop arrivals.</p><a href="arrivals.html">Search live arrivals ↗</a></div>';return;}
     list.innerHTML=items.slice(0,50).map(item=>{
-      const id=String(item.vehicleId||item.id||item.naptanId||"vehicle");
+      const id=String(item.vehicleId||item.id||item.naptanId||"position-"+item.lat+"-"+item.lon);
       return '<button class="rf-map-vehicle" type="button" data-vehicle="'+esc(id)+'"><span class="rf-map-vehicle-badge">'+esc(route)+'</span><span class="rf-map-vehicle-copy"><strong>'+esc(item.destinationName||"Destination unavailable")+'</strong><small>'+(item.vehicleId?"Vehicle "+esc(item.vehicleId):"Vehicle ID unavailable")+' · '+esc(item.stationName||"Stop not supplied")+'</small></span><span class="rf-map-vehicle-time">'+due(Number(item.timeToStation)||0)+'</span></button>';
     }).join("");
     list.querySelectorAll("[data-vehicle]").forEach(button=>button.addEventListener("click",()=>focusVehicle(button.dataset.vehicle)));
@@ -50,7 +50,7 @@
       const marker=L.marker([Number(item.lat),Number(item.lon)],{icon,title:"Route "+route+" bus"});
       marker.bindPopup(makePopup(item,route));markers.addLayer(marker);markerByVehicle.set(id,marker);
     });
-    if(located.length&&map){const bounds=markers.getBounds();if(bounds.isValid())map.fitBounds(bounds.pad(.18),{maxZoom:14});}
+    if(located.length&&map&&!hasFitCurrentRoute){const bounds=markers.getBounds();if(bounds.isValid()){map.fitBounds(bounds.pad(.18),{maxZoom:14});hasFitCurrentRoute=true;}}
     return located.length;
   }
   async function load(route,silent){
@@ -74,7 +74,7 @@
   function start(route){
     const normalized=String(route||"").trim().toUpperCase().replace(/\s+/g,"");
     if(!/^[A-Z]{0,3}\d{1,3}[A-Z]?$/.test(normalized)){statusTitle.textContent="Enter a valid bus route";statusDetail.textContent="Try a route such as 21, N1, D3 or SL6.";return;}
-    activeRoute=normalized;input.value=normalized;refresh.disabled=false;
+    activeRoute=normalized;input.value=normalized;refresh.disabled=false;hasFitCurrentRoute=false;
     if(timer)clearInterval(timer);load(normalized,false);
     timer=setInterval(()=>{if(!document.hidden&&activeRoute)load(activeRoute,true);},20000);
     const url=new URL(location.href);url.searchParams.set("route",normalized);history.replaceState({}, "", url);
