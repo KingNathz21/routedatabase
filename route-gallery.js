@@ -10,7 +10,11 @@
       }
       return {
         src: String(item?.src || item?.image || "").trim(),
-        alt: String(item?.alt || `Route ${route.Route} photo ${index + 1}`).trim()
+        alt: String(item?.alt || `Route ${route.Route} photo ${index + 1}`).trim(),
+        credit: String(item?.credit || "").trim(),
+        source: String(item?.source || "").trim(),
+        license: String(item?.license || "").trim(),
+        licenseLabel: String(item?.licenseLabel || "").trim()
       };
     }).filter(item => item.src);
 
@@ -61,6 +65,19 @@
     `;
 
     oldImage.replaceWith(gallery);
+    const attribution = document.createElement("p");
+    attribution.className = "gallery-attribution";
+    gallery.appendChild(attribution);
+    function showAttribution(image) {
+      const safeSource = /^https:\/\//i.test(image.source) ? image.source : "";
+      const safeLicense = /^https:\/\//i.test(image.license) ? image.license : "";
+      const credit = image.credit ? `Photo: ${escapeHtml(image.credit)}` : "";
+      const sourceLink = safeSource ? `<a href="${escapeHtml(safeSource)}" target="_blank" rel="noopener noreferrer">Source</a>` : "";
+      const licenseLink = safeLicense ? `<a href="${escapeHtml(safeLicense)}" target="_blank" rel="noopener noreferrer">${escapeHtml(image.licenseLabel || "Licence")}</a>` : "";
+      attribution.innerHTML = [credit, sourceLink, licenseLink].filter(Boolean).join(" · ");
+      attribution.hidden = !attribution.textContent.trim();
+    }
+    showAttribution(images[0]);
     if (images.length < 2) return;
 
     let activeIndex = 0;
@@ -74,6 +91,7 @@
       const selected = images[activeIndex];
       mainImage.src = selected.src;
       mainImage.alt = selected.alt;
+      showAttribution(selected);
       counter.textContent = `${activeIndex + 1} / ${images.length}`;
       thumbnails.forEach((thumbnail, thumbnailIndex) => {
         const active = thumbnailIndex === activeIndex;
