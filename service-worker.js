@@ -1,4 +1,4 @@
-const CACHE_NAME = "routeflow-app-v10";
+const CACHE_NAME = "routeflow-app-v11";
 const APP_SHELL = [
   "./", "./index.html", "./routes.html", "./arrivals.html", "./disruptions.html",
   "./journey-planner.html", "./operators.html", "./fleet.html", "./login.html",
@@ -18,7 +18,14 @@ const APP_SHELL = [
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL.map(path => new Request(path, { cache: "reload" }))))
+      .then(async cache => {
+        // One missing optional asset must not prevent the entire offline shell installing.
+        const results = await Promise.allSettled(APP_SHELL.map(path =>
+          cache.add(new Request(path, { cache: "reload" }))
+        ));
+        const failed = results.filter(result => result.status === "rejected").length;
+        if (failed) console.warn("RouteFlow: some optional offline assets could not be cached:", failed);
+      })
       .then(() => self.skipWaiting())
   );
 });
@@ -51,7 +58,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(fetch(request).then(response => {
       if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
       return response;
-    }).catch(async () => (await caches.match(request)) || (await caches.match("./offline.html")) || (await caches.match("./index.html"))));
+    }).catch(async () => (await caches.match(request, { ignoreSearch: true })) || (await caches.match("./offline.html")) || (await caches.match("./index.html"))));
     return;
   }
 
