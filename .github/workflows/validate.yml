@@ -97,4 +97,3 @@ jobs:
           assert db.execute("SELECT status FROM bus_sightings WHERE id='test-id'").fetchone()[0] == 'pending'
           print('Community sightings migration executes and defaults new submissions to pending.')
           PY
-          PY
