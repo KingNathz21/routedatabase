@@ -88,8 +88,31 @@
     return records;
   }
 
+  async function loadPhotoIndex() {
+    try {
+      const response = await fetch("./data/routes.json", { headers: { Accept: "application/json" }, cache: "no-store" });
+      if (!response.ok) return { current: new Map(), withdrawn: new Map() };
+      const data = await response.json();
+      return {
+        current: new Map((data.current || []).map(route => [String(route.Route), Array.isArray(route.Images) ? route.Images : []])),
+        withdrawn: new Map((data.withdrawn || []).map(route => [String(route.Route), Array.isArray(route.Images) ? route.Images : []]))
+      };
+    } catch {
+      return { current: new Map(), withdrawn: new Map() };
+    }
+  }
+
+  function mergePhotoGalleries(routes, photoMap) {
+    for (const route of routes) {
+      const images = photoMap.get(String(route.Route));
+      if (images?.length && images.length > (route.Images?.length || 0)) route.Images = images;
+    }
+  }
+
   async function fetchArchive() {
-    const [current, withdrawn] = await Promise.all([loadStatus("current"), loadStatus("withdrawn")]);
+    const [current, withdrawn, photos] = await Promise.all([loadStatus("current"), loadStatus("withdrawn"), loadPhotoIndex()]);
+    mergePhotoGalleries(current, photos.current);
+    mergePhotoGalleries(withdrawn, photos.withdrawn);
     const archive = { current, withdrawn, cachedAt: new Date().toISOString(), offline: false };
     await saveOfflineArchive(archive);
     return archive;
