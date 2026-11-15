@@ -17,12 +17,12 @@
         if (element) element.textContent = format(data[key]);
       }
       section.classList.remove("is-unavailable");
-      updated.textContent = "Live database · updated " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-      note.textContent = format(data.garages) + " garages are also recorded. Figures reflect the data currently imported into Cloudflare D1.";
+      updated.textContent = "Updated " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      note.textContent = format(data.garages) + " garages are also included in the network archive.";
     } catch (error) {
       section.classList.add("is-unavailable");
       updated.textContent = "Live figures temporarily unavailable";
-      note.textContent = "The route database could not be reached just now. Try the Routes page to browse the archive.";
+      note.textContent = "Live network statistics are temporarily unavailable. You can still browse the route archive.";
     }
   }
   loadStats();
