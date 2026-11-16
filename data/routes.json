@@ -15308,7 +15308,7 @@
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
       "Power Type": "Not yet verified",
       "Previous Route Number": "Not recorded",
-      "Notes": "Night element of route 14. TfL schedule 69977 (Saturday night/Sunday morning; effective 14 March 2026) identifies London General, Putney (AF) garage, 10 vehicles and the ordered timing points. TfL's Q1 2026/27 route-performance report lists N14; the current TfL Who Runs Your Bus directory lists route 14 under London General.",
+      "Notes": "Night element of route 14. TfL schedule 69977 (Saturday night/Sunday morning; effective 14 March 2026) identifies London General, Putney (AF) garage, 10 vehicles and the ordered timing points. TfL's Q1 2025/26 Hammersmith & Fulham performance report includes N14; the current TfL Who Runs Your Bus directory lists route 14 under London General.",
       "PVR": "10 (Saturday night/Sunday morning; TfL schedule 69977, effective 14 March 2026)",
       "Via": [
         "Putney Station",
@@ -16422,7 +16422,7 @@
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
       "Power Type": "Not yet verified",
       "Previous Route Number": "Not recorded",
-      "Notes": "Night element of route 88. TfL schedule 67571 (Saturday night/Sunday morning; effective 15 February 2025) identifies London General, Stockwell (SW) garage, 6 vehicles and ordered timing points. TfL's Q1 2026/27 Lambeth performance report lists N88; the current TfL Who Runs Your Bus directory lists route 88 under London General. Schedule-derived PVR/headway are dated snapshots, not a fleet audit.",
+      "Notes": "Night element of route 88. TfL schedule 67571 (Saturday night/Sunday morning; effective 15 February 2025) identifies London General, Stockwell (SW) garage, 6 vehicles and ordered timing points. The current TfL Who Runs Your Bus directory lists route 88 under London General. Schedule-derived PVR/headway are dated snapshots, not a fleet audit.",
       "PVR": "6 (Saturday night/Sunday morning; TfL schedule 67571, effective 15 February 2025)",
       "Via": [
         "Kentish Town Station",
@@ -17969,7 +17969,7 @@
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
       "Power Type": "Not yet verified",
       "Previous Route Number": "Not recorded",
-      "Notes": "Night element of route 345. TfL schedule 67042 (Saturday night/Sunday morning; effective 14 December 2024) identifies Transport UK London, Battersea (QB) garage, 6 vehicles and ordered timing points; its trip times give about 56–57 minutes and roughly 30-minute departures. TfL's Q1 2026/27 Lambeth performance report lists N345; the current TfL Who Runs Your Bus directory lists route 345 under Transport UK. Schedule-derived PVR/headway/journey time are dated snapshots, not a fleet audit.",
+      "Notes": "Night element of route 345. TfL schedule 67042 (Saturday night/Sunday morning; effective 14 December 2024) identifies Transport UK London, Battersea (QB) garage, 6 vehicles and ordered timing points; its trip times give about 56–57 minutes and roughly 30-minute departures. The current TfL Who Runs Your Bus directory lists route 345 under Transport UK. Schedule-derived PVR/headway/journey time are dated snapshots, not a fleet audit.",
       "PVR": "6 (Saturday night/Sunday morning; TfL schedule 67042, effective 14 December 2024)",
       "Via": [
         "Peckham Road / Southampton Way",
