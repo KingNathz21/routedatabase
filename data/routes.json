@@ -127,7 +127,7 @@
       "Evening Frequency": "Not yet verified",
       "Sunday Frequency": "Not yet verified",
       "Night Frequency": "Not yet verified",
-      "Typical Journey Time": "Not yet verified",
+      "Typical Journey Time": "About 58 minutes (weekday off-peak; TfL timetable)",
       "Approximate Route Length": "Not yet verified",
       "Models Used": "Not yet verified",
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
@@ -135,7 +135,15 @@
       "Previous Route Number": "Not recorded",
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
-      "Via": [],
+      "Via": [
+        "Westminster",
+        "Lambeth",
+        "Kennington",
+        "Brixton",
+        "Herne Hill",
+        "West Dulwich",
+        "Gipsy Hill"
+      ],
       "Images": [
         {
           "src": "https://upload.wikimedia.org/wikipedia/commons/d/d1/2419_Abellio_-_Flickr_-_antoniovera1.jpg",
@@ -178,7 +186,16 @@
       "Previous Route Number": "Not recorded",
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
-      "Via": [],
+      "Via": [
+        "Tufnell Park",
+        "Holloway",
+        "Finsbury Park",
+        "Highbury",
+        "Islington",
+        "Angel",
+        "Clerkenwell",
+        "Barbican"
+      ],
       "Images": [
         {
           "src": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Metroline_bus_VW1270_%28LK12_AHA%29%2C_14_January_2014.jpg",
@@ -221,7 +238,17 @@
       "Previous Route Number": "Not recorded",
       "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
       "PVR": "Not yet recorded",
-      "Via": [],
+      "Via": [
+        "Romford Station",
+        "Queen's Hospital",
+        "Rush Green",
+        "Becontree Heath",
+        "Martins Corner",
+        "Barking",
+        "East Ham",
+        "Upton Park",
+        "Plaistow"
+      ],
       "Images": [
         {
           "src": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Au_Morandarte_Flickr_Stagecoach_19783_on_Route_5%2C_Barking_Station_%289696936237%29.jpg",
