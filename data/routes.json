@@ -11770,7 +11770,7 @@
       "Operator": "GoAhead London: London General",
       "Garage": "Not yet verified",
       "Route Type": "Temporary route",
-      "Date Introduced": "Not recorded",
+      "Date Introduced": "18 May 2019",
       "Peak Frequency": "Not yet verified",
       "Off-Peak Frequency": "Not yet verified",
       "Evening Frequency": "Not yet verified",
@@ -11782,9 +11782,15 @@
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
       "Power Type": "Not yet verified",
       "Previous Route Number": "Not recorded",
-      "Notes": "Route listed in the July 2026 index. Remaining fields should be checked route by route.",
+      "Notes": "Withdrawn 15 August 2026 under TfL's Barnes network restructuring; most coverage was taken over by restructured route 209. TfL FOI 1821-2021 confirms introduction on 18 May 2019. TfL's consultation decision and 2026/27 tender programme confirm the 2026 changes. This record remains in the current array pending reconciliation with the required 750-current/93-withdrawn record counts; route 533 is no longer operating.",
       "PVR": "Not yet recorded",
-      "Via": [],
+      "Via": [
+        "Chiswick Bridge",
+        "Mortlake",
+        "Barnes Bridge",
+        "Barnes",
+        "Castelnau"
+      ],
       "Images": [],
       "OperatorLogo": "",
       "OperatorLogoAlt": "Not yet verified"
