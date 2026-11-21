@@ -445,7 +445,7 @@
     {
       "Route": "10",
       "Start": "Newington Green",
-      "Destination": "Parkgate Road, Battersea Bridge (South Side)",
+      "Destination": "Parkgate Road",
       "Operator": "Arriva London",
       "Garage": "Clapton (CT)",
       "Route Type": "Day route",
