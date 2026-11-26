@@ -1814,7 +1814,7 @@
       "Start": "Halliwick Park",
       "Destination": "London Bridge Bus Station",
       "Operator": "Metroline",
-      "Garage": "Not yet verified",
+      "Garage": "Holloway (N43 night duties; day allocation not separately verified)",
       "Route Type": "Day route",
       "Date Introduced": "Not recorded",
       "Peak Frequency": "Every 6–9 minutes, 06:00–18:00 at Halliwick Park towards London Bridge Bus Station.",
@@ -1828,7 +1828,7 @@
       "Vehicle Type (Single/Double Deck)": "Not yet verified",
       "Power Type": "Not yet verified",
       "Previous Route Number": "Not recorded",
-      "Notes": "Historical evidence only: Metroline's 2019 announcement described route 43 as an all-electric double-deck route operating from Holloway. A TfL N43 schedule implemented 31 January 2026 lists four vehicles for that night schedule only. These dated sources do not establish the current route 43 garage, model, power type or route-wide PVR; those fields remain unverified. Current route sequence and timetable checked against TfL on 26 November 2026.",
+      "Notes": "Current TfL schedule N43-66897-MTNt-ML-1, implemented 31 January 2026, lists Metroline (ML), four vehicles on the Monday–Thursday night / Tuesday–Friday morning schedule, and Holloway Bus Garage Stand. This supports Holloway for those N43 night duties only; it does not establish the daytime route 43 allocation or a route-wide PVR. Historical: Metroline's 2019 launch announcement described route 43 as a fully electric double-deck service from Holloway using BYD/ADL E400 MMC vehicles. That dated fleet statement is not treated as current model or power-type proof.",
       "PVR": "Not yet recorded",
       "Via": [
         "Muswell Hill",
